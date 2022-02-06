@@ -9,6 +9,23 @@
         <item
             android:icon="@drawable/run_icon"
             android:title="Track activity" />
+
+        <item
+            android:icon="@drawable/history_icon"
+            android:title="History" />
+
+        <item
+            android:icon="@drawable/leaderboard_icon"
+            android:title="Leaderboard" />
+
+        <item
+            android:icon="@drawable/friends_icon"
+            android:title="Friends" />
+
+        <item
+            android:icon="@drawable/settings_icon"
+            android:title="Settings" />
+
     </group>
 
 </menu>

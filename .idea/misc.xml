@@ -3,21 +3,36 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/bike_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/button_background.xml" value="0.2962962962962963" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/distance_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/green_dot.xml" value="0.34" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/kcal_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/login_buttons_background.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/menu_item_background.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/orange_circled_background.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/person_icon.xml" value="0.3685185185185185" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/round_activity_background.xml" value="0.34" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/speed_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_main.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_sign_in.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_sign_in_with_password.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_sign_up.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_tracking.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/back_button_panel.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/control_buttons_panel.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/current_activity_card.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/fragment_maps.xml" value="0.4466666666666667" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/fragment_overview.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/history_trainings.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/include_main_activity.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/kcal_panel.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/kilometers_panel.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/navigation_header.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/speed_panel.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/training_card.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/training_panel.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/type_of_activity_panel.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/weekly_goal.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/menu/navigation_menu.xml" value="0.32916666666666666" />
       </map>

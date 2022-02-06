@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".tracking.TrackingActivity">
+
+    <fragment
+        android:id="@+id/map_tracking"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/include3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".tracking.TrackingActivity" />
+
+    <include
+        android:id="@+id/include3"
+        layout="@layout/training_panel"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/include7"
+        layout="@layout/back_button_panel"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/start_pause_button_tracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="275dp"
+        android:clickable="true"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        app:backgroundTint="@color/start_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/stop_button_tracking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/play_icon"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/stop_button_tracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        android:visibility="gone"
+        app:backgroundTint="@color/stop_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/start_pause_button_tracking"
+        app:layout_constraintTop_toTopOf="@+id/start_pause_button_tracking"
+        app:srcCompat="@drawable/stop_icon"
+        app:tint="@color/white" />
+</androidx.constraintlayout.widget.ConstraintLayout>

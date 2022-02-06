@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import com.pawlowski.trackyouractivity.MainActivity;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -21,7 +22,7 @@ public class SignInActivity extends AppCompatActivity {
 
         hideNotificationBar();
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, TrackingActivity.class));
     }
 
     private void hideNotificationBar()
