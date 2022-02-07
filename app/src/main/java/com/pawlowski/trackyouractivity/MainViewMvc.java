@@ -1,12 +1,11 @@
 package com.pawlowski.trackyouractivity;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pawlowski.trackyouractivity.base.BaseViewMvc;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;

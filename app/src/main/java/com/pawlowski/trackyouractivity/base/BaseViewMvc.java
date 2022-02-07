@@ -1,4 +1,4 @@
-package com.pawlowski.trackyouractivity;
+package com.pawlowski.trackyouractivity.base;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.IdRes;
 
-public class BaseViewMvc {
+public abstract class BaseViewMvc {
     protected View rootView;
 
     protected <T extends View> T findViewById(@IdRes int id) {
@@ -18,6 +18,7 @@ public class BaseViewMvc {
     {
         return rootView;
     }
+
 
     public void hideKeyboard() {
         Context context = getRootView().getContext();
