@@ -29,12 +29,16 @@ import com.google.android.gms.location.LocationServices;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.consts.Const;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
+import com.pawlowski.trackyouractivity.gpx.GPXUseCase;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
 import com.pawlowski.trackyouractivity.models.TrackingStopUpdate;
+import com.urizev.gpx.beans.Waypoint;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -53,12 +57,14 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     long mStartingSeconds = 0;
     long mCurrentSeconds = 0;
 
+    ArrayList<Waypoint> mWaypoints = new ArrayList<>();
+
 
     TimeCounterUseCase mTimeCounterUseCase;
     SpeedChecker mSpeedChecker;
     SharedPreferencesHelper mSharedPreferencesHelper;
 
-    TextToSpeech textToSpeech;
+    TextToSpeech mTextToSpeech;
 
     @Override
     public void onCreate() {
@@ -86,14 +92,16 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
 
 
-        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+
+
+        mTextToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
                 if(i != TextToSpeech.ERROR)
                 {
-                    textToSpeech.setLanguage(Locale.ENGLISH);
+                    mTextToSpeech.setLanguage(Locale.ENGLISH);
                     vibrate();
-                    textToSpeech.speak("Tracking started!",TextToSpeech.QUEUE_FLUSH,null);
+                    mTextToSpeech.speak("Tracking started!",TextToSpeech.QUEUE_FLUSH,null);
                 }
             }
         });
@@ -214,6 +222,10 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
                 EventBus.getDefault().post(new LocationUpdateModel(location, mAllDistance, mCurrentSpeed));
                 mLastLocation = location;
                 mSharedPreferencesHelper.setDistanceInBackground(mAllDistance);
+
+                Waypoint waypoint = new Waypoint(null, (float)location.getLatitude(), (float)location.getLongitude());
+                waypoint.setTime(new Date(location.getTime()));
+                mWaypoints.add(waypoint);
             }
 
 
@@ -259,7 +271,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
 
 
-        textToSpeech.speak("You have completed " + kmNumber + " kilometers!"
+        mTextToSpeech.speak("You have completed " + kmNumber + " kilometers!"
                 + " Your time is " + timeTextSpeech + "!",TextToSpeech.QUEUE_FLUSH,null);
     }
 
@@ -273,7 +285,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSharedPreferencesHelper.setDistance(mAllDistance);
         mSharedPreferencesHelper.setTrackingActive(false);
         EventBus.getDefault().post(new TrackingStopUpdate(false));
-
+        new GPXUseCase(getFilesDir()).writeToGpx(mWaypoints, "trasa.gpx");
     }
 
     private LocationRequest getLocationRequest() {

@@ -73,6 +73,7 @@ public class PermissionHelper {
         }
     }
 
+
     public void handleRequestResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
             if(requestCode == Const.REQUEST_LOCATION_PERMISSION)

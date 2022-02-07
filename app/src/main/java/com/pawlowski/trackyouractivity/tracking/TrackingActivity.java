@@ -6,7 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -15,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.consts.Const;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
+import com.pawlowski.trackyouractivity.gpx.GPXUseCase;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
 import com.pawlowski.trackyouractivity.models.TrackingStopUpdate;
@@ -89,7 +94,6 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         {
             startServiceIfActive();
         }
-
 
 
 

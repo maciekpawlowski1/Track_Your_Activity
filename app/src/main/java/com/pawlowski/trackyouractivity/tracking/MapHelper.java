@@ -12,6 +12,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.gpx.GPXUseCase;
+import com.urizev.gpx.beans.Waypoint;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -59,6 +63,9 @@ public class MapHelper implements OnMapReadyCallback {
                 }
             });
         }
+
+        addManyWaypointsToMap(new GPXUseCase(mFusedLocationClient.getApplicationContext().getFilesDir()).readFromGpx("trasa.gpx"));
+
     }
 
     public void addLocationToMap(Location nextLocation)
@@ -72,6 +79,31 @@ public class MapHelper implements OnMapReadyCallback {
         }
 
         mLastLocation = nextLocation;
+    }
+
+    public void addManyWaypointsToMap(List<Waypoint> waypoints)
+    {
+        if(mMap != null)
+        {
+            Waypoint lastWaypoint = null;
+            for(Waypoint waypoint:waypoints)
+            {
+                if(lastWaypoint != null)
+                {
+                    LatLng l1 = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
+                    LatLng l2 = new LatLng(waypoint.getLatitude(), waypoint.getLongitude());
+                    mMap.addPolyline(new PolylineOptions().add(l1, l2).width(8).color(Color.rgb(251, 116, 69)));
+                }
+                lastWaypoint = waypoint;
+            }
+            if(lastWaypoint != null)
+            {
+                LatLng l = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(l));
+            }
+
+        }
+
     }
 
     private void showCurrentLocation() throws SecurityException
