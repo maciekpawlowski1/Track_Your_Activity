@@ -24,10 +24,31 @@ public class MainActivity extends AppCompatActivity {
         viewMvc.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                return false;
+                if(item.getItemId() == R.id.overview_nav_menu)
+                {
+                    viewMvc.loadFragment(new OverviewFragment(viewMvc), getSupportFragmentManager(), false);
+                }
+                else if (item.getItemId() == R.id.track_nav_menu)
+                {
+
+                }
+                else if (item.getItemId() == R.id.history_nav_menu)
+                {
+
+                }
+
+                    return false;
             }
         });
 
         viewMvc.loadFragment(new OverviewFragment(viewMvc), getSupportFragmentManager(), false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!viewMvc.showNavigation())
+        {
+            super.onBackPressed();
+        }
     }
 }

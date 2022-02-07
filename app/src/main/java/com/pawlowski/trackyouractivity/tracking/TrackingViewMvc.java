@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
-import com.pawlowski.trackyouractivity.base.BaseViewMvc;
 import com.pawlowski.trackyouractivity.R;
 
 import androidx.annotation.Nullable;
@@ -15,31 +14,32 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnControlButtonsClickListener> {
 
-    FloatingActionButton startPauseButton;
-    FloatingActionButton stopButton;
-    TextView timeText;
-    TextView distanceText;
-    TextView caloriesText;
-    TextView speedText;
+    private final FloatingActionButton mStartPauseButton;
+    private final FloatingActionButton mStopButton;
+    private final TextView mTimeText;
+    private final TextView mDistanceText;
+    private final TextView mCaloriesText;
+    private final TextView mSpeedText;
+    private ControllerButtonsState mCurrentState;
 
     public TrackingViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent, AppCompatActivity activity) {
 
         rootView = inflater.inflate(R.layout.activity_tracking, parent, false);
-        startPauseButton = findViewById(R.id.start_pause_button_tracking);
-        stopButton = findViewById(R.id.stop_button_tracking);
-        timeText = findViewById(R.id.time_text_tracking);
-        distanceText = findViewById(R.id.kilometers_text_kilometers_panel);
-        caloriesText = findViewById(R.id.kcal_text_kcal_panel);
-        speedText = findViewById(R.id.speed_text_speed_panel);
+        mStartPauseButton = findViewById(R.id.start_pause_button_tracking);
+        mStopButton = findViewById(R.id.stop_button_tracking);
+        mTimeText = findViewById(R.id.time_text_tracking);
+        mDistanceText = findViewById(R.id.kilometers_text_kilometers_panel);
+        mCaloriesText = findViewById(R.id.kcal_text_kcal_panel);
+        mSpeedText = findViewById(R.id.speed_text_speed_panel);
 
-        startPauseButton.setOnClickListener(new View.OnClickListener() {
+        mStartPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 notifyListeners(WhichListener.START_PAUSE_LISTENER.ordinal());
             }
         });
 
-        stopButton.setOnClickListener(new View.OnClickListener() {
+        mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 notifyListeners(WhichListener.STOP_LISTENER.ordinal());
@@ -49,41 +49,46 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
 
     public void changeButtonsState(ControllerButtonsState state)
     {
+        mCurrentState = state;
         if(state == ControllerButtonsState.STOPPED)
         {
-            stopButton.setVisibility(View.GONE);
-            startPauseButton.setImageResource(R.drawable.play_icon);
+            mStopButton.setVisibility(View.GONE);
+            mStartPauseButton.setImageResource(R.drawable.play_icon);
         }
         else if(state == ControllerButtonsState.PLAYED)
         {
-            stopButton.setVisibility(View.GONE);
-            startPauseButton.setImageResource(R.drawable.pause_icon);
+            mStopButton.setVisibility(View.GONE);
+            mStartPauseButton.setImageResource(R.drawable.pause_icon);
         }
         else if(state == ControllerButtonsState.PAUSED)
         {
-            stopButton.setVisibility(View.VISIBLE);
-            startPauseButton.setImageResource(R.drawable.play_icon);
+            mStopButton.setVisibility(View.VISIBLE);
+            mStartPauseButton.setImageResource(R.drawable.play_icon);
         }
     }
 
     public void setTimeText(String timeText)
     {
-        this.timeText.setText(timeText);
+        this.mTimeText.setText(timeText);
     }
 
     public void setSpeedText(double speedText)
     {
-        this.speedText.setText(speedText+"");
+        this.mSpeedText.setText(speedText+"");
     }
 
     public void setCaloriesText(int caloriesText)
     {
-        this.caloriesText.setText(caloriesText+"");
+        this.mCaloriesText.setText(caloriesText+"");
     }
 
     public void setDistanceText(double distanceText)
     {
-        this.distanceText.setText(distanceText+"");
+        this.mDistanceText.setText(distanceText+"");
+    }
+
+    public ControllerButtonsState getCurrentState() {
+        return mCurrentState;
     }
 
     @Override

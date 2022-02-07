@@ -27,15 +27,11 @@ public class MainViewMvc extends BaseViewMvc {
         rootView = inflater.inflate(R.layout.activity_main, parent, false);
 
         drawerLayout= findViewById(R.id.drawer);
-        //toolbar = findViewById(R.id.toolBar);
         navigationView = findViewById(R.id.nav_view);
 
 
-        //activity.setSupportActionBar(toolbar);
-        //toggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.Open, R.string.Close);
         toggle = new ActionBarDrawerToggle(activity, drawerLayout, R.string.Open, R.string.Close);
         drawerLayout.addDrawerListener(toggle);
-        //toggle.syncState();
 
         //View headerView = navigationView.getHeaderView(0);
         //helloText = headerView.findViewById(R.id.hello_text_nav_header);

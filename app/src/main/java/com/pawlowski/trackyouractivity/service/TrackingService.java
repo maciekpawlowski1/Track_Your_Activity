@@ -28,8 +28,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
+import com.pawlowski.trackyouractivity.models.TrackingStopUpdate;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -54,7 +56,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
     TimeCounterUseCase mTimeCounterUseCase;
     SpeedChecker mSpeedChecker;
-
+    SharedPreferencesHelper mSharedPreferencesHelper;
 
     TextToSpeech textToSpeech;
 
@@ -66,6 +68,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mStartingSeconds = System.currentTimeMillis();
         mSpeedChecker = new SpeedChecker();
         mSpeedChecker.registerListener(this);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(Const.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
 
 
         buildNotification();
@@ -172,7 +175,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         public void onReceive(Context context, Intent intent) {
             //Unregister the BroadcastReceiver when the notification is tapped
             unregisterReceiver(stopReceiver);
-            //Stop the Service//
+            stopReceiver = null;
             stopTrackingLocation();
             stopSelf();
 
@@ -191,8 +194,8 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //if(stopReceiver != null)
-        //unregisterReceiver(stopReceiver);
+        if(stopReceiver != null)
+            unregisterReceiver(stopReceiver);
 
     }
 
@@ -210,6 +213,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
                 mSpeedChecker.updateDistance(mAllDistance, location.getTime());
                 EventBus.getDefault().post(new LocationUpdateModel(location, mAllDistance, mCurrentSpeed));
                 mLastLocation = location;
+                mSharedPreferencesHelper.setDistanceInBackground(mAllDistance);
             }
 
 
@@ -220,15 +224,21 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        long lastTime = mSharedPreferencesHelper.getCurrentTime();
+        if(lastTime != 0)
+        {
+            mAllDistance = mSharedPreferencesHelper.getCurrentDistance();
+        }
+        mSharedPreferencesHelper.setTrackingActive(true);
         mFusedLocationClient.requestLocationUpdates
                 (getLocationRequest(), mLocationCallback,
                         Looper.getMainLooper() );
-        mTimeCounterUseCase = new TimeCounterUseCase(0, System.currentTimeMillis());
+        mTimeCounterUseCase = new TimeCounterUseCase(lastTime, System.currentTimeMillis());
         mTimeCounterUseCase.registerListener(this);
     }
 
 
-    void kilometersCompletedAction(int kmNumber)
+    private void kilometersCompletedAction(int kmNumber)
     {
         vibrate();
         Toast.makeText(getApplicationContext(), "You've completed " + kmNumber + " kilometers!", Toast.LENGTH_SHORT).show();
@@ -259,12 +269,17 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         mTimeCounterUseCase.unregisterListener(this);
         mTimeCounterUseCase.stopCounting();
+        mSharedPreferencesHelper.setCurrentTime(mCurrentSeconds);
+        mSharedPreferencesHelper.setDistance(mAllDistance);
+        mSharedPreferencesHelper.setTrackingActive(false);
+        EventBus.getDefault().post(new TrackingStopUpdate(false));
+
     }
 
     private LocationRequest getLocationRequest() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(3000);
+        locationRequest.setInterval(Const.TRACKING_INTERVAL);
+        locationRequest.setFastestInterval(Const.TRACKING_FAST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
     }

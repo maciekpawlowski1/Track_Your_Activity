@@ -17,14 +17,27 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-public class PermissionHelper extends BaseObservable<PermissionHelper.OnPermissionReadyListener> {
+public class PermissionHelper {
 
     private final FusedLocationProviderClient mFusedLocationClient;
     private final Activity mActivity;
+    private final List<OnPermissionReadyListener> listenersNormal = new ArrayList<>();
+    private final List<OnPermissionReadyListener> listenersBackground = new ArrayList<>();
+
 
     public PermissionHelper(FusedLocationProviderClient fusedLocationProviderClient, Activity activity) {
         mFusedLocationClient = fusedLocationProviderClient;
         mActivity = activity;
+    }
+
+    public void registerNormalListener(OnPermissionReadyListener listener)
+    {
+        listenersNormal.add(listener);
+    }
+
+    public void registerBackgroundListener(OnPermissionReadyListener listener)
+    {
+        listenersBackground.add(listener);
     }
 
 
@@ -44,14 +57,15 @@ public class PermissionHelper extends BaseObservable<PermissionHelper.OnPermissi
 
     public void requestPermission(OnPermissionReadyListener onPermissionReadyListener)
     {
-        registerListener(onPermissionReadyListener);
+        registerNormalListener(onPermissionReadyListener);
         ActivityCompat.requestPermissions(mActivity, new String[]
                         {Manifest.permission.ACCESS_FINE_LOCATION},
                 Const.REQUEST_LOCATION_PERMISSION);
     }
 
-    public void requestBackgroundPermission()
+    public void requestBackgroundPermission(OnPermissionReadyListener onPermissionReadyListener)
     {
+        registerBackgroundListener(onPermissionReadyListener);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ActivityCompat.requestPermissions(mActivity, new String[]
                             {Manifest.permission.ACCESS_BACKGROUND_LOCATION},
@@ -65,19 +79,36 @@ public class PermissionHelper extends BaseObservable<PermissionHelper.OnPermissi
             {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    notifyListeners();
+                    notifyNormalListeners();
                 } else {
+                    Toast.makeText(mActivity.getApplicationContext(), "You have to give localisation tracking permission to track your training!", Toast.LENGTH_LONG).show();
+                }
+            }
+            else if(requestCode == Const.REQUEST_LOCATION_PERMISSION2)
+            {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    notifyBackgroundListeners();
+                } else {
+                    Toast.makeText(mActivity.getApplicationContext(), "You have to give background localisation tracking permission also to track your training!", Toast.LENGTH_LONG).show();
                 }
             }
     }
 
-    @Override
-    protected void notifyListeners() {
-        for(OnPermissionReadyListener l:listeners)
+    private void notifyNormalListeners() {
+        for(OnPermissionReadyListener l:listenersNormal)
         {
             l.onSuccess();
         }
-        listeners.clear();
+        listenersNormal.clear();
+    }
+
+    private void notifyBackgroundListeners() {
+        for(OnPermissionReadyListener l:listenersBackground)
+        {
+            l.onSuccess();
+        }
+        listenersBackground.clear();
     }
 
 

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,8 +14,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
+import com.pawlowski.trackyouractivity.models.TrackingStopUpdate;
 import com.pawlowski.trackyouractivity.service.TrackingService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,58 +27,107 @@ import org.greenrobot.eventbus.ThreadMode;
 public class TrackingActivity extends AppCompatActivity implements TrackingViewMvc.OnControlButtonsClickListener {
 
 
-    MapHelper mapHelper;
-    TrackingViewMvc trackingViewMvc;
+    MapHelper mMapHelper;
+    TrackingViewMvc mTrackingViewMvc;
     FusedLocationProviderClient mFusedLocationClient;
-    PermissionHelper permissionHelper;
+    PermissionHelper mPermissionHelper;
+    SharedPreferencesHelper mSharedPreferencesHelper;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        trackingViewMvc = new TrackingViewMvc(getLayoutInflater(), null, this);
-        trackingViewMvc.registerListener(this);
-        setContentView(trackingViewMvc.getRootView());
+        mTrackingViewMvc = new TrackingViewMvc(getLayoutInflater(), null, this);
+        mTrackingViewMvc.registerListener(this);
+        setContentView(mTrackingViewMvc.getRootView());
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        permissionHelper = new PermissionHelper(mFusedLocationClient, this);
-        mapHelper = new MapHelper(mFusedLocationClient, permissionHelper);
+        mPermissionHelper = new PermissionHelper(mFusedLocationClient, this);
+        mMapHelper = new MapHelper(mFusedLocationClient, mPermissionHelper);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(Const.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_tracking);
         assert mapFragment != null;
-        mapFragment.getMapAsync(mapHelper);
+        mapFragment.getMapAsync(mMapHelper);
 
-
-        if(!permissionHelper.isTrackingPermissionGranted())
+        if(!mPermissionHelper.isTrackingPermissionGranted())
         {
-            permissionHelper.requestPermission(new PermissionHelper.OnPermissionReadyListener() {
+            mPermissionHelper.requestPermission(new PermissionHelper.OnPermissionReadyListener() {
                 @Override
                 public void onSuccess() {
-                    if(!permissionHelper.isBackgroundTrackingPermissionGranted())
+                    if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
                     {
-                        permissionHelper.requestBackgroundPermission();
+                        mPermissionHelper.requestBackgroundPermission(new PermissionHelper.OnPermissionReadyListener() {
+                            @Override
+                            public void onSuccess() {
+                                startServiceIfActive();
+                            }
+                        });
                     }
                     else
                     {
-                        startService();
+                        if(mSharedPreferencesHelper.isTrackingActive())
+                        {
+                            startServiceIfActive();
+                        }
                     }
                 }
             });
         }
-        else if(!permissionHelper.isBackgroundTrackingPermissionGranted())
+        else if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
         {
-            permissionHelper.requestBackgroundPermission();
+            mPermissionHelper.requestBackgroundPermission(new PermissionHelper.OnPermissionReadyListener() {
+                @Override
+                public void onSuccess() {
+                    startServiceIfActive();
+                }
+            });
         }
         else
         {
-            startService();
+            startServiceIfActive();
         }
 
 
 
 
     }
+
+    private void startServiceIfActive()
+    {
+        if(mSharedPreferencesHelper.isTrackingActive())
+        {
+            float distance = mSharedPreferencesHelper.getCurrentDistance();
+            long seconds = mSharedPreferencesHelper.getCurrentTime();
+            mTrackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(seconds/1000));
+            mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(distance));
+            mTrackingViewMvc.setSpeedText(0);
+            mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
+            if(!isServiceRunning())
+            {
+                startService();
+            }
+        }
+        else
+        {
+            if(mSharedPreferencesHelper.getCurrentTime() != 0)
+            {
+                mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PAUSED);
+                float distance = mSharedPreferencesHelper.getCurrentDistance();
+                long seconds = mSharedPreferencesHelper.getCurrentTime();
+                mTrackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(seconds/1000));
+                mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(distance));
+                mTrackingViewMvc.setSpeedText(0);
+            }
+            else
+            {
+                mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
+            }
+        }
+    }
+
 
     @Override
     protected void onStart() {
@@ -92,28 +142,36 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         EventBus.getDefault().unregister(this);
     }
 
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLocationUpdate(LocationUpdateModel locationUpdate)
     {
-        mapHelper.addLocationToMap(locationUpdate.getLocation());
-        double distance = locationUpdate.getAllDistance()/1000.0;
-        distance*= 10;
-        distance = Math.floor(distance);
-        distance/= 10.0;
-        trackingViewMvc.setDistanceText(distance);
-        Log.d("speed", locationUpdate.getCurrentSpeed()+"");
+        mMapHelper.addLocationToMap(locationUpdate.getLocation());
+        double distance = locationUpdate.getAllDistance();
+
+        mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(distance));
         double speed = locationUpdate.getCurrentSpeed();
         speed*= 10;
         speed = Math.floor(speed);
         speed/= 10.0;
-        trackingViewMvc.setSpeedText(speed);
+        mTrackingViewMvc.setSpeedText(speed);
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTimeUpdate(TimeUpdateModel time)
     {
-        trackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(time.getTime()/1000));
+        mTrackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(time.getTime()/1000));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTrackingStopUpdate(TrackingStopUpdate stopUpdate)
+    {
+        if(!stopUpdate.isTracking())
+        {
+            mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PAUSED);
+        }
     }
 
     private boolean isServiceRunning()
@@ -140,17 +198,31 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        permissionHelper.handleRequestResult(requestCode, permissions, grantResults);
+        mPermissionHelper.handleRequestResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void onStartPauseClick() {
-        Log.d("startpause", "click");
+        switch (mTrackingViewMvc.getCurrentState())
+        {
+            case PAUSED:
+
+            case STOPPED:
+                startService();
+                mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
+                break;
+            case PLAYED:
+                stopService();
+                //mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PAUSED);
+                break;
+
+        }
     }
 
     @Override
     public void onStopClick() {
-        Log.d("stop", "click");
-
+        //TODO: Save training
+        mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
+        mSharedPreferencesHelper.resetCurrentTraining();
     }
 }

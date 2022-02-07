@@ -3,26 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/overview_nav_menu"
             android:checked="true"
             android:icon="@drawable/home_icon"
             android:title="Overview" />
         <item
+            android:id="@+id/track_nav_menu"
             android:icon="@drawable/run_icon"
             android:title="Track activity" />
 
         <item
+            android:id="@+id/history_nav_menu"
             android:icon="@drawable/history_icon"
             android:title="History" />
 
         <item
+            android:id="@+id/leaderboard_nav_menu"
             android:icon="@drawable/leaderboard_icon"
             android:title="Leaderboard" />
 
         <item
+            android:id="@+id/friends_nav_menu"
             android:icon="@drawable/friends_icon"
             android:title="Friends" />
 
         <item
+            android:id="@+id/settings_nav_menu"
             android:icon="@drawable/settings_icon"
             android:title="Settings" />
 
