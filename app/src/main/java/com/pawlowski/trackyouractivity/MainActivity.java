@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pawlowski.trackyouractivity.overview.OverviewFragment;
+import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (item.getItemId() == R.id.track_nav_menu)
                 {
-
+                    startActivity(new Intent(MainActivity.this, TrackingActivity.class));
+                    viewMvc.hideNavigation();
                 }
                 else if (item.getItemId() == R.id.history_nav_menu)
                 {

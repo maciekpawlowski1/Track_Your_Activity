@@ -54,6 +54,15 @@ public class MainViewMvc extends BaseViewMvc {
         }
     }
 
+    public void hideNavigation()
+    {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+        {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+
+    }
+
     public void loadFragment(Fragment fragment, FragmentManager fragmentManager, boolean addToStack)
     {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -11,6 +11,8 @@ import com.urizev.gpx.beans.Route;
 import com.urizev.gpx.beans.Waypoint;
 
 
+import org.xml.sax.SAXException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -64,14 +66,33 @@ public class GPXUseCase {
             GPXParser parser = new GPXParser();
             try {
                 File file = new File(mFilesDir.getAbsolutePath() + File.separator, fileName);
-                GPX gpx = parser.parseGPX(new FileInputStream(file));
-                HashSet<Route> routes = gpx.getRoutes();
-                if(routes.size() > 0)
+                if(file.exists())
                 {
-                    return new ArrayList<>(routes).get(0).getRoutePoints();
+                    GPX gpx;
+                    try
+                    {
+                        gpx = parser.parseGPX(new FileInputStream(file));
+                    }
+                    catch (SAXException e)
+                    {
+                        Thread.sleep(100);
+                        gpx = parser.parseGPX(new FileInputStream(file));
+                    }
+
+                    HashSet<Route> routes = gpx.getRoutes();
+                    if(routes.size() > 0)
+                    {
+                        return new ArrayList<>(routes).get(0).getRoutePoints();
+                    }
+                    else
+                        return new ArrayList<>();
                 }
                 else
+                {
                     return new ArrayList<>();
+                }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

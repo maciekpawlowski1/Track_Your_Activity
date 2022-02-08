@@ -279,4 +279,9 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mSharedPreferencesHelper.resetCurrentTraining();
     }
+
+    @Override
+    public void onBackClick() {
+        onBackPressed();
+    }
 }

@@ -3,6 +3,7 @@ package com.pawlowski.trackyouractivity.tracking;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,6 +21,7 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
     private final TextView mDistanceText;
     private final TextView mCaloriesText;
     private final TextView mSpeedText;
+    private final ImageButton mBackButton;
     private ControllerButtonsState mCurrentState;
 
     public TrackingViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent, AppCompatActivity activity) {
@@ -31,6 +33,7 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
         mDistanceText = findViewById(R.id.kilometers_text_kilometers_panel);
         mCaloriesText = findViewById(R.id.kcal_text_kcal_panel);
         mSpeedText = findViewById(R.id.speed_text_speed_panel);
+        mBackButton = findViewById(R.id.back_button_back_panel);
 
         mStartPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +46,13 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
             @Override
             public void onClick(View view) {
                 notifyListeners(WhichListener.STOP_LISTENER.ordinal());
+            }
+        });
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifyListeners(WhichListener.BACK_LISTENER.ordinal());
             }
         });
     }
@@ -109,18 +119,27 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
                 l.onStopClick();
             }
         }
+        else if(which == WhichListener.BACK_LISTENER.ordinal())
+        {
+            for(OnControlButtonsClickListener l:listeners)
+            {
+                l.onBackClick();
+            }
+        }
     }
 
     interface OnControlButtonsClickListener
     {
         void onStartPauseClick();
         void onStopClick();
+        void onBackClick();
     }
 
     private enum WhichListener
     {
         START_PAUSE_LISTENER,
-        STOP_LISTENER
+        STOP_LISTENER,
+        BACK_LISTENER
     }
 
     public enum ControllerButtonsState

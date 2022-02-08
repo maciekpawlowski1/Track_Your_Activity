@@ -22,7 +22,7 @@ public class SignInActivity extends AppCompatActivity {
 
         hideNotificationBar();
 
-        startActivity(new Intent(this, TrackingActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     private void hideNotificationBar()

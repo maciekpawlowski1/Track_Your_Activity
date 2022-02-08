@@ -19,7 +19,7 @@ public class Const {
     public static int TRACKING_INTERVAL = 7000;
     public static int TRACKING_FAST_INTERVAL = 2500;
 
-    public static long GPX_UPDATE_TIME_DELTA_IN_SECONDS = 15;
+    public static long GPX_UPDATE_TIME_DELTA_IN_SECONDS = 10;
 
 
     public static String convertSecondsToTimeTest(long seconds)

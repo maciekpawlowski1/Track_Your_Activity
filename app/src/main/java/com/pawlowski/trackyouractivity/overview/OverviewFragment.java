@@ -1,4 +1,4 @@
-package com.pawlowski.trackyouractivity;
+package com.pawlowski.trackyouractivity.overview;
 
 import android.os.Bundle;
 
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+
+import com.pawlowski.trackyouractivity.MainViewMvc;
+import com.pawlowski.trackyouractivity.R;
 
 
 public class OverviewFragment extends Fragment {
