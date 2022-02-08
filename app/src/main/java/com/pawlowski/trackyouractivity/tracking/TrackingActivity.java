@@ -261,6 +261,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 break;
             case PLAYED:
                 stopService();
+                //Service will send notification when stopped to change state
                 //mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PAUSED);
                 break;
 

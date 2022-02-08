@@ -3,7 +3,6 @@ package com.pawlowski.trackyouractivity.gpx;
 import com.pawlowski.trackyouractivity.consts.Const;
 import com.urizev.gpx.beans.Waypoint;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,8 +17,8 @@ public class GPXUpdater {
     private final AtomicBoolean isFinished;
     private final Thread workingThread;
 
-    public GPXUpdater(File fileDir, int trainingId) {
-        mGpxUseCase = new GPXUseCase(fileDir);
+    public GPXUpdater(int trainingId, GPXUseCase gpxUseCase) {
+        mGpxUseCase = gpxUseCase;
         mTrainingId = trainingId;
         isFinished = new AtomicBoolean(false);
         isFinished.set(false);

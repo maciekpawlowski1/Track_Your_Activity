@@ -62,7 +62,15 @@ public class MapHelper implements OnMapReadyCallback {
 
 
         if(mTrainingId != -1)
-            addManyWaypointsToMap(new GPXUseCase(mFusedLocationClient.getApplicationContext().getFilesDir()).readFromGpx(mTrainingId + ".gpx"));
+        {
+            new GPXUseCase(mFusedLocationClient.getApplicationContext().getFilesDir()).readFromGpxTask(mTrainingId + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+                @Override
+                public void onSuccess(List<Waypoint> waypoints) {
+                    addManyWaypointsToMap(waypoints);
+
+                }
+            });
+        }
 
     }
 

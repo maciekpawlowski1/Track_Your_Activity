@@ -75,6 +75,8 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
     GPXUpdater mGPXUpdater = null;
 
+    GPXUseCase mGPXUseCase;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -86,13 +88,15 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(Const.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
         mDbHandler = new DBHandler(getApplicationContext());
         mTrainingId = mDbHandler.getCurrentTrainingId();
-        mGPXUpdater = new GPXUpdater(getFilesDir(), mTrainingId);
+        mGPXUseCase = new GPXUseCase(getFilesDir());
+        mGPXUpdater = new GPXUpdater(mTrainingId, mGPXUseCase);
         buildNotification();
         initLocationCallback();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         startTrackingLocation();
 
-        new GPXUseCase(getFilesDir()).readFromGpxTask(mTrainingId+".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+
+        mGPXUseCase.readFromGpxTask(mTrainingId+".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
             @Override
             public void onSuccess(List<Waypoint> waypoints) {
                 waypoints.addAll(mWaypoints);
@@ -306,7 +310,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSharedPreferencesHelper.setDistance(mAllDistance);
         mSharedPreferencesHelper.setTrackingActive(false);
         EventBus.getDefault().post(new TrackingStopUpdate(false));
-        new GPXUseCase(getFilesDir()).writeToGpx(mWaypoints, mTrainingId + ".gpx");
+        mGPXUseCase.writeToGpx(mWaypoints, mTrainingId + ".gpx");
         if(mGPXUpdater != null)
         {
             mGPXUpdater.stopUpdating();
