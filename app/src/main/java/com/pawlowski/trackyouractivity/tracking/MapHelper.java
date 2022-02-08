@@ -20,15 +20,17 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 public class MapHelper implements OnMapReadyCallback {
-
+    final Object LOCK = new Object();
     GoogleMap mMap = null;
     Location mLastLocation;
     private final FusedLocationProviderClient mFusedLocationClient;
     private final PermissionHelper mPermissionHelper;
+    private final int mTrainingId;
 
-    public MapHelper(FusedLocationProviderClient mFusedLocationClient, PermissionHelper permissionHelper) {
+    public MapHelper(FusedLocationProviderClient mFusedLocationClient, PermissionHelper permissionHelper, int trainingId) {
         this.mFusedLocationClient = mFusedLocationClient;
         mPermissionHelper = permissionHelper;
+        mTrainingId = trainingId;
     }
 
     @Override
@@ -39,45 +41,46 @@ public class MapHelper implements OnMapReadyCallback {
         mMap.setMaxZoomPreference(18);
         mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
 
-        if (mPermissionHelper.isTrackingPermissionGranted()) {
+        if (mTrainingId == -1 && mPermissionHelper.isTrackingPermissionGranted()) {
             try {
                 showCurrentLocation();
+                mMap.setMyLocationEnabled(true);
             } catch (SecurityException e)
             {
                 e.printStackTrace();
             }
         }
-        else
+        else if (mPermissionHelper.isTrackingPermissionGranted())
         {
-            mPermissionHelper.requestPermission(new PermissionHelper.OnPermissionReadyListener() {
-                @Override
-                public void onSuccess() {
-                    if (mPermissionHelper.isTrackingPermissionGranted()) {
-                        try {
-                            showCurrentLocation();
-                        } catch (SecurityException e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+            try {
+                mMap.setMyLocationEnabled(true);
+            } catch (SecurityException e)
+            {
+                e.printStackTrace();
+            }
         }
 
-        addManyWaypointsToMap(new GPXUseCase(mFusedLocationClient.getApplicationContext().getFilesDir()).readFromGpx("trasa.gpx"));
+
+        if(mTrainingId != -1)
+            addManyWaypointsToMap(new GPXUseCase(mFusedLocationClient.getApplicationContext().getFilesDir()).readFromGpx(mTrainingId + ".gpx"));
 
     }
 
     public void addLocationToMap(Location nextLocation)
     {
-        LatLng l2 = new LatLng(nextLocation.getLatitude(), nextLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(l2));
-        if(mLastLocation != null)
+        if(mMap != null)
         {
-            LatLng l1 = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            mMap.addPolyline(new PolylineOptions().add(l1, l2).width(8).color(Color.rgb(251, 116, 69)));
+            synchronized (LOCK)
+            {
+                LatLng l2 = new LatLng(nextLocation.getLatitude(), nextLocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(l2));
+                if(mLastLocation != null)
+                {
+                    LatLng l1 = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    mMap.addPolyline(new PolylineOptions().add(l1, l2).width(8).color(Color.rgb(251, 116, 69)));
+                }
+            }
         }
-
         mLastLocation = nextLocation;
     }
 
@@ -85,43 +88,65 @@ public class MapHelper implements OnMapReadyCallback {
     {
         if(mMap != null)
         {
-            Waypoint lastWaypoint = null;
-            for(Waypoint waypoint:waypoints)
+            synchronized (LOCK)
             {
+                mMap.clear();
+                Waypoint lastWaypoint = null;
+                for(Waypoint waypoint:waypoints)
+                {
+                    if(lastWaypoint != null)
+                    {
+                        LatLng l1 = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
+                        LatLng l2 = new LatLng(waypoint.getLatitude(), waypoint.getLongitude());
+                        mMap.addPolyline(new PolylineOptions().add(l1, l2).width(8).color(Color.rgb(251, 116, 69)));
+                    }
+                    lastWaypoint = waypoint;
+                }
                 if(lastWaypoint != null)
                 {
-                    LatLng l1 = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
-                    LatLng l2 = new LatLng(waypoint.getLatitude(), waypoint.getLongitude());
-                    mMap.addPolyline(new PolylineOptions().add(l1, l2).width(8).color(Color.rgb(251, 116, 69)));
+                    LatLng l = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(l));
+                    if(mLastLocation != null)
+                    {
+                        LatLng l1 = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
+                        LatLng l2 = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    }
                 }
-                lastWaypoint = waypoint;
             }
-            if(lastWaypoint != null)
-            {
-                LatLng l = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(l));
-            }
+
 
         }
 
     }
 
-    private void showCurrentLocation() throws SecurityException
+    public void clearMap()
     {
-
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location == null)
-                    return;
-                LatLng l = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(l));
+        if(mMap != null)
+        {
+            synchronized (LOCK)
+            {
+                mMap.clear();
 
             }
-        });
-        mMap.setMyLocationEnabled(true);
-
+        }
     }
 
+    private void showCurrentLocation() throws SecurityException
+    {
+        if(mMap != null)
+        {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if(location == null)
+                        return;
+                    LatLng l = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(l));
 
+                }
+            });
+        }
+
+
+    }
 }

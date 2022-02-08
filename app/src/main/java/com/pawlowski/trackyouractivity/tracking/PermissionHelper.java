@@ -50,9 +50,14 @@ public class PermissionHelper {
 
     public boolean isBackgroundTrackingPermissionGranted()
     {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ActivityCompat.checkSelfPermission(mActivity.getApplicationContext(),
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                != PackageManager.PERMISSION_GRANTED;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        {
+            return ActivityCompat.checkSelfPermission(mActivity.getApplicationContext(),
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED;
+        }
+        else
+            return true;
     }
 
     public void requestPermission(OnPermissionReadyListener onPermissionReadyListener)

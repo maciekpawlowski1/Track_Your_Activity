@@ -26,9 +26,12 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
+import com.pawlowski.trackyouractivity.gpx.GPXUpdater;
 import com.pawlowski.trackyouractivity.gpx.GPXUseCase;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
@@ -39,7 +42,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -51,11 +56,13 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
     LocationCallback mLocationCallback;
     FusedLocationProviderClient mFusedLocationClient;
-    Location mLastLocation;
+    DBHandler mDbHandler;
+    Location mLastLocation = null;
     float mAllDistance = 0;
     double mCurrentSpeed = 0;
     long mStartingSeconds = 0;
     long mCurrentSeconds = 0;
+    int mTrainingId;
 
     ArrayList<Waypoint> mWaypoints = new ArrayList<>();
 
@@ -66,6 +73,8 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
     TextToSpeech mTextToSpeech;
 
+    GPXUpdater mGPXUpdater = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -75,15 +84,23 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSpeedChecker = new SpeedChecker();
         mSpeedChecker.registerListener(this);
         mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(Const.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
-
-
+        mDbHandler = new DBHandler(getApplicationContext());
+        mTrainingId = mDbHandler.getCurrentTrainingId();
+        mGPXUpdater = new GPXUpdater(getFilesDir(), mTrainingId);
         buildNotification();
         initLocationCallback();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         startTrackingLocation();
 
-
-
+        new GPXUseCase(getFilesDir()).readFromGpxTask(mTrainingId+".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+            @Override
+            public void onSuccess(List<Waypoint> waypoints) {
+                waypoints.addAll(mWaypoints);
+                mWaypoints.clear();
+                mWaypoints.addAll(waypoints);
+                mGPXUpdater.startUpdating(waypoints);
+            }
+        });
 
 
 
@@ -226,6 +243,10 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
                 Waypoint waypoint = new Waypoint(null, (float)location.getLatitude(), (float)location.getLongitude());
                 waypoint.setTime(new Date(location.getTime()));
                 mWaypoints.add(waypoint);
+                if(mGPXUpdater != null)
+                {
+                    mGPXUpdater.addWaypoint(waypoint);
+                }
             }
 
 
@@ -285,7 +306,11 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSharedPreferencesHelper.setDistance(mAllDistance);
         mSharedPreferencesHelper.setTrackingActive(false);
         EventBus.getDefault().post(new TrackingStopUpdate(false));
-        new GPXUseCase(getFilesDir()).writeToGpx(mWaypoints, "trasa.gpx");
+        new GPXUseCase(getFilesDir()).writeToGpx(mWaypoints, mTrainingId + ".gpx");
+        if(mGPXUpdater != null)
+        {
+            mGPXUpdater.stopUpdating();
+        }
     }
 
     private LocationRequest getLocationRequest() {
