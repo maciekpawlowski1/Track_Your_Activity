@@ -4,11 +4,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.models.TrainingModel;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,7 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
     private final TextView mCaloriesText;
     private final TextView mSpeedText;
     private final ImageButton mBackButton;
+    private final ImageView mTrainingTypeImage;
     private ControllerButtonsState mCurrentState;
 
     public TrackingViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent, AppCompatActivity activity) {
@@ -34,6 +38,7 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
         mCaloriesText = findViewById(R.id.kcal_text_kcal_panel);
         mSpeedText = findViewById(R.id.speed_text_speed_panel);
         mBackButton = findViewById(R.id.back_button_back_panel);
+        mTrainingTypeImage = findViewById(R.id.type_of_activity_image_type_panel);
 
         mStartPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +80,11 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
             mStopButton.setVisibility(View.VISIBLE);
             mStartPauseButton.setImageResource(R.drawable.play_icon);
         }
+    }
+
+    public void setTrainingTypeIcon(int trainingType)
+    {
+        mTrainingTypeImage.setImageResource(Const.getImageResourceOfTrainingType(trainingType, true));
     }
 
     public void setTimeText(String timeText)

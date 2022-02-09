@@ -7,16 +7,19 @@ public class TrainingModel {
     private int kcal;
     private boolean isFinished;
     private long date;
+    private int trainingType;
 
-    public TrainingModel(long date, double distance, long time, int kcal, boolean isFinished) {
+    public TrainingModel(long date, double distance, long time, int kcal, boolean isFinished, int trainingType) {
         this.date = date;
         this.distance = distance;
         this.time = time;
         this.kcal = kcal;
         this.isFinished = isFinished;
+        this.trainingType = trainingType;
     }
 
-    public TrainingModel(double distance, long time, int kcal, boolean isFinished) {
+    public TrainingModel(double distance, long time, int kcal, boolean isFinished, int trainingType) {
+        this.trainingType = trainingType;
         this.date = -1;
         this.distance = distance;
         this.time = time;
@@ -70,5 +73,21 @@ public class TrainingModel {
 
     public void setDate(long date) {
         this.date = date;
+    }
+
+    public int getTrainingType() {
+        return trainingType;
+    }
+
+    public void setTrainingType(int trainingType) {
+        this.trainingType = trainingType;
+    }
+
+    public enum TrainingType
+    {
+        RUNNING,
+        CYCLING,
+        ROLLER_SKATING,
+        NORDIC_WALKING
     }
 }

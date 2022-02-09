@@ -44,6 +44,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     private double mDistance;
     private long mTime;
     private int mKcal;
+    private int mTrainingType;
 
 
 
@@ -57,6 +58,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mDbHandler = new DBHandler(getApplicationContext());
 
+        mTrainingType = getIntent().getExtras().getInt("training_type");
 
         List<TrainingModel> tr = mDbHandler.getLast3Trainings();
         if(tr.size() > 0)
@@ -73,6 +75,10 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
 
 
         mTrainingId = mDbHandler.getCurrentTrainingId();
+        if(mTrainingType == -1)
+            mTrainingType = mDbHandler.getTypeOfCurrentTraining();
+
+        mTrackingViewMvc.setTrainingTypeIcon(mTrainingType);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mPermissionHelper = new PermissionHelper(mFusedLocationClient, this);
         mMapHelper = new MapHelper(mFusedLocationClient, mPermissionHelper, mTrainingId);
@@ -135,7 +141,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
             mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(distance));
             mTrackingViewMvc.setSpeedText(0);
             mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
-            mTime = seconds;
+            mTime = seconds/1000;
             mDistance = distance;
             if(!isServiceRunning())
             {
@@ -149,7 +155,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PAUSED);
                 float distance = mSharedPreferencesHelper.getCurrentDistance();
                 long seconds = mSharedPreferencesHelper.getCurrentTime();
-                mTime = seconds;
+                mTime = seconds/1000;
                 mDistance = distance;
                 mTrackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(seconds/1000));
                 mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(distance));
@@ -253,7 +259,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
                 break;
             case STOPPED:
-                mDbHandler.insertTraining(new TrainingModel(System.currentTimeMillis(), 0, 0, 0, false));
+                mDbHandler.insertTraining(new TrainingModel(System.currentTimeMillis(), 0, 0, 0, false, mTrainingType));
                 mTrainingId = mDbHandler.getCurrentTrainingId();
                 mMapHelper.clearMap();
                 startService();
@@ -272,10 +278,9 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     public void onStopClick() {
         //TODO: Save kcal also
         mKcal = 0;
-        TrainingModel training = new TrainingModel(mDistance, mTime, mKcal, true);
+        TrainingModel training = new TrainingModel(mDistance, mTime, mKcal, true, mTrainingType);
         training.setId(mTrainingId);
         mDbHandler.updateTraining(training);
-        Log.d("Zapisywanie", "Czas: " + mTime + " Id: " + mTrainingId);
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mSharedPreferencesHelper.resetCurrentTraining();
     }

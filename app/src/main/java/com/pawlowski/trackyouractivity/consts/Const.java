@@ -1,5 +1,10 @@
 package com.pawlowski.trackyouractivity.consts;
 
+import android.util.Log;
+
+import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.models.TrainingModel;
+
 public class Const {
     public static final int REQUEST_LOCATION_PERMISSION = 631;
     public static final int REQUEST_LOCATION_PERMISSION2 = 632;
@@ -37,6 +42,58 @@ public class Const {
         distance = Math.floor(distance);
         distance/= 10.0;
         return distance;
+    }
+
+    public static String cutDouble(double value)
+    {
+        value*= 10;
+        value = Math.floor(value);
+        value/= 10.0;
+        return value+"";
+    }
+
+    public static int getImageResourceOfTrainingType(int trainingType, boolean isWhite)
+    {
+        if(isWhite)
+        {
+            if(trainingType == TrainingModel.TrainingType.RUNNING.ordinal())
+            {
+                return R.drawable.run_icon_white;
+            }
+            else if(trainingType == TrainingModel.TrainingType.CYCLING.ordinal())
+            {
+                return R.drawable.bike_icon_white;
+            }
+            else if(trainingType == TrainingModel.TrainingType.ROLLER_SKATING.ordinal())
+            {
+                return R.drawable.roller_skating_icon_white;
+            }
+            else if(trainingType == TrainingModel.TrainingType.NORDIC_WALKING.ordinal())
+            {
+                return R.drawable.nordic_walking_icon_white;
+            }
+        }
+        else
+        {
+            if(trainingType == TrainingModel.TrainingType.RUNNING.ordinal())
+            {
+                return R.drawable.run_icon2;
+            }
+            else if(trainingType == TrainingModel.TrainingType.CYCLING.ordinal())
+            {
+                return R.drawable.bike_icon_dark;
+            }
+            else if(trainingType == TrainingModel.TrainingType.ROLLER_SKATING.ordinal())
+            {
+                return R.drawable.roller_skating_icon_dark;
+            }
+            else if(trainingType == TrainingModel.TrainingType.NORDIC_WALKING.ordinal())
+            {
+                return R.drawable.nordic_walking_icon_dark;
+            }
+        }
+
+        return -1;
     }
 
 }

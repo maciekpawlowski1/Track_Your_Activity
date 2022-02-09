@@ -329,6 +329,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     public void onTimeUpdate(long currentSeconds) {
         mCurrentSeconds = currentSeconds;
         EventBus.getDefault().post(new TimeUpdateModel(currentSeconds));
+        mSharedPreferencesHelper.setCurrentTimeInBackground(currentSeconds);
     }
 
     @Override

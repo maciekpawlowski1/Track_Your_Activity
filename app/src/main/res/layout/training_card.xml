@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,7 +10,7 @@
         android:layout_height="100dp">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/open_button_training_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
@@ -20,7 +21,7 @@
             app:srcCompat="@drawable/arrow_right_icon" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/training_type_image_training_card"
             android:layout_width="50dp"
             android:layout_height="0dp"
             android:layout_marginBottom="1dp"
@@ -31,53 +32,64 @@
             app:srcCompat="@drawable/run_icon_dark" />
 
         <TextView
-            android:id="@+id/textView16"
+            android:id="@+id/distance_training_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="15,6 km"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/textView15"
-            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+            app:layout_constraintStart_toStartOf="@+id/date_training_card"
+            app:layout_constraintTop_toBottomOf="@+id/date_training_card" />
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/kcal_training_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
             android:text="1211 kcal"
-            app:layout_constraintStart_toStartOf="@+id/textView16"
-            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+            app:layout_constraintStart_toStartOf="@+id/distance_training_card"
+            app:layout_constraintTop_toBottomOf="@+id/distance_training_card" />
 
         <TextView
-            android:id="@+id/textView18"
+            android:id="@+id/speed_training_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:fontFamily="@font/montserrat"
             android:text="12,5 km/h"
-            app:layout_constraintStart_toEndOf="@+id/textView17"
-            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+            app:layout_constraintStart_toEndOf="@+id/time_training_card"
+            app:layout_constraintTop_toBottomOf="@+id/distance_training_card" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/date_training_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/montserrat"
             android:text="15 May"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/training_type_image_training_card"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/time_training_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/montserrat"
+            android:text="01:15:23"
+            app:layout_constraintStart_toEndOf="@+id/kcal_training_card"
+            app:layout_constraintTop_toTopOf="@+id/kcal_training_card" />
 
         <View
             android:id="@+id/divider2"
             android:layout_width="1dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/training_type_image_training_card"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
