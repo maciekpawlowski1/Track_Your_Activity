@@ -109,7 +109,7 @@ public class DBHandler extends SQLiteOpenHelper {
     {
         List<TrainingModel> trainings = new ArrayList<>();
 
-        String selectKeys = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date";
+        String selectKeys = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date DESC";
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(selectKeys, null);

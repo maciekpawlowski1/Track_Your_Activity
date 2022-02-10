@@ -7,6 +7,7 @@ import android.widget.Toolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.pawlowski.trackyouractivity.base.BaseViewMvc;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +20,6 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainViewMvc extends BaseViewMvc {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
-    Toolbar toolbar;
     NavigationView navigationView;
 
     public MainViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent, AppCompatActivity activity) {
@@ -40,6 +40,12 @@ public class MainViewMvc extends BaseViewMvc {
 
 
     }
+
+    public void checkItem(@IdRes int itemId)
+    {
+        navigationView.setCheckedItem(itemId);
+    }
+
 
     public boolean showNavigation()
     {

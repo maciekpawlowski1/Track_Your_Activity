@@ -25,7 +25,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TrainingModel currentTraining = mTrainings.get(position);
-        Log.d("current", currentTraining.getTrainingType()+"");
         holder.viewMvc.bindTraining(currentTraining);
     }
 

@@ -52,7 +52,6 @@ public class TrainingHistoryItemViewMvc extends BaseObservableViewMvc<TrainingHi
         String speedS = Const.cutDouble(speed) + " km/h";
         speedText.setText(speedS);
         int imageResource = Const.getImageResourceOfTrainingType(training.getTrainingType(), false);
-        Log.d("setting_resource", training.getTrainingType()+" " + imageResource);
         typeOfTrainingImage.setImageResource(imageResource);
 
     }

@@ -29,6 +29,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Overview"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/menu_open_button_fragment_overview"
+                    app:layout_constraintStart_toEndOf="@+id/menu_open_button_fragment_overview"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageButton
                     android:id="@+id/menu_open_button_fragment_overview"
                     android:layout_width="wrap_content"
