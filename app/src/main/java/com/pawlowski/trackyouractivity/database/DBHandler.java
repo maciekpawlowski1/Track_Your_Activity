@@ -100,6 +100,22 @@ public class DBHandler extends SQLiteOpenHelper {
         return -1;
     }
 
+    public TrainingModel getTraining(int id)
+    {
+
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type FROM Trainings T WHERE T.id LIKE " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        TrainingModel training = null;
+        Cursor cursor = db.rawQuery(selectSql, null);
+        if (cursor.moveToFirst()) {
+            training = new TrainingModel(cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
+            training.setId(cursor.getInt(0));
+        }
+        cursor.close();
+        return training;
+    }
+
     public List<TrainingModel> getLast3Trainings()
     {
         List<TrainingModel> trainings = new ArrayList<>();
@@ -111,6 +127,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 TrainingModel training = new TrainingModel(cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
+                training.setId(cursor.getInt(0));
                 trainings.add(training);
                 Log.d("Getting", training.getTrainingType()+"");
             }while(cursor.moveToNext());
@@ -130,6 +147,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 TrainingModel training = new TrainingModel(cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
+                training.setId(cursor.getInt(0));
                 trainings.add(training);
             }while(cursor.moveToNext());
         }

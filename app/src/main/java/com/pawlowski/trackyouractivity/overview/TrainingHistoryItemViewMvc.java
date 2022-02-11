@@ -36,6 +36,8 @@ public class TrainingHistoryItemViewMvc extends BaseObservableViewMvc<TrainingHi
         timeText = findViewById(R.id.time_training_card);
         openButton = findViewById(R.id.open_button_training_card);
         typeOfTrainingImage = findViewById(R.id.training_type_image_training_card);
+
+        openButton.setOnClickListener(v -> notifyListeners(null));
     }
 
     public void bindTraining(TrainingModel training)
@@ -54,6 +56,11 @@ public class TrainingHistoryItemViewMvc extends BaseObservableViewMvc<TrainingHi
         int imageResource = Const.getImageResourceOfTrainingType(training.getTrainingType(), false);
         typeOfTrainingImage.setImageResource(imageResource);
 
+    }
+
+    public void clearListeners()
+    {
+        listeners.clear();
     }
 
     @Override

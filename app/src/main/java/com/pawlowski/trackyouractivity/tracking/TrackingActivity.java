@@ -71,7 +71,6 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
             }
 
         }
-        Log.d("Last 3", tr.size() + " " + (tr.size()>0?tr.get(0).getTime():""));
 
 
         mTrainingId = mDbHandler.getCurrentTrainingId();

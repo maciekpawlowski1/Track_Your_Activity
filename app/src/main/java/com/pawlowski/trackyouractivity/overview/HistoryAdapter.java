@@ -1,10 +1,13 @@
 package com.pawlowski.trackyouractivity.overview;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.models.TrainingModel;
+import com.pawlowski.trackyouractivity.training_details.TrainingDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     List<TrainingModel> mTrainings = new ArrayList<>();
+    Context mContext;
+    public HistoryAdapter(Context appContext) {
+        mContext = appContext;
+    }
 
     @NonNull
     @Override
@@ -26,6 +33,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TrainingModel currentTraining = mTrainings.get(position);
         holder.viewMvc.bindTraining(currentTraining);
+        holder.viewMvc.clearListeners();
+        holder.viewMvc.registerListener(new TrainingHistoryItemViewMvc.TrainingCardButtonsClickListener() {
+            @Override
+            public void onCardClick() {
+                Intent i = new Intent(mContext, TrainingDetailsActivity.class);
+                i.putExtra("training_id", currentTraining.getId());
+                mContext.startActivity(i);
+            }
+        });
     }
 
     @Override

@@ -127,7 +127,7 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
 
         mViewMvc.registerListener(this);
 
-        mHistoryAdapter = new HistoryAdapter();
+        mHistoryAdapter = new HistoryAdapter(getContext());
         mViewMvc.setRecyclerAdapter(mHistoryAdapter);
         mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings()); //TODO: Move to background thread
 

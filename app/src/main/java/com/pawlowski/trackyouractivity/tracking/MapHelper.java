@@ -1,5 +1,6 @@
 package com.pawlowski.trackyouractivity.tracking;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
@@ -26,11 +27,23 @@ public class MapHelper implements OnMapReadyCallback {
     private final FusedLocationProviderClient mFusedLocationClient;
     private final PermissionHelper mPermissionHelper;
     private final int mTrainingId;
+    private final Context mAppContext;
+    private final boolean mCurrentlyTracking;
 
-    public MapHelper(FusedLocationProviderClient mFusedLocationClient, PermissionHelper permissionHelper, int trainingId) {
+    public MapHelper(@NonNull FusedLocationProviderClient mFusedLocationClient, @NonNull PermissionHelper permissionHelper, int trainingId) {
         this.mFusedLocationClient = mFusedLocationClient;
         mPermissionHelper = permissionHelper;
         mTrainingId = trainingId;
+        mCurrentlyTracking = true;
+        mAppContext = mFusedLocationClient.getApplicationContext();
+    }
+
+    public MapHelper(int trainingId, Context appContext) {
+        mTrainingId = trainingId;
+        mAppContext = appContext;
+        mCurrentlyTracking = false;
+        mFusedLocationClient = null;
+        mPermissionHelper = null;
     }
 
     @Override
@@ -41,31 +54,37 @@ public class MapHelper implements OnMapReadyCallback {
         mMap.setMaxZoomPreference(18);
         mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
 
-        if (mTrainingId == -1 && mPermissionHelper.isTrackingPermissionGranted()) {
-            try {
-                showCurrentLocation();
-                mMap.setMyLocationEnabled(true);
-            } catch (SecurityException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else if (mPermissionHelper.isTrackingPermissionGranted())
+        if(mCurrentlyTracking && mPermissionHelper != null)
         {
-            try {
-                mMap.setMyLocationEnabled(true);
-            } catch (SecurityException e)
+            if (mTrainingId == -1 && mPermissionHelper.isTrackingPermissionGranted()) {
+                try {
+                    showCurrentLocation();
+                    mMap.setMyLocationEnabled(true);
+                } catch (SecurityException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            else if (mPermissionHelper.isTrackingPermissionGranted())
             {
-                e.printStackTrace();
+                try {
+                    mMap.setMyLocationEnabled(true);
+                } catch (SecurityException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
+
 
 
         if(mTrainingId != -1)
         {
-            new GPXUseCase(mFusedLocationClient.getApplicationContext().getFilesDir()).readFromGpxTask(mTrainingId + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+            Log.d("reading", "reading " + mTrainingId);
+            new GPXUseCase(mAppContext.getFilesDir()).readFromGpxTask(mTrainingId + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
                 @Override
                 public void onSuccess(List<Waypoint> waypoints) {
+                    Log.d("reading", "success: " + waypoints.size());
                     addManyWaypointsToMap(waypoints);
 
                 }

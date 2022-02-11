@@ -44,7 +44,7 @@ public class HistoryFragment extends Fragment implements HistoryViewMvc.HistoryB
         mViewMvc = new HistoryViewMvc(inflater, container);
 
         mViewMvc.registerListener(this);
-        mHistoryAdapter = new HistoryAdapter();
+        mHistoryAdapter = new HistoryAdapter(getContext());
         mDbHandler = new DBHandler(getContext());
         mViewMvc.setRecyclerAdapter(mHistoryAdapter);
         mHistoryAdapter.setTrainings(mDbHandler.getAllTrainings());
