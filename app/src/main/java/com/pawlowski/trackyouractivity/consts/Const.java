@@ -5,6 +5,8 @@ import android.util.Log;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 
+import java.util.regex.Pattern;
+
 public class Const {
     public static final int REQUEST_LOCATION_PERMISSION = 631;
     public static final int REQUEST_LOCATION_PERMISSION2 = 632;
@@ -51,6 +53,20 @@ public class Const {
         value/= 10.0;
         return value+"";
     }
+
+    public static boolean isNameCorrect(String name)
+    {
+        return name.length() > 2;
+    }
+
+    public static boolean isDateCorrect(String date)
+    {
+        final String DATE_PATTERN = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$";//"/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/";
+        Pattern pattern = Pattern.compile(DATE_PATTERN);
+        return pattern.matcher(date).matches();
+    }
+
+
 
     public static int getImageResourceOfTrainingType(int trainingType, boolean isWhite)
     {

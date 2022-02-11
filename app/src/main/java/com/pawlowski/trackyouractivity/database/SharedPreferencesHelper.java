@@ -27,6 +27,18 @@ public class SharedPreferencesHelper {
         editor.commit();
     }
 
+    public int getWeeklyGoal()
+    {
+        return mSharedPreferences.getInt("weekly_goal", 0);
+    }
+
+    public void setWeeklyGoal(int goal)
+    {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt("weekly_goal", goal);
+        editor.commit();
+    }
+
     public void setDistance(float currentDistance)
     {
         SharedPreferences.Editor editor = mSharedPreferences.edit();

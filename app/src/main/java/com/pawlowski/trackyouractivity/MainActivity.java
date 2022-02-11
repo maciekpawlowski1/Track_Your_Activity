@@ -12,6 +12,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.pawlowski.trackyouractivity.history.HistoryFragment;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 import com.pawlowski.trackyouractivity.overview.OverviewFragment;
+import com.pawlowski.trackyouractivity.settings.ProfileSettingsFragment;
 import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
                 else if (item.getItemId() == R.id.history_nav_menu)
                 {
                     viewMvc.loadFragment(new HistoryFragment(viewMvc), getSupportFragmentManager(), false);
+                    viewMvc.checkItem(R.id.history_nav_menu);
+                }
+                else if(item.getItemId() == R.id.settings_nav_menu)
+                {
+                    viewMvc.loadFragment(new ProfileSettingsFragment(), getSupportFragmentManager(), false);
                     viewMvc.checkItem(R.id.history_nav_menu);
                 }
 

@@ -3,10 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/account_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/bike_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/bike_icon_dark.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/button_background.xml" value="0.2962962962962963" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/calendar_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/distance_icon.xml" value="0.34" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/edit_text_background.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/green_dot.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/kcal_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/login_buttons_background.xml" value="0.34" />
@@ -21,7 +24,10 @@
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/run_icon.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/run_icon2.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/run_icon_dark.xml" value="0.34" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/seek_bar.xml" value="0.34" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/seek_bar_thumb.xml" value="0.34" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/drawable/speed_icon.xml" value="0.34" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/account_inputs_panel.xml" value="0.32155797101449274" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_main.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_sign_in.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/activity_sign_in_with_password.xml" value="0.3333333333333333" />
@@ -33,6 +39,7 @@
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/fragment_history.xml" value="0.32155797101449274" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/fragment_maps.xml" value="0.4466666666666667" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/fragment_overview.xml" value="0.32065217391304346" />
+        <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/fragment_profile_settings.xml" value="0.32155797101449274" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/history_trainings.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/include_main_activity.xml" value="0.32065217391304346" />
         <entry key="..\:/Users/macie/AndroidStudioProjects/TrackYourActivity/app/src/main/res/layout/kcal_panel.xml" value="0.32065217391304346" />

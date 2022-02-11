@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.pawlowski.trackyouractivity.R;
@@ -29,6 +30,10 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
     private final ImageButton mCyclingStartButton;
     private final ImageButton mRollerSkatingStartButton;
     private final ImageButton mNordicWalkingStartButton;
+    private final TextView mWeeklyGoalInfoText;
+    private final TextView mWeeklyGoalAlreadyDoneText;
+    private final TextView mWeeklyGoalLeftText;
+    private final ProgressBar mWeeklyGoalProgressBar;
     //private final ImageButton moreStartButton;
 
 
@@ -47,6 +52,10 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
         mRollerSkatingStartButton = findViewById(R.id.roller_skating_choose_panel);
         mNordicWalkingStartButton = findViewById(R.id.nordic_walking_choose_panel);
         mCurrentTrainingTypeImage = findViewById(R.id.current_training_type_image_current_training);
+        mWeeklyGoalInfoText = findViewById(R.id.weekly_goal_info_text_weekly_goal);
+        mWeeklyGoalAlreadyDoneText = findViewById(R.id.how_much_already_done_weekly_goal);
+        mWeeklyGoalLeftText = findViewById(R.id.how_much_left_weekly_goal);
+        mWeeklyGoalProgressBar = findViewById(R.id.progress_bar_weekly_goal);
 
         mHistoryRecycler.setLayoutManager(new LinearLayoutManager(container.getContext()));
         mMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +122,21 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
     public void setCurrentTrainingTypeImage(int trainingType)
     {
         mCurrentTrainingTypeImage.setImageResource(Const.getImageResourceOfTrainingType(trainingType, false));
+    }
+
+    public void bindWeeklyGoal(int weeklyGoal, int alreadyDone, int left)
+    {
+        mWeeklyGoalInfoText.setText((weeklyGoal+" km"));
+        mWeeklyGoalAlreadyDoneText.setText((alreadyDone+" km"));
+        mWeeklyGoalLeftText.setText((left+" km left"));
+
+        if(left == 0)
+            mWeeklyGoalProgressBar.setProgress(100);
+        else
+        {
+            mWeeklyGoalProgressBar.setProgress((int)(1.*alreadyDone/weeklyGoal*100));
+        }
+
     }
 
     @Override

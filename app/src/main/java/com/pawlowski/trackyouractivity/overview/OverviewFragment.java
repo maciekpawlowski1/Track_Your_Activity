@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -58,6 +62,16 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
     @Override
     public void onStart() {
         super.onStart();
+
+        int alreadyDone = mDbHandler.getWeeklyKm(getWeekStartDate(Calendar.getInstance().getTime()).getTime(),
+                getWeekEndDate(Calendar.getInstance().getTime()).getTime());
+
+        //Log.d("monday", getWeekStartDate(Calendar.getInstance().getTime()).toString());
+        //Log.d("sunday", getWeekEndDate(Calendar.getInstance().getTime()).toLocaleString());
+
+        int weeklyGoal = mSharedPreferences.getWeeklyGoal();
+        mViewMvc.bindWeeklyGoal(weeklyGoal, alreadyDone, Math.max(weeklyGoal - alreadyDone, 0));
+
         if(mSharedPreferences.getCurrentTime() != 0)
         {
             mViewMvc.setCurrentTrainingTime(Const.convertSecondsToTimeTest(mSharedPreferences.getCurrentTime()/1000));
@@ -70,6 +84,32 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
         {
             mViewMvc.hideCurrentActivityAndShowStartActivityPanel();
         }
+    }
+
+
+
+    private static Date getWeekStartDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_WEEK, 2);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+
+
+        return cal.getTime();
+    }
+
+
+    private static Date getWeekEndDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getWeekStartDate(date));
+        cal.add(Calendar.DATE, 6);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+
+        return cal.getTime();
     }
 
     @Override

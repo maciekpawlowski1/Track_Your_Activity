@@ -22,4 +22,12 @@
         <item name="fontFamily">@font/montserrat</item>
         <item name="hintTextColor">@color/white</item>
     </style>
+
+    <style name="AccountSettingsTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/orange</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="fontFamily">@font/montserrat</item>
+        <item name="hintTextColor">@color/black</item>
+    </style>
 </resources>

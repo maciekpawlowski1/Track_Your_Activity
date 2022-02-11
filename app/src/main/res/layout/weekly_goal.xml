@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progress_bar_weekly_goal"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/weekly_goal_info_text_weekly_goal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -37,23 +37,23 @@
             app:layout_constraintTop_toTopOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/how_much_already_done_weekly_goal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
             android:text="15 km"
-            app:layout_constraintBottom_toTopOf="@+id/progressBar"
-            app:layout_constraintStart_toStartOf="@+id/progressBar" />
+            app:layout_constraintBottom_toTopOf="@+id/progress_bar_weekly_goal"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar_weekly_goal" />
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/how_much_left_weekly_goal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
             android:text="45 km left"
             android:textColor="@color/gray"
-            app:layout_constraintBottom_toTopOf="@+id/progressBar"
-            app:layout_constraintEnd_toEndOf="@+id/progressBar" />
+            app:layout_constraintBottom_toTopOf="@+id/progress_bar_weekly_goal"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar_weekly_goal" />
 
         <TextView
             android:id="@+id/textView5"
@@ -63,7 +63,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="Your weekly goal :"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/progressBar"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar_weekly_goal"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

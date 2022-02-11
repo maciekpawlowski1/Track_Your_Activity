@@ -52,14 +52,28 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getCurrentTrainingId()
+    public int getWeeklyKm(long mondayStartDate, long sundayEndDate)
     {
-        List<LatLng>locations = new ArrayList<>();
-
-        String selectKeys = "SELECT T.id FROM Trainings T WHERE T.is_finished LIKE 'false' LIMIT 1";
+        String selectSql = "SELECT SUM(T.distance) FROM Trainings T WHERE T.date >= " + mondayStartDate + " AND T.date <= " + sundayEndDate;
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery(selectKeys, null);
+        Cursor cursor = db.rawQuery(selectSql, null);
+        if (cursor.moveToFirst()) {
+            double sum = cursor.getDouble(0);
+            cursor.close();
+            return (int)(sum/1000);
+        }
+        cursor.close();
+        return 0;
+    }
+
+    public int getCurrentTrainingId()
+    {
+
+        String selectSql = "SELECT T.id FROM Trainings T WHERE T.is_finished LIKE 'false' LIMIT 1";
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectSql, null);
         if (cursor.moveToFirst()) {
             int id = cursor.getInt(0);
             cursor.close();
@@ -73,10 +87,10 @@ public class DBHandler extends SQLiteOpenHelper {
     {
         List<LatLng>locations = new ArrayList<>();
 
-        String selectKeys = "SELECT T.training_type FROM Trainings T WHERE T.is_finished LIKE 'false' LIMIT 1";
+        String selectSql = "SELECT T.training_type FROM Trainings T WHERE T.is_finished LIKE 'false' LIMIT 1";
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery(selectKeys, null);
+        Cursor cursor = db.rawQuery(selectSql, null);
         if (cursor.moveToFirst()) {
             int type = cursor.getInt(0);
             cursor.close();
@@ -90,10 +104,10 @@ public class DBHandler extends SQLiteOpenHelper {
     {
         List<TrainingModel> trainings = new ArrayList<>();
 
-        String selectKeys = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date DESC LIMIT 3";
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date DESC LIMIT 3";
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery(selectKeys, null);
+        Cursor cursor = db.rawQuery(selectSql, null);
         if (cursor.moveToFirst()) {
             do {
                 TrainingModel training = new TrainingModel(cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
@@ -109,10 +123,10 @@ public class DBHandler extends SQLiteOpenHelper {
     {
         List<TrainingModel> trainings = new ArrayList<>();
 
-        String selectKeys = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date DESC";
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date DESC";
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery(selectKeys, null);
+        Cursor cursor = db.rawQuery(selectSql, null);
         if (cursor.moveToFirst()) {
             do {
                 TrainingModel training = new TrainingModel(cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
