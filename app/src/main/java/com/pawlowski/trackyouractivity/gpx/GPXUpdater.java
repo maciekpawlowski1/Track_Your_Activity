@@ -1,6 +1,6 @@
 package com.pawlowski.trackyouractivity.gpx;
 
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.urizev.gpx.beans.Waypoint;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class GPXUpdater {
             }
 
             try {
-                Thread.sleep(Const.GPX_UPDATE_TIME_DELTA_IN_SECONDS * 1000L);
+                Thread.sleep(ConstAndStaticMethods.GPX_UPDATE_TIME_DELTA_IN_SECONDS * 1000L);
             } catch (InterruptedException e) {
                 //e.printStackTrace();
                 return;

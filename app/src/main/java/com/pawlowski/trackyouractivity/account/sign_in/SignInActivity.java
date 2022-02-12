@@ -10,12 +10,15 @@ import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
 import com.pawlowski.trackyouractivity.MainActivity;
+import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in_with_password.SignInWithPasswordActivity;
 import com.pawlowski.trackyouractivity.account.sign_up.SignUpActivity;
+import com.pawlowski.trackyouractivity.base.BaseActivity;
 
-public class SignInActivity extends AppCompatActivity implements SignInViewMvc.SignInButtonsClickListener {
+public class SignInActivity extends BaseActivity implements SignInViewMvc.SignInButtonsClickListener {
 
     SignInViewMvc mViewMvc;
+    FirebaseAuthHelper mFirebaseAuthHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,26 +26,19 @@ public class SignInActivity extends AppCompatActivity implements SignInViewMvc.S
         mViewMvc = new SignInViewMvc(getLayoutInflater(), null);
         mViewMvc.registerListener(this);
         setContentView(mViewMvc.getRootView());
+        mFirebaseAuthHelper = new FirebaseAuthHelper();
 
         hideNotificationBar();
 
-        //startActivity(new Intent(this, MainActivity.class));
+        if(mFirebaseAuthHelper.isSignedIn())    //TODO: Create splash screen and move it there
+        {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
     }
 
-    private void hideNotificationBar()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            final WindowInsetsController insetsController = getWindow().getInsetsController();
-            if (insetsController != null) {
-                insetsController.hide(WindowInsets.Type.statusBars());
-            }
-        } else {
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN
-            );
-        }
-    }
+
 
     @Override
     public void onRegisterButtonClick() {

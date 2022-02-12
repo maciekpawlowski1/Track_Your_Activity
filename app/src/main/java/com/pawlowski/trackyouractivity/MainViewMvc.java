@@ -1,8 +1,8 @@
 package com.pawlowski.trackyouractivity;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 import com.pawlowski.trackyouractivity.base.BaseViewMvc;
@@ -18,20 +18,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class MainViewMvc extends BaseViewMvc {
-    DrawerLayout drawerLayout;
-    ActionBarDrawerToggle toggle;
-    NavigationView navigationView;
+    private final DrawerLayout mDrawerLayout;
+    private final ActionBarDrawerToggle mToggle;
+    private final NavigationView mNavigationView;
 
     public MainViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent, AppCompatActivity activity) {
 
         rootView = inflater.inflate(R.layout.activity_main, parent, false);
 
-        drawerLayout= findViewById(R.id.drawer);
-        navigationView = findViewById(R.id.nav_view);
+        mDrawerLayout = findViewById(R.id.drawer);
+        mNavigationView = findViewById(R.id.nav_view);
 
 
-        toggle = new ActionBarDrawerToggle(activity, drawerLayout, R.string.Open, R.string.Close);
-        drawerLayout.addDrawerListener(toggle);
+        mToggle = new ActionBarDrawerToggle(activity, mDrawerLayout, R.string.Open, R.string.Close);
+        mDrawerLayout.addDrawerListener(mToggle);
 
         //View headerView = navigationView.getHeaderView(0);
         //helloText = headerView.findViewById(R.id.hello_text_nav_header);
@@ -41,17 +41,23 @@ public class MainViewMvc extends BaseViewMvc {
 
     }
 
+
+    public @Nullable MenuItem getCheckedItem()
+    {
+        return mNavigationView.getCheckedItem();
+    }
+
     public void checkItem(@IdRes int itemId)
     {
-        navigationView.setCheckedItem(itemId);
+        mNavigationView.setCheckedItem(itemId);
     }
 
 
     public boolean showNavigation()
     {
-        if(!drawerLayout.isDrawerOpen(GravityCompat.START))
+        if(!mDrawerLayout.isDrawerOpen(GravityCompat.START))
         {
-            drawerLayout.openDrawer(GravityCompat.START);
+            mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
         }
         else
@@ -62,9 +68,9 @@ public class MainViewMvc extends BaseViewMvc {
 
     public void hideNavigation()
     {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+        if(mDrawerLayout.isDrawerOpen(GravityCompat.START))
         {
-            drawerLayout.closeDrawer(GravityCompat.START);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         }
 
     }
@@ -73,7 +79,7 @@ public class MainViewMvc extends BaseViewMvc {
     {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_frame_layout_main, fragment).commit();
-        drawerLayout.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         if(addToStack)
         {
             fragmentTransaction.addToBackStack(null);
@@ -83,7 +89,7 @@ public class MainViewMvc extends BaseViewMvc {
 
     public void setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener listener)
     {
-        navigationView.setNavigationItemSelectedListener(listener);
+        mNavigationView.setNavigationItemSelectedListener(listener);
     }
 
 

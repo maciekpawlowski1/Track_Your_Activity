@@ -13,6 +13,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class SignUpViewMvc extends BaseObservableViewMvc<SignUpViewMvc.SignUpButtonsClickListener> {
@@ -21,20 +24,24 @@ public class SignUpViewMvc extends BaseObservableViewMvc<SignUpViewMvc.SignUpBut
     private final ImageButton mGoogleButton;
     private final ImageButton mFacebookButton;
     private final TextInputEditText mMailInput;
-    private final TextInputEditText mPasswordInput;
     private final TextInputLayout mMailInputLayout;
+    private final TextInputEditText mPasswordInput;
     private final TextInputLayout mPasswordInputLayout;
+    private final TextInputEditText mPasswordRepeatInput;
+    private final TextInputLayout mPasswordRepeatInputLayout;
 
     public SignUpViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent) {
         rootView = inflater.inflate(R.layout.activity_sign_up, parent, false);
         mSubmitButton = findViewById(R.id.submit_button_sign_up);
+        mBackButton = findViewById(R.id.back_button_back_panel);
         mGoogleButton = findViewById(R.id.google_login_button_sign_up);
         mFacebookButton = findViewById(R.id.facebook_login_button_sign_up);
         mMailInput = findViewById(R.id.mail_input_edit_text_sign_up);
-        mPasswordInput = findViewById(R.id.password_input_edit_text_sign_up);
         mMailInputLayout = findViewById(R.id.mail_input_layout_sign_up);
+        mPasswordInput = findViewById(R.id.password_input_edit_text_sign_up);
         mPasswordInputLayout = findViewById(R.id.password_input_layout_sign_up);
-        mBackButton = findViewById(R.id.back_button_back_panel);
+        mPasswordRepeatInput = findViewById(R.id.password_repeat_input_edit_text_sign_up);
+        mPasswordRepeatInputLayout = findViewById(R.id.password_repeat_input_layout_sign_up);
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,16 +104,53 @@ public class SignUpViewMvc extends BaseObservableViewMvc<SignUpViewMvc.SignUpBut
 
             }
         });
+
+        mPasswordRepeatInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mPasswordInputLayout.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
-    public void setMailError(String errorText)
+    public void setMailError(@Nullable String errorText)
     {
         mMailInputLayout.setError(errorText);
     }
 
-    public void setPasswordError(String errorText)
+    public void setPasswordError(@Nullable String errorText)
     {
         mPasswordInputLayout.setError(errorText);
+    }
+
+    public void setPasswordRepeatError(@Nullable String errorText)
+    {
+        mPasswordRepeatInputLayout.setError(errorText);
+    }
+
+    public @NonNull
+    String getMailInputValue()
+    {
+        return Objects.requireNonNull(mMailInput.getText()).toString();
+    }
+
+    public @NonNull String getPasswordInputValue()
+    {
+        return Objects.requireNonNull(mPasswordInput.getText()).toString();
+    }
+    public @NonNull String getPasswordRepeatInputValue()
+    {
+        return Objects.requireNonNull(mPasswordRepeatInput.getText()).toString();
     }
 
 

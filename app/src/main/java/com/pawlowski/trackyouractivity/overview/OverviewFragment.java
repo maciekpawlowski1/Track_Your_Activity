@@ -7,30 +7,29 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pawlowski.trackyouractivity.MainActivity;
 import com.pawlowski.trackyouractivity.MainViewMvc;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
+import com.pawlowski.trackyouractivity.history.HistoryFragment;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
 import com.pawlowski.trackyouractivity.models.TrackingStopUpdate;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
+import com.pawlowski.trackyouractivity.settings.ProfileSettingsFragment;
 import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 
 public class OverviewFragment extends Fragment implements OverviewViewMvc.OverviewButtonsListener {
@@ -55,7 +54,7 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDbHandler = new DBHandler(getContext());
-        mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(Const.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
+        mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
 
     }
 
@@ -63,19 +62,21 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
     public void onStart() {
         super.onStart();
 
+        mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings()); //TODO: Move to background thread
+
+
         int alreadyDone = mDbHandler.getWeeklyKm(getWeekStartDate(Calendar.getInstance().getTime()).getTime(),
                 getWeekEndDate(Calendar.getInstance().getTime()).getTime());
 
-        //Log.d("monday", getWeekStartDate(Calendar.getInstance().getTime()).toString());
-        //Log.d("sunday", getWeekEndDate(Calendar.getInstance().getTime()).toLocaleString());
+
 
         int weeklyGoal = mSharedPreferences.getWeeklyGoal();
         mViewMvc.bindWeeklyGoal(weeklyGoal, alreadyDone, Math.max(weeklyGoal - alreadyDone, 0));
 
         if(mSharedPreferences.getCurrentTime() != 0)
         {
-            mViewMvc.setCurrentTrainingTime(Const.convertSecondsToTimeTest(mSharedPreferences.getCurrentTime()/1000));
-            mViewMvc.setCurrentTrainingDistance(Const.distanceMetersToKilometers(mSharedPreferences.getCurrentDistance())+"");
+            mViewMvc.setCurrentTrainingTime(ConstAndStaticMethods.convertSecondsToTimeTest(mSharedPreferences.getCurrentTime()/1000));
+            mViewMvc.setCurrentTrainingDistance(ConstAndStaticMethods.distanceMetersToKilometers(mSharedPreferences.getCurrentDistance())+"");
             mViewMvc.setCurrentTrainingTypeImage(mDbHandler.getTypeOfCurrentTraining());
             EventBus.getDefault().register(this);
             mViewMvc.showCurrentActivityPanel();
@@ -129,7 +130,6 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
 
         mHistoryAdapter = new HistoryAdapter(getContext());
         mViewMvc.setRecyclerAdapter(mHistoryAdapter);
-        mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings()); //TODO: Move to background thread
 
         return mViewMvc.getRootView();
     }
@@ -153,16 +153,22 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
         startActivity(i);
     }
 
+    @Override
+    public void onMoreHistoryClick() {
+        mMainActivityViewMvc.loadFragment(new HistoryFragment(mMainActivityViewMvc), requireActivity().getSupportFragmentManager(), false);
+        mMainActivityViewMvc.checkItem(R.id.history_nav_menu);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDistanceUpdate(LocationUpdateModel locationUpdate)
     {
-        mViewMvc.setCurrentTrainingDistance(Const.distanceMetersToKilometers(locationUpdate.getAllDistance())+"");
+        mViewMvc.setCurrentTrainingDistance(ConstAndStaticMethods.distanceMetersToKilometers(locationUpdate.getAllDistance())+"");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTimeUpdate(TimeUpdateModel time)
     {
-        mViewMvc.setCurrentTrainingTime(Const.convertSecondsToTimeTest(time.getTime()/1000));
+        mViewMvc.setCurrentTrainingTime(ConstAndStaticMethods.convertSecondsToTimeTest(time.getTime()/1000));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

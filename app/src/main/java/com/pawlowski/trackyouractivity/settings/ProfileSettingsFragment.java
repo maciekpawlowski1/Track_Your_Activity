@@ -10,18 +10,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.MainViewMvc;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
+import com.pawlowski.trackyouractivity.overview.OverviewFragment;
 
 
 public class ProfileSettingsFragment extends Fragment implements ProfileSettingsViewMvc.ProfileSettingsButtonsClickListener {
 
     private ProfileSettingsViewMvc mViewMvc;
     private SharedPreferencesHelper mSharedPreferences;
+    private MainViewMvc mMainViewMvc;
 
     public ProfileSettingsFragment() {
         // Required empty public constructor
     }
+
+
+    public ProfileSettingsFragment(MainViewMvc mainViewMvc) {
+        mMainViewMvc = mainViewMvc;
+    }
+
+
 
 
 
@@ -29,7 +39,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(Const.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
+        mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
 
     }
 
@@ -51,12 +61,12 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
         int goal = mViewMvc.getGoal();
 
         boolean correct = true;
-        if(!Const.isNameCorrect(name))
+        if(!ConstAndStaticMethods.isNameCorrect(name))
         {
             correct = false;
             mViewMvc.setNameError("Incorrect name");
         }
-        if(!Const.isDateCorrect(date))
+        if(!ConstAndStaticMethods.isDateCorrect(date))
         {
             correct = false;
             mViewMvc.setBirthdayError("Incorrect date");
@@ -75,6 +85,8 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
         if(correct)
         {
             mSharedPreferences.setWeeklyGoal(goal);
+            mSharedPreferences.setProfileSaved(true);
+            mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc), requireActivity().getSupportFragmentManager(), false);
             //TODO: Save
         }
     }

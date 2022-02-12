@@ -20,6 +20,7 @@ import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 import java.util.Calendar;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSettingsViewMvc.ProfileSettingsButtonsClickListener> {
@@ -148,12 +149,12 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
         });
     }
 
-    public String getDateOfBirth()
+    public @NonNull String getDateOfBirth()
     {
         return Objects.requireNonNull(mBirthdayInput.getText()).toString();
     }
 
-    public String getName()
+    public @NonNull String getName()
     {
         return Objects.requireNonNull(mNameInput.getText()).toString();
     }
@@ -167,22 +168,22 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
             return -1;
     }
 
-    public void setNameError(String errorText)
+    public void setNameError(@Nullable String errorText)
     {
         mNameInputLayout.setError(errorText);
     }
 
-    public void setBirthdayError(String errorText)
+    public void setBirthdayError(@Nullable String errorText)
     {
         mBirthdayInputLayout.setError(errorText);
     }
 
-    public void setWeightError(String errorText)
+    public void setWeightError(@Nullable String errorText)
     {
         mWeightInputLayout.setError(errorText);
     }
 
-    public void setGoalError(String errorText)
+    public void setGoalError(@Nullable String errorText)
     {
         mSeekBarEditText.setError(errorText);
     }

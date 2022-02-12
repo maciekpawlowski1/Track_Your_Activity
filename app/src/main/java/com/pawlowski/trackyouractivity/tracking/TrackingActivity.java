@@ -16,7 +16,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
@@ -81,7 +81,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mPermissionHelper = new PermissionHelper(mFusedLocationClient, this);
         mMapHelper = new MapHelper(mFusedLocationClient, mPermissionHelper, mTrainingId);
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(Const.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_tracking);
@@ -136,8 +136,8 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         {
             float distance = mSharedPreferencesHelper.getCurrentDistance();
             long seconds = mSharedPreferencesHelper.getCurrentTime();
-            mTrackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(seconds/1000));
-            mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(distance));
+            mTrackingViewMvc.setTimeText(ConstAndStaticMethods.convertSecondsToTimeTest(seconds/1000));
+            mTrackingViewMvc.setDistanceText(ConstAndStaticMethods.distanceMetersToKilometers(distance));
             mTrackingViewMvc.setSpeedText(0);
             mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
             mTime = seconds/1000;
@@ -156,8 +156,8 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 long seconds = mSharedPreferencesHelper.getCurrentTime();
                 mTime = seconds/1000;
                 mDistance = distance;
-                mTrackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(seconds/1000));
-                mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(distance));
+                mTrackingViewMvc.setTimeText(ConstAndStaticMethods.convertSecondsToTimeTest(seconds/1000));
+                mTrackingViewMvc.setDistanceText(ConstAndStaticMethods.distanceMetersToKilometers(distance));
                 mTrackingViewMvc.setSpeedText(0);
             }
             else
@@ -189,7 +189,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mMapHelper.addLocationToMap(locationUpdate.getLocation());
         mDistance = locationUpdate.getAllDistance();
 
-        mTrackingViewMvc.setDistanceText(Const.distanceMetersToKilometers(mDistance));
+        mTrackingViewMvc.setDistanceText(ConstAndStaticMethods.distanceMetersToKilometers(mDistance));
         double speed = locationUpdate.getCurrentSpeed();
         speed*= 10;
         speed = Math.floor(speed);
@@ -201,7 +201,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTimeUpdate(TimeUpdateModel time)
     {
-        mTrackingViewMvc.setTimeText(Const.convertSecondsToTimeTest(time.getTime()/1000));
+        mTrackingViewMvc.setTimeText(ConstAndStaticMethods.convertSecondsToTimeTest(time.getTime()/1000));
         mTime = time.getTime()/1000;
 
     }
@@ -240,7 +240,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
 
     private void stopService()
     {
-        sendBroadcast(new Intent(Const.INTENT_FILTER_STOP_TEXT));
+        sendBroadcast(new Intent(ConstAndStaticMethods.INTENT_FILTER_STOP_TEXT));
     }
 
     @Override

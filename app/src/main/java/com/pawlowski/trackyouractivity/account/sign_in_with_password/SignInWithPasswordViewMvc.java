@@ -13,6 +13,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithPasswordViewMvc.SignInWithPasswordButtonsClickListener> {
@@ -108,12 +111,22 @@ public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithP
         });
     }
 
-    public void setMailError(String errorText)
+    public @NonNull String getMailInputValue()
+    {
+        return Objects.requireNonNull(mMailInput.getText()).toString();
+    }
+
+    public @NonNull String getPasswordInputValue()
+    {
+        return Objects.requireNonNull(mPasswordInput.getText()).toString();
+    }
+
+    public void setMailError(@Nullable String errorText)
     {
         mMailInputLayout.setError(errorText);
     }
 
-    public void setPasswordError(String errorText)
+    public void setPasswordError(@Nullable String errorText)
     {
         mPasswordInputLayout.setError(errorText);
     }

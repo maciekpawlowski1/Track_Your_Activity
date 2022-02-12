@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 
 import androidx.annotation.Nullable;
@@ -34,6 +34,7 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
     private final TextView mWeeklyGoalAlreadyDoneText;
     private final TextView mWeeklyGoalLeftText;
     private final ProgressBar mWeeklyGoalProgressBar;
+    private final TextView mMoreHistoryTextButton;
     //private final ImageButton moreStartButton;
 
 
@@ -56,6 +57,7 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
         mWeeklyGoalAlreadyDoneText = findViewById(R.id.how_much_already_done_weekly_goal);
         mWeeklyGoalLeftText = findViewById(R.id.how_much_left_weekly_goal);
         mWeeklyGoalProgressBar = findViewById(R.id.progress_bar_weekly_goal);
+        mMoreHistoryTextButton = findViewById(R.id.more_history_text_button_overview_fragment);
 
         mHistoryRecycler.setLayoutManager(new LinearLayoutManager(container.getContext()));
         mMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +102,13 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
             }
         });
 
+        mMoreHistoryTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifyListeners(OverviewWhichButton.MORE_HISTORY_BUTTON.ordinal());
+            }
+        });
+
 
 
     }
@@ -121,7 +130,7 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
 
     public void setCurrentTrainingTypeImage(int trainingType)
     {
-        mCurrentTrainingTypeImage.setImageResource(Const.getImageResourceOfTrainingType(trainingType, false));
+        mCurrentTrainingTypeImage.setImageResource(ConstAndStaticMethods.getImageResourceOfTrainingType(trainingType, false));
     }
 
     public void bindWeeklyGoal(int weeklyGoal, int alreadyDone, int left)
@@ -185,6 +194,13 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
                 l.onTrainingStartClick(TrainingModel.TrainingType.ROLLER_SKATING);
             }
         }
+        else if(which == OverviewWhichButton.MORE_HISTORY_BUTTON.ordinal())
+        {
+            for(OverviewButtonsListener l:listeners)
+            {
+                l.onMoreHistoryClick();
+            }
+        }
     }
 
     public void showCurrentActivityPanel() {
@@ -204,6 +220,7 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
         void onMenuButtonClick();
         void onCurrentTrainingCardClick();
         void onTrainingStartClick(TrainingModel.TrainingType trainingType);
+        void onMoreHistoryClick();
     }
 
     enum OverviewWhichButton
@@ -213,6 +230,7 @@ public class OverviewViewMvc extends BaseObservableViewMvc<OverviewViewMvc.Overv
         RUNNING_BUTTON,
         CYCLING_BUTTON,
         NORDIC_WALKING_BUTTON,
-        ROLLER_SKATING_BUTTON
+        ROLLER_SKATING_BUTTON,
+        MORE_HISTORY_BUTTON
     }
 }

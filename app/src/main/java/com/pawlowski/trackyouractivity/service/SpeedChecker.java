@@ -1,9 +1,7 @@
 package com.pawlowski.trackyouractivity.service;
 
-import android.util.Log;
-
 import com.pawlowski.trackyouractivity.base.BaseObservable;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 
 public class SpeedChecker extends BaseObservable<SpeedChecker.SpeedChangeListener> {
     private double mPreviousDistance = -1;
@@ -17,7 +15,7 @@ public class SpeedChecker extends BaseObservable<SpeedChecker.SpeedChangeListene
             mPreviousCheckTime = lastDistanceCheckTime;
             mPreviousDistance = currentDistance;
         }
-        else if(lastDistanceCheckTime - mPreviousCheckTime > 1000 * Const.SPEED_TIME_CHECKING_DELTA_IN_SECONDS)
+        else if(lastDistanceCheckTime - mPreviousCheckTime > 1000 * ConstAndStaticMethods.SPEED_TIME_CHECKING_DELTA_IN_SECONDS)
         {
             mCurrentSpeed = ((currentDistance-mPreviousDistance)/((lastDistanceCheckTime-mPreviousCheckTime)/1000.))/(1000/3600.);
             mPreviousCheckTime = lastDistanceCheckTime;

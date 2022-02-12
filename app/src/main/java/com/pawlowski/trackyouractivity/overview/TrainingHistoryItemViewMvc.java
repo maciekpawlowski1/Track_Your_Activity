@@ -1,6 +1,5 @@
 package com.pawlowski.trackyouractivity.overview;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 
 import java.util.Date;
@@ -42,18 +41,18 @@ public class TrainingHistoryItemViewMvc extends BaseObservableViewMvc<TrainingHi
 
     public void bindTraining(TrainingModel training)
     {
-        String distance = Const.distanceMetersToKilometers(training.getDistance()) + " km";
+        String distance = ConstAndStaticMethods.distanceMetersToKilometers(training.getDistance()) + " km";
         distanceText.setText(distance);
         Date date = new Date(training.getDate());
         String dateS = date.getDate() + "." + (date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1) + "." + "20" + (date.getYear()+"").substring(1) + " " + (date.getHours()<10?"0"+date.getHours():date.getHours())+":"+(date.getMinutes()<10?"0"+date.getMinutes():date.getMinutes());
         dateText.setText(dateS);
-        timeText.setText(Const.convertSecondsToTimeTest(training.getTime()));
+        timeText.setText(ConstAndStaticMethods.convertSecondsToTimeTest(training.getTime()));
         String kcal = training.getKcal()+" kcal";
         kcalText.setText(kcal);
         double speed = training.getDistance()/(training.getTime())/(1000./3600.);
-        String speedS = Const.cutDouble(speed) + " km/h";
+        String speedS = ConstAndStaticMethods.cutDouble(speed) + " km/h";
         speedText.setText(speedS);
-        int imageResource = Const.getImageResourceOfTrainingType(training.getTrainingType(), false);
+        int imageResource = ConstAndStaticMethods.getImageResourceOfTrainingType(training.getTrainingType(), false);
         typeOfTrainingImage.setImageResource(imageResource);
 
     }

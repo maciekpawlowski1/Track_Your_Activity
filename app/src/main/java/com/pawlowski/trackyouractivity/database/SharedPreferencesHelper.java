@@ -20,6 +20,19 @@ public class SharedPreferencesHelper {
         return mSharedPreferences.getFloat("distance", 0);
     }
 
+
+    public boolean isProfileSaved()
+    {
+        return mSharedPreferences.getBoolean("is_profile_saved", false);
+    }
+
+    public void setProfileSaved(boolean isSaved)
+    {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean("is_profile_saved", isSaved);
+        editor.commit();
+    }
+
     public void setTrackingActive(boolean isTurnedOn)
     {
         SharedPreferences.Editor editor = mSharedPreferences.edit();

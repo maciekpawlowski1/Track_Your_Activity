@@ -1,13 +1,11 @@
 package com.pawlowski.trackyouractivity.consts;
 
-import android.util.Log;
-
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 
 import java.util.regex.Pattern;
 
-public class Const {
+public class ConstAndStaticMethods {
     public static final int REQUEST_LOCATION_PERMISSION = 631;
     public static final int REQUEST_LOCATION_PERMISSION2 = 632;
 
@@ -64,6 +62,47 @@ public class Const {
         final String DATE_PATTERN = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$";//"/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/";
         Pattern pattern = Pattern.compile(DATE_PATTERN);
         return pattern.matcher(date).matches();
+    }
+
+
+
+    public static boolean isMailCorrect(String mail)
+    {
+        final String mailRegex = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+        return Pattern.compile(mailRegex).matcher(mail).matches();
+    }
+
+
+
+    public static boolean isPasswordCorrect(String password)
+    {
+        if(password.length() > 5)
+        {
+            boolean smallLetter = false;
+            boolean bigLetter = false;
+            boolean decimal = false;
+            for(int i=0;i<password.length();i++)
+            {
+                char z = password.charAt(i);
+                if (z >= 'a' && z <= 'z')
+                {
+                    smallLetter = true;
+                }
+                else if (z >= 'A' && z <= 'Z')
+                {
+                    bigLetter = true;
+                }
+                else if (z >= '0' && z <= '9')
+                {
+                    decimal = true;
+                }
+            }
+            return smallLetter && bigLetter && decimal;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 

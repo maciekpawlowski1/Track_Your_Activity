@@ -4,12 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.pawlowski.trackyouractivity.base.BaseObservable;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +63,7 @@ public class PermissionHelper {
         registerNormalListener(onPermissionReadyListener);
         ActivityCompat.requestPermissions(mActivity, new String[]
                         {Manifest.permission.ACCESS_FINE_LOCATION},
-                Const.REQUEST_LOCATION_PERMISSION);
+                ConstAndStaticMethods.REQUEST_LOCATION_PERMISSION);
     }
 
     public void requestBackgroundPermission(OnPermissionReadyListener onPermissionReadyListener)
@@ -74,14 +72,14 @@ public class PermissionHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ActivityCompat.requestPermissions(mActivity, new String[]
                             {Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                    Const.REQUEST_LOCATION_PERMISSION2);
+                    ConstAndStaticMethods.REQUEST_LOCATION_PERMISSION2);
         }
     }
 
 
     public void handleRequestResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
-            if(requestCode == Const.REQUEST_LOCATION_PERMISSION)
+            if(requestCode == ConstAndStaticMethods.REQUEST_LOCATION_PERMISSION)
             {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -90,7 +88,7 @@ public class PermissionHelper {
                     Toast.makeText(mActivity.getApplicationContext(), "You have to give localisation tracking permission to track your training!", Toast.LENGTH_LONG).show();
                 }
             }
-            else if(requestCode == Const.REQUEST_LOCATION_PERMISSION2)
+            else if(requestCode == ConstAndStaticMethods.REQUEST_LOCATION_PERMISSION2)
             {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

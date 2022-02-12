@@ -9,10 +9,8 @@ import android.widget.TextView;
 
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
-
-import org.w3c.dom.Text;
 
 import java.util.Date;
 
@@ -50,12 +48,12 @@ public class TrainingDetailsViewMvc extends BaseObservableViewMvc<TrainingDetail
 
     public void bindTraining(TrainingModel training)
     {
-        mTrainingTypeImage.setImageResource(Const.getImageResourceOfTrainingType(training.getTrainingType(), true));
-        mDistanceText.setText((Const.distanceMetersToKilometers(training.getDistance())+""));
-        mTimeText.setText((Const.convertSecondsToTimeTest(training.getTime())));
+        mTrainingTypeImage.setImageResource(ConstAndStaticMethods.getImageResourceOfTrainingType(training.getTrainingType(), true));
+        mDistanceText.setText((ConstAndStaticMethods.distanceMetersToKilometers(training.getDistance())+""));
+        mTimeText.setText((ConstAndStaticMethods.convertSecondsToTimeTest(training.getTime())));
         mCaloriesText.setText(training.getKcal()+"");
         double speed = training.getDistance()/(training.getTime())/(1000./3600.);
-        String speedS = Const.cutDouble(speed);
+        String speedS = ConstAndStaticMethods.cutDouble(speed);
         mSpeedText.setText(speedS);
         Date date = new Date(training.getDate());
         String dateS = date.getDate() + "." + (date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1) + "." + "20" + (date.getYear()+"").substring(1) + " " + (date.getHours()<10?"0"+date.getHours():date.getHours())+":"+(date.getMinutes()<10?"0"+date.getMinutes():date.getMinutes());

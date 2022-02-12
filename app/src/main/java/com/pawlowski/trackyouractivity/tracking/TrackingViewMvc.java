@@ -10,8 +10,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 import com.pawlowski.trackyouractivity.R;
-import com.pawlowski.trackyouractivity.consts.Const;
-import com.pawlowski.trackyouractivity.models.TrainingModel;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -84,7 +83,7 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
 
     public void setTrainingTypeIcon(int trainingType)
     {
-        mTrainingTypeImage.setImageResource(Const.getImageResourceOfTrainingType(trainingType, true));
+        mTrainingTypeImage.setImageResource(ConstAndStaticMethods.getImageResourceOfTrainingType(trainingType, true));
     }
 
     public void setTimeText(String timeText)

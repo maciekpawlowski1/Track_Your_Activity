@@ -28,7 +28,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.pawlowski.trackyouractivity.R;
-import com.pawlowski.trackyouractivity.consts.Const;
+import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.gpx.GPXUpdater;
@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -85,7 +84,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mStartingSeconds = System.currentTimeMillis();
         mSpeedChecker = new SpeedChecker();
         mSpeedChecker.registerListener(this);
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(Const.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
         mDbHandler = new DBHandler(getApplicationContext());
         mTrainingId = mDbHandler.getCurrentTrainingId();
         mGPXUseCase = new GPXUseCase(getFilesDir());
@@ -147,7 +146,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
 
     private void buildNotification() {
-        String stop = Const.INTENT_FILTER_STOP_TEXT;
+        String stop = ConstAndStaticMethods.INTENT_FILTER_STOP_TEXT;
         registerReceiver(stopReceiver, new IntentFilter(stop));
         PendingIntent broadcastIntent = PendingIntent.getBroadcast(
                 this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
@@ -157,8 +156,8 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationChannel channel = new NotificationChannel(
-                    Const.NOTIFICATION_CHANNEL_ID,
-                    Const.SERVICE_NAME,
+                    ConstAndStaticMethods.NOTIFICATION_CHANNEL_ID,
+                    ConstAndStaticMethods.SERVICE_NAME,
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setLightColor(Color.BLUE);
             channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
@@ -168,7 +167,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
             manager.createNotificationChannel(channel);
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-                    this, Const.NOTIFICATION_CHANNEL_ID);
+                    this, ConstAndStaticMethods.NOTIFICATION_CHANNEL_ID);
             Notification notification = notificationBuilder.setOngoing(true)
                     .setSmallIcon(R.drawable.run_icon)
                     .setContentTitle("Tracking")
@@ -176,10 +175,10 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
                     .addAction(new NotificationCompat.Action(R.drawable.pause_icon, "Pause", broadcastIntent))
                     //.setContentIntent(broadcastIntent)
                     .setCategory(Notification.CATEGORY_SERVICE)
-                    .setChannelId(Const.NOTIFICATION_CHANNEL_ID)
+                    .setChannelId(ConstAndStaticMethods.NOTIFICATION_CHANNEL_ID)
                     .build();
 
-            startForeground(Const.NOTIFICATION_ID, notification);
+            startForeground(ConstAndStaticMethods.NOTIFICATION_ID, notification);
         }
         else
         {
@@ -193,7 +192,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
                     .setOngoing(true)
                     //.setContentIntent(broadcastIntent)
                     .setSmallIcon(R.drawable.run_icon);
-            startForeground(Const.NOTIFICATION_ID, builder.build());
+            startForeground(ConstAndStaticMethods.NOTIFICATION_ID, builder.build());
         }
 
 
@@ -319,8 +318,8 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
 
     private LocationRequest getLocationRequest() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(Const.TRACKING_INTERVAL);
-        locationRequest.setFastestInterval(Const.TRACKING_FAST_INTERVAL);
+        locationRequest.setInterval(ConstAndStaticMethods.TRACKING_INTERVAL);
+        locationRequest.setFastestInterval(ConstAndStaticMethods.TRACKING_FAST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
     }
