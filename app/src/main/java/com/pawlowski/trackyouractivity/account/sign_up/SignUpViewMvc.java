@@ -30,10 +30,10 @@ public class SignUpViewMvc extends BaseObservableViewMvc<SignUpViewMvc.SignUpBut
         mSubmitButton = findViewById(R.id.submit_button_sign_up);
         mGoogleButton = findViewById(R.id.google_login_button_sign_up);
         mFacebookButton = findViewById(R.id.facebook_login_button_sign_up);
-        mMailInput = findViewById(R.id.mail_input_edit_text_sign_in_with_mail);
-        mPasswordInput = findViewById(R.id.password_input_edit_text_sign_in_with_mail);
-        mMailInputLayout = findViewById(R.id.mail_input_layout_sign_in_with_mail);
-        mPasswordInputLayout = findViewById(R.id.password_input_layout_sign_in_with_mail);
+        mMailInput = findViewById(R.id.mail_input_edit_text_sign_up);
+        mPasswordInput = findViewById(R.id.password_input_edit_text_sign_up);
+        mMailInputLayout = findViewById(R.id.mail_input_layout_sign_up);
+        mPasswordInputLayout = findViewById(R.id.password_input_layout_sign_up);
         mBackButton = findViewById(R.id.back_button_back_panel);
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {

@@ -1,10 +1,11 @@
 package com.pawlowski.trackyouractivity.account.sign_up;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity implements SignUpViewMvc.SignUpButtonsClickListener{
 
@@ -25,7 +26,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpViewMvc.S
 
     @Override
     public void onBackButtonClick() {
-
+        Intent i = new Intent(this, SignInActivity.class);
+        startActivity(i);
+        finish();
     }
 
     @Override

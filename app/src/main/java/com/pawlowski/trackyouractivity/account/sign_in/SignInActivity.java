@@ -26,7 +26,7 @@ public class SignInActivity extends AppCompatActivity implements SignInViewMvc.S
 
         hideNotificationBar();
 
-        startActivity(new Intent(this, MainActivity.class));
+        //startActivity(new Intent(this, MainActivity.class));
     }
 
     private void hideNotificationBar()

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 
 public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithPasswordViewMvc.SignInWithPasswordButtonsClickListener> {
     private final Button mSubmitButton;
+    private final ImageButton mBackButton;
     private final ImageButton mMailButton;
     private final ImageButton mGoogleButton;
     private final ImageButton mFacebookButton;
@@ -28,6 +29,7 @@ public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithP
     public SignInWithPasswordViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent) {
         rootView = inflater.inflate(R.layout.activity_sign_in_with_password, parent, false);
         mSubmitButton = findViewById(R.id.submit_button_sign_in_with_mail);
+        mBackButton = findViewById(R.id.back_button_back_panel);
         mMailButton = findViewById(R.id.mail_login_button_sign_in_with_mail);
         mGoogleButton = findViewById(R.id.google_login_button_sign_in_with_mail);
         mFacebookButton = findViewById(R.id.facebook_login_button_sign_in_with_mail);
@@ -40,6 +42,13 @@ public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithP
             @Override
             public void onClick(View view) {
                 notifyListeners(WhichSignInWithPasswordButton.SUBMIT_BUTTON.ordinal());
+            }
+        });
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifyListeners(WhichSignInWithPasswordButton.BACK_BUTTON.ordinal());
             }
         });
 
@@ -122,6 +131,13 @@ public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithP
                 l.onSubmitButtonClick();
             }
         }
+        else if(which == WhichSignInWithPasswordButton.BACK_BUTTON.ordinal())
+        {
+            for(SignInWithPasswordViewMvc.SignInWithPasswordButtonsClickListener l:listeners)
+            {
+                l.onBackButtonClick();
+            }
+        }
         else if(which == WhichSignInWithPasswordButton.REGISTER_WITH_MAIL_BUTTON.ordinal())
         {
             for(SignInWithPasswordViewMvc.SignInWithPasswordButtonsClickListener l:listeners)
@@ -151,6 +167,7 @@ public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithP
         void onRegisterWithMailButtonClick();
         void onGoogleButtonClick();
         void onFacebookButtonClick();
+        void onBackButtonClick();
     }
 
     enum WhichSignInWithPasswordButton
@@ -158,6 +175,7 @@ public class SignInWithPasswordViewMvc extends BaseObservableViewMvc<SignInWithP
         SUBMIT_BUTTON,
         REGISTER_WITH_MAIL_BUTTON,
         GOOGLE_BUTTON,
-        FACEBOOK_BUTTON
+        FACEBOOK_BUTTON,
+        BACK_BUTTON
     }
 }
