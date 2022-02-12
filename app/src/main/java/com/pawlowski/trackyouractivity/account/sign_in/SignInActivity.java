@@ -1,4 +1,4 @@
-package com.pawlowski.trackyouractivity.account;
+package com.pawlowski.trackyouractivity.account.sign_in;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,15 +10,19 @@ import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
 import com.pawlowski.trackyouractivity.MainActivity;
-import com.pawlowski.trackyouractivity.R;
-import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
+import com.pawlowski.trackyouractivity.account.sign_in_with_password.SignInWithPasswordActivity;
+import com.pawlowski.trackyouractivity.account.sign_up.SignUpActivity;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements SignInViewMvc.SignInButtonsClickListener {
+
+    SignInViewMvc mViewMvc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        mViewMvc = new SignInViewMvc(getLayoutInflater(), null);
+        mViewMvc.registerListener(this);
+        setContentView(mViewMvc.getRootView());
 
         hideNotificationBar();
 
@@ -38,5 +42,29 @@ public class SignInActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN
             );
         }
+    }
+
+    @Override
+    public void onRegisterButtonClick() {
+        Intent i = new Intent(this, SignUpActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    @Override
+    public void onMailButtonClick() {
+        Intent i = new Intent(this, SignInWithPasswordActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    @Override
+    public void onGoogleButtonClick() {
+
+    }
+
+    @Override
+    public void onFacebookButtonClick() {
+
     }
 }

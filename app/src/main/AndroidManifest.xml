@@ -18,7 +18,7 @@
             android:name=".tracking.TrackingActivity"
             android:exported="false" />
         <activity
-            android:name=".account.SignUpActivity"
+            android:name=".account.sign_up.SignUpActivity"
             android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -29,10 +29,10 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <activity
-            android:name=".account.SignInWithPasswordActivity"
+            android:name=".account.sign_in_with_password.SignInWithPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".account.SignInActivity"
+            android:name=".account.sign_in.SignInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
