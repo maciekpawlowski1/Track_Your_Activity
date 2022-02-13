@@ -5,15 +5,22 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.work.Operation;
+import androidx.work.WorkInfo;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.MainViewMvc;
+import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
+import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.overview.OverviewFragment;
+import com.pawlowski.trackyouractivity.upload_job.WorkHelper;
 
 
 public class ProfileSettingsFragment extends Fragment implements ProfileSettingsViewMvc.ProfileSettingsButtonsClickListener {
@@ -21,6 +28,8 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
     private ProfileSettingsViewMvc mViewMvc;
     private SharedPreferencesHelper mSharedPreferences;
     private MainViewMvc mMainViewMvc;
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private FirebaseAuthHelper mFirebaseAuthHelper;
 
     public ProfileSettingsFragment() {
         // Required empty public constructor
@@ -29,6 +38,8 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
 
     public ProfileSettingsFragment(MainViewMvc mainViewMvc) {
         mMainViewMvc = mainViewMvc;
+        mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
+        mFirebaseAuthHelper = new FirebaseAuthHelper();
     }
 
 
@@ -48,6 +59,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
                              Bundle savedInstanceState) {
         mViewMvc = new ProfileSettingsViewMvc(inflater, container);
         mViewMvc.registerListener(this);
+
 
 
         return mViewMvc.getRootView();
@@ -84,6 +96,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
 
         if(correct)
         {
+            mFirebaseDatabaseHelper.addUserInfo(mFirebaseAuthHelper.getCurrentUser().getUid(), name, date, goal, weight);
             mSharedPreferences.setWeeklyGoal(goal);
             mSharedPreferences.setProfileSaved(true);
             mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc), requireActivity().getSupportFragmentManager(), false);

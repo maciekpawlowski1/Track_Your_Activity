@@ -40,21 +40,18 @@ public class GPXUseCase {
     {
         synchronized (LOCK)
         {
-            Log.d("Zapis", waypoints.size()+"");
             GPX gpx = new GPX();
             Route route = new Route();
             route.setRoutePoints(waypoints);
             gpx.addRoute(route);
             try {
                 OutputStream out;
-                //out = new FileOutputStream(new File(android.os.Environment.getExternalStorageDirectory(), filename));
                 out = new FileOutputStream(new File(mFilesDir.getAbsolutePath() + File.separator, filename));
                 GPXParser parser = new GPXParser();
                 parser.writeGPX(gpx, out);
 
             } catch (FileNotFoundException | TransformerException | ParserConfigurationException e) {
                 e.printStackTrace();
-                Log.d("Blad", "Nie udalo sie zapisac");
             }
         }
     }

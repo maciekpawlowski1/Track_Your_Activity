@@ -34,10 +34,10 @@ import java.util.Date;
 
 public class OverviewFragment extends Fragment implements OverviewViewMvc.OverviewButtonsListener {
 
-    MainViewMvc mMainActivityViewMvc;
-    OverviewViewMvc mViewMvc;
-    HistoryAdapter mHistoryAdapter;
-    SharedPreferencesHelper mSharedPreferences;
+    private MainViewMvc mMainActivityViewMvc;
+    private OverviewViewMvc mViewMvc;
+    private HistoryAdapter mHistoryAdapter;
+    private SharedPreferencesHelper mSharedPreferences;
     private DBHandler mDbHandler;
 
     public OverviewFragment() {

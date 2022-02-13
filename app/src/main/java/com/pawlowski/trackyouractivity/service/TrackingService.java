@@ -53,28 +53,29 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     public TrackingService() {
     }
 
-    LocationCallback mLocationCallback;
-    FusedLocationProviderClient mFusedLocationClient;
-    DBHandler mDbHandler;
-    Location mLastLocation = null;
-    float mAllDistance = 0;
-    double mCurrentSpeed = 0;
-    long mStartingSeconds = 0;
-    long mCurrentSeconds = 0;
-    int mTrainingId;
+    private LocationCallback mLocationCallback;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private DBHandler mDbHandler;
+    private Location mLastLocation = null;
+    private float mAllDistance = 0;
+    private double mCurrentSpeed = 0;
+    private long mStartingSeconds = 0;
+    private long mCurrentSeconds = 0;
+    private int mTrainingId;
 
-    ArrayList<Waypoint> mWaypoints = new ArrayList<>();
+    private ArrayList<Waypoint> mWaypoints = new ArrayList<>();
 
 
-    TimeCounterUseCase mTimeCounterUseCase;
-    SpeedChecker mSpeedChecker;
-    SharedPreferencesHelper mSharedPreferencesHelper;
+    private TimeCounterUseCase mTimeCounterUseCase;
+    private SpeedChecker mSpeedChecker;
+    private SharedPreferencesHelper mSharedPreferencesHelper;
 
-    TextToSpeech mTextToSpeech;
+    private TextToSpeech mTextToSpeech;
 
-    GPXUpdater mGPXUpdater = null;
+    private GPXUpdater mGPXUpdater = null;
 
-    GPXUseCase mGPXUseCase;
+    private GPXUseCase mGPXUseCase;
+
 
     @Override
     public void onCreate() {

@@ -2,6 +2,8 @@ package com.pawlowski.trackyouractivity.tracking;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.work.WorkInfo;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -16,19 +18,23 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
+import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
 import com.pawlowski.trackyouractivity.models.TrackingStopUpdate;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 import com.pawlowski.trackyouractivity.service.TrackingService;
+import com.pawlowski.trackyouractivity.upload_job.WorkHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.List;
 
 public class TrackingActivity extends AppCompatActivity implements TrackingViewMvc.OnControlButtonsClickListener {
@@ -45,6 +51,10 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     private long mTime;
     private int mKcal;
     private int mTrainingType;
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private String mAccountKey;
+    private String mTrainingKey = null;
+    private FirebaseAuthHelper mFirebaseAuthHelper;
 
 
 
@@ -56,24 +66,18 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         setContentView(mTrackingViewMvc.getRootView());
 
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
+        mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
         mDbHandler = new DBHandler(getApplicationContext());
+        Log.d("trackingactivity", "To save: " + mDbHandler.getAllNotSavedTrainings().size());
 
-        mTrainingType = getIntent().getExtras().getInt("training_type");
+        Bundle bundle = getIntent().getExtras();
+        mTrainingType = bundle.getInt("training_type");
+        mFirebaseAuthHelper = new FirebaseAuthHelper();
 
-        List<TrainingModel> tr = mDbHandler.getLast3Trainings();
-        if(tr.size() > 0)
-        {
-            for(int i=0;i<tr.size();i++)
-            {
-                TrainingModel tr1;
-                tr1 = tr.get(i);
-                Log.d("Nr " + i, tr1.getId() + " " + tr1.getTime() + " " + tr1.getDistance());
-            }
-
-        }
-
+        mAccountKey = mFirebaseAuthHelper.getCurrentUser().getUid();
 
         mTrainingId = mDbHandler.getCurrentTrainingId();
+        mTrainingKey = mDbHandler.getCurrentTrainingKey();
         if(mTrainingType == -1)
             mTrainingType = mDbHandler.getTypeOfCurrentTraining();
 
@@ -258,7 +262,8 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
                 break;
             case STOPPED:
-                mDbHandler.insertTraining(new TrainingModel(System.currentTimeMillis(), 0, 0, 0, false, mTrainingType));
+                mTrainingKey = mFirebaseDatabaseHelper.createNewEmptyTraining(mAccountKey);
+                mDbHandler.insertTraining(new TrainingModel(mTrainingKey, System.currentTimeMillis(), 0, 0, 0, false, mTrainingType));
                 mTrainingId = mDbHandler.getCurrentTrainingId();
                 mMapHelper.clearMap();
                 startService();
@@ -266,7 +271,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 break;
             case PLAYED:
                 stopService();
-                //Service will send notification when stopped to change state
+                //Service will send update by EventBus when stopped to change state
                 //mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PAUSED);
                 break;
 
@@ -277,11 +282,20 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     public void onStopClick() {
         //TODO: Save kcal also
         mKcal = 0;
-        TrainingModel training = new TrainingModel(mDistance, mTime, mKcal, true, mTrainingType);
+        mFirebaseDatabaseHelper.addTraining(mAccountKey, mTrainingKey, mDistance, mKcal, mTime);
+        TrainingModel training = new TrainingModel(mTrainingKey, mDistance, mTime, mKcal, true, mTrainingType);
         training.setId(mTrainingId);
         mDbHandler.updateTraining(training);
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mSharedPreferencesHelper.resetCurrentTraining();
+
+        new WorkHelper().startWorkIfNotExists(getApplicationContext(),mAccountKey).observe(TrackingActivity.this, new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(WorkInfo workInfo) {
+                Log.d("info", workInfo.getState().toString());
+            }
+        });
+        //mFirebaseDatabaseHelper.uploadFile(mAccountKey, mTrainingKey, new File(getFilesDir().getAbsolutePath() + File.separator, mTrainingId+".gpx"));
     }
 
     @Override
