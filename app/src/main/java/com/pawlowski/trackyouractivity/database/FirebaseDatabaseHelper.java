@@ -2,6 +2,7 @@ package com.pawlowski.trackyouractivity.database;
 
 import android.net.Uri;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -9,12 +10,16 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,7 +67,15 @@ public class FirebaseDatabaseHelper {
         values.put("t", seconds);
         values.put("w", date);
         values.put("a", trainingType);
-        return reference.updateChildren(values);
+        return reference.updateChildren(values).continueWithTask(new Continuation<Void, Task<Void>>() {
+            @Override
+            public Task<Void> then(@NonNull Task<Void> task) throws Exception {
+                if(!task.isSuccessful())
+                    return task;
+                else
+                    return database.getReference("k/" + accountKey + "/" + trainingKey).setValue(1);
+            }
+        });
     }
 
     public Task<TrainingModel> downloadTraining(String accountKey, String trainingKey)
@@ -90,11 +103,39 @@ public class FirebaseDatabaseHelper {
         return source.getTask();
     }
 
-    /*public UploadTask downloadGpxFile(String accountKey, String trainingKey)
+    public Task<List<String>> getKeysToDownload(String accountKey, List<String> currentDownloadedKeys)
+    {
+        TaskCompletionSource<List<String>> source = new TaskCompletionSource<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("k/"+accountKey);
+        reference.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                List<String> keys = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey();
+                    if (!currentDownloadedKeys.contains(key))
+                        keys.add(key);
+                }
+
+
+                source.setResult(keys);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                source.setException(e);
+            }
+        });
+
+        return source.getTask();
+    }
+
+    public FileDownloadTask downloadGpxFile(String accountKey, String trainingKey, File destinationFile)
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        return storage.getReference().child(accountKey + "/" + trainingKey+".gpx").getFile()
-    }*/
+        return storage.getReference().child(accountKey + "/" + trainingKey+".gpx").getFile(destinationFile);
+    }
 
     public UploadTask uploadFile(String accountKey, String trainingKey, File file)
     {
