@@ -14,6 +14,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
+import com.pawlowski.trackyouractivity.models.UserModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,6 +46,36 @@ public class FirebaseDatabaseHelper {
         values.put("b", dateOfBirth);
         values.put("g", goal);
         return reference.updateChildren(values);
+    }
+
+    public Task<UserModel> getUserInfo(String accountKey)
+    {
+        TaskCompletionSource<UserModel> source = new TaskCompletionSource<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("u/"+accountKey);
+        reference.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists())
+                    source.setException(new Exception("No such user"));
+                else
+                {
+                    String name = dataSnapshot.child("n").getValue(String.class);
+                    String dateOfBirth = dataSnapshot.child("b").getValue(String.class);
+                    Long goal = dataSnapshot.child("g").getValue(Long.class);
+                    Long weight = dataSnapshot.child("w").getValue(Long.class);
+                    assert weight != null;
+                    assert goal != null;
+                    source.setResult(new UserModel(accountKey, name, dateOfBirth, weight.intValue(), goal.intValue()));
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                source.setException(e);
+            }
+        });
+        return source.getTask();
     }
 
     public String createNewEmptyTraining(String accountKey)

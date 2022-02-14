@@ -22,6 +22,9 @@ import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
+import com.pawlowski.trackyouractivity.models.TrainingsDownloadedUpdateModel;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -149,7 +152,9 @@ public class DownloadWorker extends ListenableWorker {
         Tasks.whenAll(tasks).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                completer.set(Result.success()); //What if there is no image in Cloud Storage? If would be try, then infinity retrying?
+                EventBus.getDefault().post(new TrainingsDownloadedUpdateModel(true));
+
+                completer.set(Result.success()); //What if there is no gpx file in Cloud Storage? If would be retry, then infinity retrying?
             }
         });
     }

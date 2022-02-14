@@ -3,17 +3,12 @@ package com.pawlowski.trackyouractivity.overview;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.MainViewMvc;
 import com.pawlowski.trackyouractivity.R;
-import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
@@ -22,7 +17,7 @@ import com.pawlowski.trackyouractivity.models.LocationUpdateModel;
 import com.pawlowski.trackyouractivity.models.TimeUpdateModel;
 import com.pawlowski.trackyouractivity.models.TrackingStopUpdate;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
-import com.pawlowski.trackyouractivity.settings.ProfileSettingsFragment;
+import com.pawlowski.trackyouractivity.models.TrainingsDownloadedUpdateModel;
 import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,6 +26,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 
 public class OverviewFragment extends Fragment implements OverviewViewMvc.OverviewButtonsListener {
@@ -66,6 +64,8 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
 
         mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings(mAccountKey)); //TODO: Move to background thread
 
+        EventBus.getDefault().register(this);
+
 
         int alreadyDone = mDbHandler.getWeeklyKm(getWeekStartDate(Calendar.getInstance().getTime()).getTime(),
                 getWeekEndDate(Calendar.getInstance().getTime()).getTime());
@@ -80,7 +80,6 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
             mViewMvc.setCurrentTrainingTime(ConstAndStaticMethods.convertSecondsToTimeTest(mSharedPreferences.getCurrentTime()/1000));
             mViewMvc.setCurrentTrainingDistance(ConstAndStaticMethods.distanceMetersToKilometers(mSharedPreferences.getCurrentDistance())+"");
             mViewMvc.setCurrentTrainingTypeImage(mDbHandler.getTypeOfCurrentTraining());
-            EventBus.getDefault().register(this);
             mViewMvc.showCurrentActivityPanel();
         }
         else
@@ -165,6 +164,13 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
     public void onDistanceUpdate(LocationUpdateModel locationUpdate)
     {
         mViewMvc.setCurrentTrainingDistance(ConstAndStaticMethods.distanceMetersToKilometers(locationUpdate.getAllDistance())+"");
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTrainingsDownloadedUpdate(TrainingsDownloadedUpdateModel trainingsUpdate)
+    {
+        mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings(mAccountKey)); //TODO: Move to background thread
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
