@@ -12,6 +12,7 @@ import com.pawlowski.trackyouractivity.models.TrainingModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -52,6 +53,26 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insert("Trainings", null, values);
         db.close();
     }
+
+    public void insertTrainingAfterDownloading(TrainingModel training, String accountKey)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("date", training.getDate());
+        values.put("distance", training.getDistance());
+        values.put("time", training.getTime());
+        values.put("kcal", training.getKcal());
+        values.put("is_finished", training.isFinished()+"");
+        values.put("training_type", training.getTrainingType());
+        values.put("training_key", training.getKey());
+        values.put("is_saved", "true");
+        values.put("account_key", accountKey);
+        Log.d("Inserting", training.getTrainingType()+"");
+        db.insert("Trainings", null, values);
+        db.close();
+    }
+
+
 
     public int getWeeklyKm(long mondayStartDate, long sundayEndDate)
     {
@@ -186,6 +207,23 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         cursor.close();
         return trainings;
+    }
+
+    public List<String> getAllTrainingsKeys(String accountKey)
+    {
+        List<String> trainingsKeys = new ArrayList<>();
+
+        String selectSql = "SELECT T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' AND T.account_key LIKE '" + accountKey + "' ORDER BY T.date DESC";
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectSql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                trainingsKeys.add(cursor.getString(0));
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return trainingsKeys;
     }
 
     public void updateTraining(TrainingModel training)

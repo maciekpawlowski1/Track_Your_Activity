@@ -87,11 +87,11 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 double distance = (double) Objects.requireNonNull(dataSnapshot.child("d").getValue());
-                int kcal = (int) Objects.requireNonNull(dataSnapshot.child("k").getValue());
+                long kcal = (long) Objects.requireNonNull(dataSnapshot.child("k").getValue());
                 long seconds = (long) Objects.requireNonNull(dataSnapshot.child("t").getValue());
                 long date = (long) Objects.requireNonNull(dataSnapshot.child("w").getValue());
-                int type = (int) Objects.requireNonNull(dataSnapshot.child("a").getValue());
-                source.setResult(new TrainingModel(trainingKey, date, distance, seconds, kcal, true, type));
+                long type = (long) Objects.requireNonNull(dataSnapshot.child("a").getValue());
+                source.setResult(new TrainingModel(trainingKey, date, distance, seconds, (int)kcal, true, (int)type));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

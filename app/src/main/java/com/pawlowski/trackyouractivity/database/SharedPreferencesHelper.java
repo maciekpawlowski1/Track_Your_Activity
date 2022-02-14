@@ -10,6 +10,18 @@ public class SharedPreferencesHelper {
         this.mSharedPreferences = mSharedPreferences;
     }
 
+    public void setLastUpdatesCheckTime(long time)
+    {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putLong("lastUpdatesCheck", time);
+        editor.apply();
+    }
+
+    public long getLastUpdatesCheckTime()
+    {
+        return mSharedPreferences.getLong("lastUpdatesCheck", 0);
+    }
+
     public boolean isTrackingActive()
     {
         return mSharedPreferences.getBoolean("isTracking", false);

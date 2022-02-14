@@ -16,6 +16,7 @@ public class ConstAndStaticMethods {
     public static final String SERVICE_NAME = "TrackingService";
 
     public static final int NOTIFICATION_ID = 1;
+    public static final int UPDATE_CHECK_DELTA_TIME_IN_SECONDS = 300;
 
     public static long SPEED_TIME_CHECKING_DELTA_IN_SECONDS = 15;
 

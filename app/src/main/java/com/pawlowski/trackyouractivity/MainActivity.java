@@ -2,26 +2,40 @@ package com.pawlowski.trackyouractivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
+import com.pawlowski.trackyouractivity.database.DBHandler;
+import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
+import com.pawlowski.trackyouractivity.download_job.DownloadWorkHelper;
 import com.pawlowski.trackyouractivity.history.HistoryFragment;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 import com.pawlowski.trackyouractivity.overview.OverviewFragment;
 import com.pawlowski.trackyouractivity.settings.ProfileSettingsFragment;
 import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.work.WorkInfo;
 
 public class MainActivity extends AppCompatActivity {
 
     private MainViewMvc mViewMvc;
     private SharedPreferencesHelper mSharedPreferences;
     private String mAccountKey;
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if((bundle != null && bundle.getBoolean("start_with_settings", false)) || !mSharedPreferences.isProfileSaved())
         {
+            //TODO: Download from firebase if profile saved
             mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
         }
         else
@@ -74,6 +89,69 @@ public class MainActivity extends AppCompatActivity {
             mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
         }
 
+        mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
+
+        checkForUpdatesIfNeeded();
+    }
+
+    public void checkForUpdatesIfNeeded()
+    {
+        Log.d("checkForUpdatesIfNeeded", "Method called");
+        long lastCheck = mSharedPreferences.getLastUpdatesCheckTime();
+        long now = System.currentTimeMillis();
+        if(now - lastCheck > ConstAndStaticMethods.UPDATE_CHECK_DELTA_TIME_IN_SECONDS * 1000)
+        {
+            Log.d("checkForUpdatesIfNeeded", "Checking...");
+            Handler handler = new Handler(getMainLooper());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<String> trainingKeys = new DBHandler(getApplicationContext()).getAllTrainingsKeys(mAccountKey);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFirebaseDatabaseHelper.getKeysToDownload(mAccountKey, trainingKeys).addOnSuccessListener(new OnSuccessListener<List<String>>() {
+                                @Override
+                                public void onSuccess(List<String> strings) {
+                                    mSharedPreferences.setLastUpdatesCheckTime(now);
+                                    if(strings.size() > 0)
+                                    {
+                                        Log.d("checkForUpdatesIfNeeded", "Found to download: " + strings.size());
+                                        startDownloadWorker(strings);
+
+                                    }
+                                    else
+                                    {
+                                        Log.d("checkForUpdatesIfNeeded", "No updates needed");
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }).start();
+
+        }
+        else
+        {
+            Log.d("checkForUpdatesIfNeeded", "Don't need to check");
+        }
+    }
+
+    public void startDownloadWorker(List<String> trainingKeys)
+    {
+        new DownloadWorkHelper().startWorkIfNotExists(getApplicationContext(), mAccountKey, trainingKeys).observe(MainActivity.this, new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(WorkInfo workInfo) {
+                Log.d("DownloadWorkerState", workInfo.getState().toString());
+            }
+        });
     }
 
     @Override
