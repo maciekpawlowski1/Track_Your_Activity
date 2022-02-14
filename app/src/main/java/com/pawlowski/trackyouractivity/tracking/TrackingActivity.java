@@ -53,6 +53,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     private String mAccountKey;
     private String mTrainingKey = null;
     private FirebaseAuthHelper mFirebaseAuthHelper;
+    private boolean wasOnStartBefore;
 
 
 
@@ -66,6 +67,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
         mDbHandler = new DBHandler(getApplicationContext());
+        wasOnStartBefore = false;
 
         Bundle bundle = getIntent().getExtras();
         mTrainingType = bundle.getInt("training_type");
@@ -137,6 +139,32 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
 
     }
 
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+
+        if(wasOnStartBefore)
+        {
+            mMapHelper.readGpxAndUpdateMap();
+            startServiceIfActive();
+        }
+
+        EventBus.getDefault().register(this);
+
+        wasOnStartBefore = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void startServiceIfActive()
     {
         if(mSharedPreferencesHelper.isTrackingActive())
@@ -173,22 +201,6 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
             }
         }
     }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLocationUpdate(LocationUpdateModel locationUpdate)

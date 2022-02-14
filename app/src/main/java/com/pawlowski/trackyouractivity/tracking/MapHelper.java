@@ -29,6 +29,7 @@ public class MapHelper implements OnMapReadyCallback {
     private String mTrainingKey;
     private final Context mAppContext;
     private final boolean mCurrentlyTracking;
+    private final GPXUseCase mGpxUseCase;
 
     public MapHelper(@NonNull FusedLocationProviderClient mFusedLocationClient, @NonNull PermissionHelper permissionHelper, String trainingKey) {
         this.mFusedLocationClient = mFusedLocationClient;
@@ -36,6 +37,7 @@ public class MapHelper implements OnMapReadyCallback {
         mTrainingKey = trainingKey;
         mCurrentlyTracking = true;
         mAppContext = mFusedLocationClient.getApplicationContext();
+        mGpxUseCase = new GPXUseCase(mAppContext.getFilesDir());
     }
 
     public MapHelper(String trainingKey, Context appContext) {
@@ -44,6 +46,7 @@ public class MapHelper implements OnMapReadyCallback {
         mCurrentlyTracking = false;
         mFusedLocationClient = null;
         mPermissionHelper = null;
+        mGpxUseCase = new GPXUseCase(mAppContext.getFilesDir());
     }
 
     @Override
@@ -78,20 +81,25 @@ public class MapHelper implements OnMapReadyCallback {
 
 
 
-        if(mTrainingKey != null)
+        readGpxAndUpdateMap();
+
+    }
+
+    public void readGpxAndUpdateMap()
+    {
+        if(mTrainingKey != null && mMap != null)
         {
             Log.d("reading", "reading " + mTrainingKey);
-            new GPXUseCase(mAppContext.getFilesDir()).readFromGpxTask(mTrainingKey + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+            mGpxUseCase.readFromGpxTask(mTrainingKey + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
                 @Override
                 public void onSuccess(List<Waypoint> waypoints) {
                     Log.d("reading", "success: " + waypoints.size());
                     addManyWaypointsToMap(waypoints);
-
                 }
             });
         }
-
     }
+
 
     public void addLocationToMap(Location nextLocation)
     {
@@ -133,12 +141,12 @@ public class MapHelper implements OnMapReadyCallback {
                 {
                     LatLng l = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(l));
-                    if(mLastLocation != null)
-                    {
-                        LatLng l1 = new LatLng(lastWaypoint.getLatitude(), lastWaypoint.getLongitude());
-                        LatLng l2 = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    }
+                    mLastLocation = new Location("reverseGeocoded");
+                    mLastLocation.setLatitude(lastWaypoint.getLatitude());
+                    mLastLocation.setLongitude(lastWaypoint.getLongitude());
+                    mLastLocation.setTime(lastWaypoint.getTime().getTime());
                 }
+
             }
 
 

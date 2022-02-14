@@ -149,8 +149,19 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     private void buildNotification() {
         String stop = ConstAndStaticMethods.INTENT_FILTER_STOP_TEXT;
         registerReceiver(stopReceiver, new IntentFilter(stop));
+
+        int flag;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            flag = PendingIntent.FLAG_IMMUTABLE;
+        }
+        else
+        {
+            flag = PendingIntent.FLAG_UPDATE_CURRENT;
+        }
+
         PendingIntent broadcastIntent = PendingIntent.getBroadcast(
-                this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
+                this, 0, new Intent(stop), flag);
 
 
 

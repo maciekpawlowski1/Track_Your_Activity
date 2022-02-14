@@ -62,8 +62,17 @@ public class UploadWorker extends ListenableWorker {
             );
             notificationManager.createNotificationChannel(channel);
         }
+        int flag;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            flag = PendingIntent.FLAG_IMMUTABLE;
+        }
+        else
+        {
+            flag = PendingIntent.FLAG_UPDATE_CURRENT;
+        }
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL_ID)
-                .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), SignInActivity.class), PendingIntent.FLAG_IMMUTABLE))
+                .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), SignInActivity.class), flag))
                 .setSmallIcon(R.drawable.upload_icon)
                 .setOngoing(true)
                 .setAutoCancel(true)
