@@ -118,7 +118,7 @@ public class UploadWorker extends ListenableWorker {
         List<Integer> taskTrainingIds = new ArrayList<>();
         for(TrainingModel training: trainings)
         {
-            File file = new File(mFilesDir.getAbsolutePath() + File.separator, training.getId()+".gpx");
+            File file = new File(mFilesDir.getAbsolutePath() + File.separator, training.getKey()+".gpx");
             if(file.exists())
             {
                 Log.d("worker", "Running some task");

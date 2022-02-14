@@ -87,7 +87,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mTrackingViewMvc.setTrainingTypeIcon(mTrainingType);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mPermissionHelper = new PermissionHelper(mFusedLocationClient, this);
-        mMapHelper = new MapHelper(mFusedLocationClient, mPermissionHelper, mTrainingId);
+        mMapHelper = new MapHelper(mFusedLocationClient, mPermissionHelper, mTrainingKey);
         mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

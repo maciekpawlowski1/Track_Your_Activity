@@ -25,14 +25,17 @@ public class TrainingDetailsActivity extends AppCompatActivity implements Traini
 
         int trainingId = getIntent().getExtras().getInt("training_id");
 
-        mMapHelper = new MapHelper(trainingId, getApplicationContext());
+
+
+
+        mTraining = new DBHandler(getApplicationContext()).getTraining(trainingId);
+        mMapHelper = new MapHelper(mTraining.getKey(), getApplicationContext());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_tracking);
         assert mapFragment != null;
         mapFragment.getMapAsync(mMapHelper);
 
-        mTraining = new DBHandler(getApplicationContext()).getTraining(trainingId);
         mViewMvc.bindTraining(mTraining);
         mViewMvc.registerListener(this);
     }

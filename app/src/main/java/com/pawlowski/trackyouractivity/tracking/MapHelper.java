@@ -26,20 +26,20 @@ public class MapHelper implements OnMapReadyCallback {
     Location mLastLocation;
     private final FusedLocationProviderClient mFusedLocationClient;
     private final PermissionHelper mPermissionHelper;
-    private final int mTrainingId;
+    private String mTrainingKey;
     private final Context mAppContext;
     private final boolean mCurrentlyTracking;
 
-    public MapHelper(@NonNull FusedLocationProviderClient mFusedLocationClient, @NonNull PermissionHelper permissionHelper, int trainingId) {
+    public MapHelper(@NonNull FusedLocationProviderClient mFusedLocationClient, @NonNull PermissionHelper permissionHelper, String trainingKey) {
         this.mFusedLocationClient = mFusedLocationClient;
         mPermissionHelper = permissionHelper;
-        mTrainingId = trainingId;
+        mTrainingKey = trainingKey;
         mCurrentlyTracking = true;
         mAppContext = mFusedLocationClient.getApplicationContext();
     }
 
-    public MapHelper(int trainingId, Context appContext) {
-        mTrainingId = trainingId;
+    public MapHelper(String trainingKey, Context appContext) {
+        mTrainingKey = trainingKey;
         mAppContext = appContext;
         mCurrentlyTracking = false;
         mFusedLocationClient = null;
@@ -56,7 +56,7 @@ public class MapHelper implements OnMapReadyCallback {
 
         if(mCurrentlyTracking && mPermissionHelper != null)
         {
-            if (mTrainingId == -1 && mPermissionHelper.isTrackingPermissionGranted()) {
+            if (mTrainingKey == null && mPermissionHelper.isTrackingPermissionGranted()) {
                 try {
                     showCurrentLocation();
                     mMap.setMyLocationEnabled(true);
@@ -78,10 +78,10 @@ public class MapHelper implements OnMapReadyCallback {
 
 
 
-        if(mTrainingId != -1)
+        if(mTrainingKey != null)
         {
-            Log.d("reading", "reading " + mTrainingId);
-            new GPXUseCase(mAppContext.getFilesDir()).readFromGpxTask(mTrainingId + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+            Log.d("reading", "reading " + mTrainingKey);
+            new GPXUseCase(mAppContext.getFilesDir()).readFromGpxTask(mTrainingKey + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
                 @Override
                 public void onSuccess(List<Waypoint> waypoints) {
                     Log.d("reading", "success: " + waypoints.size());

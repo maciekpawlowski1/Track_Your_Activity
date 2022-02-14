@@ -10,16 +10,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import androidx.annotation.WorkerThread;
 
 public class GPXUpdater {
+    private String mTrainingKey;
     private final GPXUseCase mGpxUseCase;
-    private final int mTrainingId;
     private final ArrayList<Waypoint> mWaypoints = new ArrayList<>();
     private int mLastUpdatedSize;
     private final AtomicBoolean isFinished;
     private final Thread workingThread;
 
-    public GPXUpdater(int trainingId, GPXUseCase gpxUseCase) {
+    public GPXUpdater(String trainingKey, GPXUseCase gpxUseCase) {
+        mTrainingKey = trainingKey;
         mGpxUseCase = gpxUseCase;
-        mTrainingId = trainingId;
         isFinished = new AtomicBoolean(false);
         isFinished.set(false);
         workingThread = new Thread(this::work);
@@ -35,7 +35,7 @@ public class GPXUpdater {
             {
                 if(mWaypoints.size() != mLastUpdatedSize)
                 {
-                    mGpxUseCase.writeToGpx(mWaypoints, mTrainingId+".gpx");
+                    mGpxUseCase.writeToGpx(mWaypoints, mTrainingKey+".gpx");
                     mLastUpdatedSize = mWaypoints.size();
                 }
             }

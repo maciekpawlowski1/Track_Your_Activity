@@ -61,7 +61,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     private double mCurrentSpeed = 0;
     private long mStartingSeconds = 0;
     private long mCurrentSeconds = 0;
-    private int mTrainingId;
+    private String mTrainingKey = null;
 
     private ArrayList<Waypoint> mWaypoints = new ArrayList<>();
 
@@ -87,16 +87,16 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSpeedChecker.registerListener(this);
         mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
         mDbHandler = new DBHandler(getApplicationContext());
-        mTrainingId = mDbHandler.getCurrentTrainingId();
+        mTrainingKey = mDbHandler.getCurrentTrainingKey();
         mGPXUseCase = new GPXUseCase(getFilesDir());
-        mGPXUpdater = new GPXUpdater(mTrainingId, mGPXUseCase);
+        mGPXUpdater = new GPXUpdater(mTrainingKey, mGPXUseCase);
         buildNotification();
         initLocationCallback();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         startTrackingLocation();
 
 
-        mGPXUseCase.readFromGpxTask(mTrainingId+".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+        mGPXUseCase.readFromGpxTask(mTrainingKey+".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
             @Override
             public void onSuccess(List<Waypoint> waypoints) {
                 waypoints.addAll(mWaypoints);
@@ -310,7 +310,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSharedPreferencesHelper.setDistance(mAllDistance);
         mSharedPreferencesHelper.setTrackingActive(false);
         EventBus.getDefault().post(new TrackingStopUpdate(false));
-        mGPXUseCase.writeToGpx(mWaypoints, mTrainingId + ".gpx");
+        mGPXUseCase.writeToGpx(mWaypoints, mTrainingKey + ".gpx");
         if(mGPXUpdater != null)
         {
             mGPXUpdater.stopUpdating();
