@@ -69,6 +69,23 @@ public class DBHandler extends SQLiteOpenHelper {
         return 0;
     }
 
+    public TrainingModel getCurrentTraining()
+    {
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'false' LIMIT 1";
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        TrainingModel training;
+        Cursor cursor = db.rawQuery(selectSql, null);
+        if (cursor.moveToFirst()) {
+            training = new TrainingModel(cursor.getString(6),cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
+            training.setId(cursor.getInt(0));
+            cursor.close();
+            return training;
+        }
+        cursor.close();
+        return null;
+    }
+
     public int getCurrentTrainingId()
     {
 

@@ -34,9 +34,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-import java.util.List;
-
 public class TrackingActivity extends AppCompatActivity implements TrackingViewMvc.OnControlButtonsClickListener {
 
 
@@ -51,6 +48,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     private long mTime;
     private int mKcal;
     private int mTrainingType;
+    private long mTrainingDate;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mAccountKey;
     private String mTrainingKey = null;
@@ -68,7 +66,6 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
         mDbHandler = new DBHandler(getApplicationContext());
-        Log.d("trackingactivity", "To save: " + mDbHandler.getAllNotSavedTrainings().size());
 
         Bundle bundle = getIntent().getExtras();
         mTrainingType = bundle.getInt("training_type");
@@ -76,10 +73,16 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
 
         mAccountKey = mFirebaseAuthHelper.getCurrentUser().getUid();
 
-        mTrainingId = mDbHandler.getCurrentTrainingId();
-        mTrainingKey = mDbHandler.getCurrentTrainingKey();
-        if(mTrainingType == -1)
-            mTrainingType = mDbHandler.getTypeOfCurrentTraining();
+        TrainingModel current = mDbHandler.getCurrentTraining();
+        if(current != null)
+        {
+            mTrainingId = current.getId();
+            mTrainingKey = current.getKey();
+            mTrainingDate = current.getDate();
+            mTrainingType = current.getTrainingType();
+        }
+
+
 
         mTrackingViewMvc.setTrainingTypeIcon(mTrainingType);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -263,7 +266,8 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 break;
             case STOPPED:
                 mTrainingKey = mFirebaseDatabaseHelper.createNewEmptyTraining(mAccountKey);
-                mDbHandler.insertTraining(new TrainingModel(mTrainingKey, System.currentTimeMillis(), 0, 0, 0, false, mTrainingType));
+                mTrainingDate = System.currentTimeMillis();
+                mDbHandler.insertTraining(new TrainingModel(mTrainingKey, mTrainingDate, 0, 0, 0, false, mTrainingType));
                 mTrainingId = mDbHandler.getCurrentTrainingId();
                 mMapHelper.clearMap();
                 startService();
@@ -282,7 +286,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     public void onStopClick() {
         //TODO: Save kcal also
         mKcal = 0;
-        mFirebaseDatabaseHelper.addTraining(mAccountKey, mTrainingKey, mDistance, mKcal, mTime);
+        mFirebaseDatabaseHelper.addTraining(mAccountKey, mTrainingKey, mDistance, mKcal, mTime, mTrainingDate, mTrainingType);
         TrainingModel training = new TrainingModel(mTrainingKey, mDistance, mTime, mKcal, true, mTrainingType);
         training.setId(mTrainingId);
         mDbHandler.updateTraining(training);
