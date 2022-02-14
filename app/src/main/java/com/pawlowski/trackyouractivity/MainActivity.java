@@ -19,8 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    MainViewMvc mViewMvc;
-    SharedPreferencesHelper mSharedPreferences;
+    private MainViewMvc mViewMvc;
+    private SharedPreferencesHelper mSharedPreferences;
+    private String mAccountKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
 
         mSharedPreferences = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
 
+        mAccountKey = new FirebaseAuthHelper().getCurrentUser().getUid();
+
         mViewMvc.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.overview_nav_menu)
                 {
-                    mViewMvc.loadFragment(new OverviewFragment(mViewMvc), getSupportFragmentManager(), false);
+                    mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                     mViewMvc.checkItem(R.id.overview_nav_menu);
                 }
                 else if (item.getItemId() == R.id.track_nav_menu)
@@ -48,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (item.getItemId() == R.id.history_nav_menu)
                 {
-                    mViewMvc.loadFragment(new HistoryFragment(mViewMvc), getSupportFragmentManager(), false);
+                    mViewMvc.loadFragment(new HistoryFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                     mViewMvc.checkItem(R.id.history_nav_menu);
                 }
                 else if(item.getItemId() == R.id.settings_nav_menu)
                 {
-                    mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc), getSupportFragmentManager(), false);
+                    mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                     mViewMvc.checkItem(R.id.history_nav_menu);
                 }
 
@@ -64,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if((bundle != null && bundle.getBoolean("start_with_settings", false)) || !mSharedPreferences.isProfileSaved())
         {
-            mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc), getSupportFragmentManager(), false);
+            mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
         }
         else
         {
-            mViewMvc.loadFragment(new OverviewFragment(mViewMvc), getSupportFragmentManager(), false);
+            mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
         }
 
     }

@@ -7,11 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -19,7 +17,7 @@ import androidx.annotation.Nullable;
 public class DBHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TrackYourActivityDatabase";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     public DBHandler(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -27,7 +25,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql1 = "CREATE TABLE Trainings(id INTEGER PRIMARY KEY, training_key TEXT, distance DOUBLE, time LONG, kcal INTEGER, is_finished TEXT, date LONG, training_type INTEGER, is_saved TEXT)";
+        String sql1 = "CREATE TABLE Trainings(id INTEGER PRIMARY KEY, training_key TEXT, distance DOUBLE, time LONG, kcal INTEGER, is_finished TEXT, date LONG, training_type INTEGER, is_saved TEXT, account_key TEXT)";
         sqLiteDatabase.execSQL(sql1);
     }
 
@@ -37,7 +35,7 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void insertTraining(TrainingModel training)
+    public void insertTraining(TrainingModel training, String accountKey)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -49,6 +47,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("training_type", training.getTrainingType());
         values.put("training_key", training.getKey());
         values.put("is_saved", "false");
+        values.put("account_key", accountKey);
         Log.d("Inserting", training.getTrainingType()+"");
         db.insert("Trainings", null, values);
         db.close();
@@ -120,7 +119,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public int getTypeOfCurrentTraining()
     {
-        List<LatLng>locations = new ArrayList<>();
 
         String selectSql = "SELECT T.training_type FROM Trainings T WHERE T.is_finished LIKE 'false' LIMIT 1";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -151,11 +149,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return training;
     }
 
-    public List<TrainingModel> getLast3Trainings()
+    public List<TrainingModel> getLast3Trainings(String accountKey)
     {
         List<TrainingModel> trainings = new ArrayList<>();
 
-        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date DESC LIMIT 3";
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' AND T.account_key LIKE '" + accountKey + "' ORDER BY T.date DESC LIMIT 3";
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(selectSql, null);
@@ -171,11 +169,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return trainings;
     }
 
-    public List<TrainingModel> getAllTrainings()
+    public List<TrainingModel> getAllTrainings(String accountKey)
     {
         List<TrainingModel> trainings = new ArrayList<>();
 
-        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' ORDER BY T.date DESC";
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' AND T.account_key LIKE '" + accountKey + "' ORDER BY T.date DESC";
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(selectSql, null);
@@ -225,11 +223,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public List<TrainingModel> getAllNotSavedTrainings()
+    public List<TrainingModel> getAllNotSavedTrainings(String accountKey)
     {
         List<TrainingModel> trainings = new ArrayList<>();
 
-        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' AND T.is_saved LIKE 'false'";
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' AND T.is_saved LIKE 'false' AND t.account_key LIKE '" + accountKey + "'";
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(selectSql, null);

@@ -279,7 +279,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
             case STOPPED:
                 mTrainingKey = mFirebaseDatabaseHelper.createNewEmptyTraining(mAccountKey);
                 mTrainingDate = System.currentTimeMillis();
-                mDbHandler.insertTraining(new TrainingModel(mTrainingKey, mTrainingDate, 0, 0, 0, false, mTrainingType));
+                mDbHandler.insertTraining(new TrainingModel(mTrainingKey, mTrainingDate, 0, 0, 0, false, mTrainingType), mAccountKey);
                 mTrainingId = mDbHandler.getCurrentTrainingId();
                 mMapHelper.clearMap();
                 startService();

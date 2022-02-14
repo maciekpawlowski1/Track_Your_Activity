@@ -28,6 +28,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
     private ProfileSettingsViewMvc mViewMvc;
     private SharedPreferencesHelper mSharedPreferences;
     private MainViewMvc mMainViewMvc;
+    private String mAccountKey;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private FirebaseAuthHelper mFirebaseAuthHelper;
 
@@ -36,8 +37,9 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
     }
 
 
-    public ProfileSettingsFragment(MainViewMvc mainViewMvc) {
+    public ProfileSettingsFragment(MainViewMvc mainViewMvc, String accountKey) {
         mMainViewMvc = mainViewMvc;
+        mAccountKey = accountKey;
         mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
         mFirebaseAuthHelper = new FirebaseAuthHelper();
     }
@@ -99,7 +101,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
             mFirebaseDatabaseHelper.addUserInfo(mFirebaseAuthHelper.getCurrentUser().getUid(), name, date, goal, weight);
             mSharedPreferences.setWeeklyGoal(goal);
             mSharedPreferences.setProfileSaved(true);
-            mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc), requireActivity().getSupportFragmentManager(), false);
+            mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
             //TODO: Save
         }
     }

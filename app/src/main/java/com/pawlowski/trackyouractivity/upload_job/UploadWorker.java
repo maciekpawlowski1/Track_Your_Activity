@@ -36,9 +36,10 @@ public class UploadWorker extends ListenableWorker {
 
     private static final String NOTIFICATION_CHANNEL_ID = "TrackYourActivityWorkerChannelId";
     private static final CharSequence NOTIFICATION_CHANNEL_NAME = "TrackYourActivityWorkerChannelName";
-    DBHandler mDBHandler;
-    FirebaseDatabaseHelper mFirebaseDatabaseHelper;
-    File mFilesDir;
+    private final DBHandler mDBHandler;
+    private final FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private final File mFilesDir;
+
 
     public UploadWorker(Context context, WorkerParameters workerParams) {
         super(context, workerParams);
@@ -121,7 +122,7 @@ public class UploadWorker extends ListenableWorker {
 
     private void work(String accountKey, @NonNull CallbackToFutureAdapter.Completer<Result> completer)
     {
-        List<TrainingModel> trainings = mDBHandler.getAllNotSavedTrainings();
+        List<TrainingModel> trainings = mDBHandler.getAllNotSavedTrainings(accountKey);
         Log.d("worker", "to save: " + trainings.size());
         List<UploadTask> tasks = new ArrayList<>();
         List<Integer> taskTrainingIds = new ArrayList<>();

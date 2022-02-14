@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.MainViewMvc;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
@@ -39,13 +40,15 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
     private HistoryAdapter mHistoryAdapter;
     private SharedPreferencesHelper mSharedPreferences;
     private DBHandler mDbHandler;
+    private String mAccountKey;
 
     public OverviewFragment() {
         // Required empty public constructor
     }
 
-    public OverviewFragment(MainViewMvc mainActivityViewMvc) {
+    public OverviewFragment(MainViewMvc mainActivityViewMvc, String accountKey) {
         this.mMainActivityViewMvc = mainActivityViewMvc;
+        mAccountKey = accountKey;
     }
 
 
@@ -55,14 +58,13 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
         super.onCreate(savedInstanceState);
         mDbHandler = new DBHandler(getContext());
         mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings()); //TODO: Move to background thread
+        mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings(mAccountKey)); //TODO: Move to background thread
 
 
         int alreadyDone = mDbHandler.getWeeklyKm(getWeekStartDate(Calendar.getInstance().getTime()).getTime(),
@@ -155,7 +157,7 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
 
     @Override
     public void onMoreHistoryClick() {
-        mMainActivityViewMvc.loadFragment(new HistoryFragment(mMainActivityViewMvc), requireActivity().getSupportFragmentManager(), false);
+        mMainActivityViewMvc.loadFragment(new HistoryFragment(mMainActivityViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
         mMainActivityViewMvc.checkItem(R.id.history_nav_menu);
     }
 

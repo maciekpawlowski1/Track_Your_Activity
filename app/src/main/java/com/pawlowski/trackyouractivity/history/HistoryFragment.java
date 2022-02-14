@@ -21,14 +21,16 @@ public class HistoryFragment extends Fragment implements HistoryViewMvc.HistoryB
     private HistoryAdapter mHistoryAdapter;
     private DBHandler mDbHandler;
     private MainViewMvc mMainActivityViewMvc;
+    private String mAccountKey;
 
     public HistoryFragment() {
         // Required empty public constructor
     }
 
-    public HistoryFragment(MainViewMvc mainActivityViewMvc)
+    public HistoryFragment(MainViewMvc mainActivityViewMvc, String accountKey)
     {
         mMainActivityViewMvc = mainActivityViewMvc;
+        mAccountKey = accountKey;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class HistoryFragment extends Fragment implements HistoryViewMvc.HistoryB
         mHistoryAdapter = new HistoryAdapter(getContext());
         mDbHandler = new DBHandler(getContext());
         mViewMvc.setRecyclerAdapter(mHistoryAdapter);
-        mHistoryAdapter.setTrainings(mDbHandler.getAllTrainings());
+        mHistoryAdapter.setTrainings(mDbHandler.getAllTrainings(mAccountKey));
         return mViewMvc.getRootView();
     }
 
