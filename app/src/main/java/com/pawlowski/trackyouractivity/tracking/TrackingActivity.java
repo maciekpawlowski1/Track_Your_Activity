@@ -102,6 +102,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
             mPermissionHelper.requestPermission(new PermissionHelper.OnPermissionReadyListener() {
                 @Override
                 public void onSuccess() {
+                    mMapHelper.startShowingLocation();
                     if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
                     {
                         mPermissionHelper.requestBackgroundPermission(new PermissionHelper.OnPermissionReadyListener() {
@@ -277,17 +278,41 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         switch (mTrackingViewMvc.getCurrentState())
         {
             case PAUSED:
-                startService();
-                mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
+                if(!mPermissionHelper.isTrackingPermissionGranted())
+                {
+                    mPermissionHelper.requestPermission(new PermissionHelper.OnPermissionReadyListener() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+                    });
+                }
+                else
+                {
+                    startService();
+                    mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
+                }
                 break;
             case STOPPED:
-                mTrainingKey = mFirebaseDatabaseHelper.createNewEmptyTraining(mAccountKey);
-                mTrainingDate = System.currentTimeMillis();
-                mDbHandler.insertTraining(new TrainingModel(mTrainingKey, mTrainingDate, 0, 0, 0, false, mTrainingType), mAccountKey);
-                mTrainingId = mDbHandler.getCurrentTrainingId();
-                mMapHelper.clearMap();
-                startService();
-                mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
+                if(!mPermissionHelper.isTrackingPermissionGranted())
+                {
+                    mPermissionHelper.requestPermission(new PermissionHelper.OnPermissionReadyListener() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+                    });
+                }
+                else
+                {
+                    mTrainingKey = mFirebaseDatabaseHelper.createNewEmptyTraining(mAccountKey);
+                    mTrainingDate = System.currentTimeMillis();
+                    mDbHandler.insertTraining(new TrainingModel(mTrainingKey, mTrainingDate, 0, 0, 0, false, mTrainingType), mAccountKey);
+                    mTrainingId = mDbHandler.getCurrentTrainingId();
+                    mMapHelper.clearMap();
+                    startService();
+                    mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.PLAYED);
+                }
                 break;
             case PLAYED:
                 stopService();

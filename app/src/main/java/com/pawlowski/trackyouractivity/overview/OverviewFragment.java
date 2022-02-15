@@ -67,13 +67,7 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
         EventBus.getDefault().register(this);
 
 
-        int alreadyDone = mDbHandler.getWeeklyKm(getWeekStartDate(Calendar.getInstance().getTime()).getTime(),
-                getWeekEndDate(Calendar.getInstance().getTime()).getTime());
-
-
-
-        int weeklyGoal = mSharedPreferences.getWeeklyGoal();
-        mViewMvc.bindWeeklyGoal(weeklyGoal, alreadyDone, Math.max(weeklyGoal - alreadyDone, 0));
+        bindWeeklyGoal();
 
         if(mSharedPreferences.getCurrentTime() != 0)
         {
@@ -88,7 +82,15 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
         }
     }
 
+    private void bindWeeklyGoal()
+    {
+        int alreadyDone = mDbHandler.getWeeklyKm(getWeekStartDate(Calendar.getInstance().getTime()).getTime(),
+                getWeekEndDate(Calendar.getInstance().getTime()).getTime());
 
+
+        int weeklyGoal = mSharedPreferences.getWeeklyGoal();
+        mViewMvc.bindWeeklyGoal(weeklyGoal, alreadyDone, Math.max(weeklyGoal - alreadyDone, 0));
+    }
 
     private static Date getWeekStartDate(Date date){
         Calendar cal = Calendar.getInstance();
@@ -171,6 +173,7 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
     public void onTrainingsDownloadedUpdate(TrainingsDownloadedUpdateModel trainingsUpdate)
     {
         mHistoryAdapter.setTrainings(mDbHandler.getLast3Trainings(mAccountKey)); //TODO: Move to background thread
+        bindWeeklyGoal();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

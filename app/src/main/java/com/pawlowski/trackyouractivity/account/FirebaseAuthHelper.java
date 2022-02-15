@@ -37,6 +37,11 @@ public class FirebaseAuthHelper {
         return mFirebaseAuth.getCurrentUser() != null;
     }
 
+    public void signOut()
+    {
+        mFirebaseAuth.signOut();
+    }
+
     public FirebaseUser getCurrentUser()
     {
         return mFirebaseAuth.getCurrentUser();

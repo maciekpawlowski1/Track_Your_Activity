@@ -129,4 +129,9 @@ public class SharedPreferencesHelper {
         setCurrentTime(0);
         setCurrentKcal(0);
     }
+
+    public void resetPersonValues()
+    {
+        setProfileSaved(false);
+    }
 }

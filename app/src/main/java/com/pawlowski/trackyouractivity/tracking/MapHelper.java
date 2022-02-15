@@ -70,12 +70,7 @@ public class MapHelper implements OnMapReadyCallback {
             }
             else if (mPermissionHelper.isTrackingPermissionGranted())
             {
-                try {
-                    mMap.setMyLocationEnabled(true);
-                } catch (SecurityException e)
-                {
-                    e.printStackTrace();
-                }
+                startShowingLocation();
             }
         }
 
@@ -83,6 +78,16 @@ public class MapHelper implements OnMapReadyCallback {
 
         readGpxAndUpdateMap();
 
+    }
+
+    public void startShowingLocation()
+    {
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void readGpxAndUpdateMap()

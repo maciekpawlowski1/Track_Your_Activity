@@ -48,6 +48,10 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
         super.onCreate(savedInstanceState);
         mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
 
+        if(mSharedPreferences.isProfileSaved())
+        {
+            //TODO: bind saved values
+        }
     }
 
     @Override

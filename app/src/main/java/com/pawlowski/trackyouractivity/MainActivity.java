@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
+import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.base.BaseActivity;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
@@ -40,6 +41,7 @@ public class MainActivity extends BaseActivity {
     private SharedPreferencesHelper mSharedPreferences;
     private String mAccountKey;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private FirebaseAuthHelper mFirebaseAuthHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class MainActivity extends BaseActivity {
 
         mSharedPreferences = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
 
-        mAccountKey = new FirebaseAuthHelper().getCurrentUser().getUid();
+        mFirebaseAuthHelper = new FirebaseAuthHelper();
+        mAccountKey = mFirebaseAuthHelper.getCurrentUser().getUid();
         mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
 
 
@@ -78,7 +81,15 @@ public class MainActivity extends BaseActivity {
                 else if(item.getItemId() == R.id.settings_nav_menu)
                 {
                     mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
-                    mViewMvc.checkItem(R.id.history_nav_menu);
+                    mViewMvc.checkItem(R.id.settings_nav_menu);
+                }
+                else if(item.getItemId() == R.id.sign_out_nav_menu)
+                {
+                    mSharedPreferences.resetPersonValues();
+                    mFirebaseAuthHelper.signOut();
+                    Intent i = new Intent(MainActivity.this, SignInActivity.class);
+                    startActivity(i);
+                    finish();
                 }
 
                     return false;
@@ -184,6 +195,14 @@ public class MainActivity extends BaseActivity {
         if((checkedItem == null || checkedItem.getItemId() != R.id.settings_nav_menu) && !mViewMvc.showNavigation())
         {
             super.onBackPressed();
+        }
+        else if(checkedItem != null && checkedItem.getItemId() == R.id.settings_nav_menu)
+        {
+            if(mSharedPreferences.isProfileSaved())
+            {
+                if(!mViewMvc.showNavigation())
+                    super.onBackPressed();
+            }
         }
     }
 }
