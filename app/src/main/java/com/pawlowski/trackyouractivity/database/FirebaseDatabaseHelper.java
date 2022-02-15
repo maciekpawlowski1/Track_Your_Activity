@@ -57,6 +57,7 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists())
+
                     source.setException(new Exception("No such user"));
                 else
                 {

@@ -171,6 +171,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         {
             float distance = mSharedPreferencesHelper.getCurrentDistance();
             long seconds = mSharedPreferencesHelper.getCurrentTime();
+            mKcal = (int)mSharedPreferencesHelper.getCurrentKcal();
             mTrackingViewMvc.setTimeText(ConstAndStaticMethods.convertSecondsToTimeTest(seconds/1000));
             mTrackingViewMvc.setDistanceText(ConstAndStaticMethods.distanceMetersToKilometers(distance));
             mTrackingViewMvc.setSpeedText(0);
@@ -214,6 +215,9 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         speed = Math.floor(speed);
         speed/= 10.0;
         mTrackingViewMvc.setSpeedText(speed);
+
+        mKcal = (int) locationUpdate.getAllKcal();
+        mTrackingViewMvc.setCaloriesText((int) locationUpdate.getAllKcal());
 
     }
 
@@ -296,8 +300,6 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
 
     @Override
     public void onStopClick() {
-        //TODO: Save kcal also
-        mKcal = 0;
         mFirebaseDatabaseHelper.addTraining(mAccountKey, mTrainingKey, mDistance, mKcal, mTime, mTrainingDate, mTrainingType);
         TrainingModel training = new TrainingModel(mTrainingKey, mDistance, mTime, mKcal, true, mTrainingType);
         training.setId(mTrainingId);

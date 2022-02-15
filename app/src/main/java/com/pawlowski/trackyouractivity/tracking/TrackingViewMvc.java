@@ -106,6 +106,9 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
         this.mDistanceText.setText(distanceText+"");
     }
 
+
+
+
     public ControllerButtonsState getCurrentState() {
         return mCurrentState;
     }

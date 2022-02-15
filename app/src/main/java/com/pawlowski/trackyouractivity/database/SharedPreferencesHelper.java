@@ -1,6 +1,5 @@
 package com.pawlowski.trackyouractivity.database;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPreferencesHelper {
@@ -9,6 +8,32 @@ public class SharedPreferencesHelper {
     public SharedPreferencesHelper(SharedPreferences mSharedPreferences) {
         this.mSharedPreferences = mSharedPreferences;
     }
+
+
+    public void setCurrentKcal(float kcal)
+    {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putFloat("kcal", kcal);
+        editor.commit();
+    }
+
+    public double getCurrentKcal()
+    {
+        return mSharedPreferences.getFloat("kcal", 0);
+    }
+
+    public void setWeight(int weight)
+    {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt("weight", weight);
+        editor.apply();
+    }
+
+    public int getWeight()
+    {
+        return mSharedPreferences.getInt("weight", 0);
+    }
+
 
     public void setLastUpdatesCheckTime(long time)
     {
@@ -102,5 +127,6 @@ public class SharedPreferencesHelper {
         setTrackingActive(false);
         setDistance(0);
         setCurrentTime(0);
+        setCurrentKcal(0);
     }
 }

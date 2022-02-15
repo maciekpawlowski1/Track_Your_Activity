@@ -54,6 +54,7 @@ public class MainActivity extends BaseActivity {
         mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
 
 
+
         mViewMvc.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -87,7 +88,6 @@ public class MainActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         if((bundle != null && bundle.getBoolean("start_with_settings", false)) || !mSharedPreferences.isProfileSaved())
         {
-            //TODO: Save also other profile information
             showProgressDialog("Please wait...");
             mFirebaseDatabaseHelper.getUserInfo(mAccountKey).addOnCompleteListener(new OnCompleteListener<UserModel>() {
                 @Override
@@ -96,6 +96,7 @@ public class MainActivity extends BaseActivity {
                     {
                         UserModel user = task.getResult();
                         mSharedPreferences.setWeeklyGoal(user.getGoal());
+                        mSharedPreferences.setWeight(user.getWeight());
                         mSharedPreferences.setProfileSaved(true);
                         mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                     }

@@ -3,37 +3,47 @@ package com.pawlowski.trackyouractivity.models;
 import android.location.Location;
 
 public class LocationUpdateModel {
-    private Location location;
-    private float allDistance;
-    private double currentSpeed;
+    private Location mLocation;
+    private float mAllDistance;
+    private double mCurrentSpeed;
+    private double mAllKcal;
 
-    public LocationUpdateModel(Location location, float allDistance, double currentSpeed) {
-        this.location = location;
-        this.allDistance = allDistance;
-        this.currentSpeed = currentSpeed;
+    public LocationUpdateModel(Location location, float allDistance, double currentSpeed, double allKcal) {
+        this.mLocation = location;
+        this.mAllDistance = allDistance;
+        this.mCurrentSpeed = currentSpeed;
+        mAllKcal = allKcal;
     }
 
     public Location getLocation() {
-        return location;
+        return mLocation;
     }
 
     public void setLocation(Location location) {
-        this.location = location;
+        this.mLocation = location;
     }
 
     public float getAllDistance() {
-        return allDistance;
+        return mAllDistance;
     }
 
     public void setAllDistance(float allDistance) {
-        this.allDistance = allDistance;
+        this.mAllDistance = allDistance;
     }
 
     public double getCurrentSpeed() {
-        return currentSpeed;
+        return mCurrentSpeed;
     }
 
     public void setCurrentSpeed(double currentSpeed) {
-        this.currentSpeed = currentSpeed;
+        this.mCurrentSpeed = currentSpeed;
+    }
+
+    public double getAllKcal() {
+        return mAllKcal;
+    }
+
+    public void setAllKcal(double mAllKcal) {
+        this.mAllKcal = mAllKcal;
     }
 }

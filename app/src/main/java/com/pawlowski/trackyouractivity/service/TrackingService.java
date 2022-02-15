@@ -49,7 +49,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
-public class TrackingService extends Service implements TimeCounterUseCase.OnTimeUpdateListener, SpeedChecker.SpeedChangeListener {
+public class TrackingService extends Service implements TimeCounterUseCase.OnTimeUpdateListener, SpeedAndKcalChecker.SpeedChangeListener {
+
+
     public TrackingService() {
     }
 
@@ -59,15 +61,15 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     private Location mLastLocation = null;
     private float mAllDistance = 0;
     private double mCurrentSpeed = 0;
-    private long mStartingSeconds = 0;
+    private double mAllKcal = 0;
     private long mCurrentSeconds = 0;
     private String mTrainingKey = null;
 
-    private ArrayList<Waypoint> mWaypoints = new ArrayList<>();
+    private final ArrayList<Waypoint> mWaypoints = new ArrayList<>();
 
 
     private TimeCounterUseCase mTimeCounterUseCase;
-    private SpeedChecker mSpeedChecker;
+    private SpeedAndKcalChecker mSpeedAndKcalChecker;
     private SharedPreferencesHelper mSharedPreferencesHelper;
 
     private TextToSpeech mTextToSpeech;
@@ -81,13 +83,13 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     public void onCreate() {
         super.onCreate();
 
-
-        mStartingSeconds = System.currentTimeMillis();
-        mSpeedChecker = new SpeedChecker();
-        mSpeedChecker.registerListener(this);
         mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
         mDbHandler = new DBHandler(getApplicationContext());
+        mSpeedAndKcalChecker = new SpeedAndKcalChecker(mSharedPreferencesHelper.getCurrentKcal(), mDbHandler.getTypeOfCurrentTraining(), mSharedPreferencesHelper.getWeight());
+        mSpeedAndKcalChecker.registerListener(this);
+
         mTrainingKey = mDbHandler.getCurrentTrainingKey();
+
         mGPXUseCase = new GPXUseCase(getFilesDir());
         mGPXUpdater = new GPXUpdater(mTrainingKey, mGPXUseCase);
         buildNotification();
@@ -248,10 +250,14 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
                 Location location = locationResult.getLastLocation();
 
                 if (mLastLocation != null) {
+                    double lastDistance = mAllDistance;
                     mAllDistance += mLastLocation.distanceTo(location);
+
+                    if(Math.floor(lastDistance/1000.) != Math.floor(mAllDistance/1000.))
+                        kilometersCompletedAction((int)Math.floor(mAllDistance/1000.));
                 }
-                mSpeedChecker.updateDistance(mAllDistance, location.getTime());
-                EventBus.getDefault().post(new LocationUpdateModel(location, mAllDistance, mCurrentSpeed));
+                mSpeedAndKcalChecker.updateDistance(mAllDistance, location.getTime());
+                EventBus.getDefault().post(new LocationUpdateModel(location, mAllDistance, mCurrentSpeed, mAllKcal));
                 mLastLocation = location;
                 mSharedPreferencesHelper.setDistanceInBackground(mAllDistance);
 
@@ -343,8 +349,11 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         mSharedPreferencesHelper.setCurrentTimeInBackground(currentSeconds);
     }
 
+
+
     @Override
-    public void onSpeedChange(double currentSpeed) {
+    public void onSpeedChange(double currentSpeed, double allKcal) {
         mCurrentSpeed = currentSpeed;
+        mAllKcal = allKcal;
     }
 }

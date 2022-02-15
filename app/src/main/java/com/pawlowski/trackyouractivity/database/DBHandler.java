@@ -83,9 +83,11 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             double sum = cursor.getDouble(0);
             cursor.close();
+            db.close();
             return (int)(sum/1000);
         }
         cursor.close();
+        db.close();
         return 0;
     }
 
@@ -100,9 +102,11 @@ public class DBHandler extends SQLiteOpenHelper {
             training = new TrainingModel(cursor.getString(6),cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
             training.setId(cursor.getInt(0));
             cursor.close();
+            db.close();
             return training;
         }
         cursor.close();
+        db.close();
         return null;
     }
 
@@ -116,9 +120,11 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             int id = cursor.getInt(0);
             cursor.close();
+            db.close();
             return id;
         }
         cursor.close();
+        db.close();
         return -1;
     }
 
@@ -132,9 +138,11 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             String key = cursor.getString(0);
             cursor.close();
+            db.close();
             return key;
         }
         cursor.close();
+        db.close();
         return null;
     }
 
@@ -148,9 +156,11 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             int type = cursor.getInt(0);
             cursor.close();
+            db.close();
             return type;
         }
         cursor.close();
+        db.close();
         return -1;
     }
 
@@ -167,6 +177,7 @@ public class DBHandler extends SQLiteOpenHelper {
             training.setId(cursor.getInt(0));
         }
         cursor.close();
+        db.close();
         return training;
     }
 
@@ -183,10 +194,10 @@ public class DBHandler extends SQLiteOpenHelper {
                 TrainingModel training = new TrainingModel(cursor.getString(6), cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
                 training.setId(cursor.getInt(0));
                 trainings.add(training);
-                Log.d("Getting", training.getTrainingType()+"");
             }while(cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return trainings;
     }
 
@@ -206,6 +217,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return trainings;
     }
 
@@ -223,6 +235,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return trainingsKeys;
     }
 
@@ -246,7 +259,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.update("Trainings", values, "id = ?",
                 new String[]{String.valueOf(training.getId())});
 
-
+        db.close();
     }
 
     public void updateTrainingAsSaved(int trainingId)
@@ -258,7 +271,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.update("Trainings", values, "id = ?",
                 new String[]{String.valueOf(trainingId)});
 
-
+        db.close();
     }
 
     public List<TrainingModel> getAllNotSavedTrainings(String accountKey)
@@ -277,6 +290,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return trainings;
     }
 }

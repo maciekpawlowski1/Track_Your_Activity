@@ -23,9 +23,195 @@ public class ConstAndStaticMethods {
     public static String SHARED_PREFERENCES_NAME = "TrackYourActivity";
 
     public static int TRACKING_INTERVAL = 7000;
-    public static int TRACKING_FAST_INTERVAL = 2500;
+    public static int TRACKING_FAST_INTERVAL = 2000;
 
     public static long GPX_UPDATE_TIME_DELTA_IN_SECONDS = 10;
+
+
+    public static double RUNNING_4MPH_MET = 6.0;
+
+    public static double getKcalForGivenSecondsHavingMet(double weight, double met, long seconds)
+    {
+        return (((met * weight * 3.5) / 200.) / 60.) * seconds;
+    }
+
+
+    public static double getCyclingMet(double speedKmh)
+    {
+        double speedMph = speedKmh / 1.61;
+        if(speedMph <= 9.4)
+        {
+            return 3.5;
+        }
+        else if(speedMph > 9.4 && speedMph <= 10)
+        {
+            return 5.8;
+        }
+        else if(speedMph > 10 && speedMph <= 11.9)
+        {
+            return 6.8;
+        }
+        else if(speedMph > 11.9 && speedMph <= 13.9)
+        {
+            return 8.0;
+        }
+        else if(speedMph > 13.9 && speedMph <= 15.9)
+        {
+            return 10;
+        }
+        else if(speedMph > 15.9 && speedMph <= 19)
+        {
+            return 12.0;
+        }
+        else if(speedMph > 19)
+        {
+            return 15.8;
+        }
+        else
+            return 0.;
+    }
+
+    public static double getRollerSkatingMet(double speedKmh)
+    {
+        double speedMph = speedKmh / 1.61;
+        if(speedMph <= 9.0)
+        {
+            return 7.0;
+        }
+        else if(speedMph > 9.0 && speedMph <= 11.0)
+        {
+            return 7.5;
+        }
+        else if(speedMph > 11.0 && speedMph <= 13.0)
+        {
+            return 9.8;
+        }
+        else if(speedMph > 13.0 && speedMph <= 13.6)
+        {
+            return 12.3;
+        }
+        else if(speedMph > 13.6)
+        {
+            return 14.0;
+        }
+        else
+            return 0.;
+    }
+
+    public static double getWalkingMet(double speedKmh)
+    {
+        double speedMph = speedKmh / 1.61;
+        if(speedMph <= 2.0)
+        {
+            return 2.0;
+        }
+        else if(speedMph > 2.0 && speedMph <= 2.5)
+        {
+            return 2.8;
+        }
+        else if(speedMph > 2.5 && speedMph <= 2.8)
+        {
+            return 3.0;
+        }
+        else if(speedMph > 2.8 && speedMph <= 3.2)
+        {
+            return 3.5;
+        }
+        else if(speedMph > 3.5 && speedMph <= 4.0)
+        {
+            return 4.3;
+        }
+        else if(speedMph > 4.0 && speedMph <= 4.5)
+        {
+            return 5.0;
+        }
+        else if(speedMph > 4.5 && speedMph <= 5.0)
+        {
+            return 7.0;
+        }
+        else if(speedMph > 5.0)
+        {
+            return 8.3;
+        }
+        else
+            return 0.;
+    }
+
+    public static double getRunningMet(double speedKmh)
+    {
+        double speedMph = speedKmh / 1.61;
+        if(speedMph <= 4)
+        {
+            return 5.0;
+        }
+        else if(speedMph > 4 && speedMph <= 5)
+        {
+            return 6.0;
+        }
+        else if(speedMph > 5 && speedMph <= 5.2)
+        {
+            return 8.3;
+        }
+        else if(speedMph > 5.2 && speedMph <= 6)
+        {
+            return 9.0;
+        }
+        else if(speedMph > 6 && speedMph <= 6.7)
+        {
+            return 9.8;
+        }
+        else if(speedMph > 6.7 && speedMph <= 7)
+        {
+            return 10.5;
+        }
+        else if(speedMph > 7 && speedMph <= 7.5)
+        {
+            return 11;
+        }
+        else if(speedMph > 7.5 && speedMph <= 8)
+        {
+            return 11.5;
+        }
+        else if(speedMph > 8 && speedMph <= 8.6)
+        {
+            return 11.8;
+        }
+        else if(speedMph > 8.6 && speedMph <= 9)
+        {
+            return 12.3;
+        }
+        else if(speedMph > 9 && speedMph <= 10)
+        {
+            return 12.8;
+        }
+        else if(speedMph > 10 && speedMph <= 11)
+        {
+            return 14.5;
+        }
+        else if(speedMph > 11 && speedMph <= 12)
+        {
+            return 16.0;
+        }
+        else if(speedMph > 12 && speedMph <= 13)
+        {
+            return 19.0;
+        }
+        else if(speedMph > 13 && speedMph <= 14)
+        {
+            return 19.8;
+        }
+        else if(speedMph > 14)
+        {
+            return 23.0;
+        }
+        else
+        {
+            return 0.0;
+        }
+
+    }
+
+
 
 
     public static String convertSecondsToTimeTest(long seconds)
