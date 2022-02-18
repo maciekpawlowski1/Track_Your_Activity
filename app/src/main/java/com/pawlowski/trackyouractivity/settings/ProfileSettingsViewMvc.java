@@ -14,6 +14,7 @@ import android.widget.SeekBar;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.pawlowski.trackyouractivity.MainViewMvc;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 
@@ -34,9 +35,12 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
     private final TextInputLayout mNameInputLayout;
     private final TextInputLayout mWeightInputLayout;
     private final ImageButton mCalendarButton;
+    private final ImageButton mMenuButton;
     private final Button mSaveButton;
+    private MainViewMvc mMainViewMvc;
 
-    public ProfileSettingsViewMvc(LayoutInflater inflater, ViewGroup container) {
+    public ProfileSettingsViewMvc(LayoutInflater inflater, ViewGroup container, MainViewMvc mainViewMvc) {
+        mMainViewMvc = mainViewMvc;
         rootView = inflater.inflate(R.layout.fragment_profile_settings, container, false);
         mSeekBar = findViewById(R.id.seek_bar_profile_settings);
         mSeekBarEditText = findViewById(R.id.goal_seek_bar_text_profile_settings);
@@ -48,6 +52,7 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
         mNameInputLayout = findViewById(R.id.name_input_layout_profile_settings);
         mWeightInputLayout = findViewById(R.id.weight_input_layout_profile_settings);
         mSaveButton = findViewById(R.id.save_button_profile_settings);
+        mMenuButton = findViewById(R.id.menu_open_button_profile_settings);
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +152,21 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
 
             }
         });
+
+        mMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMainViewMvc.showNavigation();
+            }
+        });
+    }
+
+    public void bindSavedValues(@NonNull String name, int goal, int weight)
+    {
+        mNameInput.setText(name);
+        mWeightInput.setText(weight+"");
+        mSeekBar.setProgress(goal);
+        mSeekBarEditText.setText(goal+"");
     }
 
     public @NonNull String getDateOfBirth()
@@ -166,6 +186,14 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
             return Integer.parseInt(weightString);
         else
             return -1;
+    }
+
+    public void setVisibilityOfMenuButton(boolean visible)
+    {
+        if(visible)
+            mMenuButton.setVisibility(View.VISIBLE);
+        else
+            mMenuButton.setVisibility(View.GONE);
     }
 
     public void setNameError(@Nullable String errorText)

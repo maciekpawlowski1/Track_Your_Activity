@@ -84,6 +84,7 @@ public class UploadWorker extends ListenableWorker {
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET)
                 .setContentText("Uploading training")
                 .build();
+
         return CallbackToFutureAdapter.getFuture(new CallbackToFutureAdapter.Resolver<>() {
             @Nullable
             @Override

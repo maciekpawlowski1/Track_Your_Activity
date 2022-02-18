@@ -48,19 +48,24 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
         super.onCreate(savedInstanceState);
         mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
 
-        if(mSharedPreferences.isProfileSaved())
-        {
-            //TODO: bind saved values
-        }
+
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mViewMvc = new ProfileSettingsViewMvc(inflater, container);
+        mViewMvc = new ProfileSettingsViewMvc(inflater, container, mMainViewMvc);
         mViewMvc.registerListener(this);
 
-
+        if(mSharedPreferences.isProfileSaved())
+        {
+            mViewMvc.setVisibilityOfMenuButton(true);
+            mViewMvc.bindSavedValues(null/*TODO: bind name and birthday*/,mSharedPreferences.getWeeklyGoal(),mSharedPreferences.getWeight());
+        }
+        else
+        {
+            mViewMvc.setVisibilityOfMenuButton(false);
+        }
 
         return mViewMvc.getRootView();
     }

@@ -20,6 +20,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/activity_background">
 
+
+
                 <Button
                     android:id="@+id/save_button_profile_settings"
                     android:layout_width="0dp"
@@ -123,6 +125,19 @@
                     android:layout_height="120dp"
                     android:background="@drawable/orange_circled_background"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/menu_open_button_profile_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/orange"
+                    android:contentDescription="Open menu"
+                    android:src="@drawable/menu_icon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

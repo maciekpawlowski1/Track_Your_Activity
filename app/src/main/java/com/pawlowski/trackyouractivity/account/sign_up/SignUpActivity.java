@@ -2,9 +2,12 @@ package com.pawlowski.trackyouractivity.account.sign_up;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.auth.AuthResult;
 import com.pawlowski.trackyouractivity.MainActivity;
+import com.pawlowski.trackyouractivity.account.BaseAccountActivity;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.base.BaseActivity;
@@ -13,7 +16,7 @@ import com.pawlowski.trackyouractivity.settings.ProfileSettingsFragment;
 
 import androidx.annotation.NonNull;
 
-public class SignUpActivity extends BaseActivity implements SignUpViewMvc.SignUpButtonsClickListener, FirebaseAuthHelper.SignInUpProcessCompleteListener{
+public class SignUpActivity extends BaseAccountActivity implements SignUpViewMvc.SignUpButtonsClickListener, FirebaseAuthHelper.SignInUpProcessCompleteListener{
 
     SignUpViewMvc mViewMvc;
     FirebaseAuthHelper mFirebaseAuthHelper;
@@ -28,6 +31,8 @@ public class SignUpActivity extends BaseActivity implements SignUpViewMvc.SignUp
         mFirebaseAuthHelper.registerListener(this);
 
         hideNotificationBar();
+
+        initGoogleLogin();
     }
 
     @Override
@@ -93,7 +98,7 @@ public class SignUpActivity extends BaseActivity implements SignUpViewMvc.SignUp
 
     @Override
     public void onGoogleButtonClick() {
-
+        signInByGoogle();
     }
 
     @Override
@@ -114,5 +119,19 @@ public class SignUpActivity extends BaseActivity implements SignUpViewMvc.SignUp
     public void onFailure(@NonNull String errorText) {
         hideProgressDialog();
         Toast.makeText(this, errorText, Toast.LENGTH_LONG).show();
+    }
+
+    //Google Sign in
+    @Override
+    public void onFailure(@NonNull Exception e) {
+        hideProgressDialog();
+        Log.w("SignInActivity", "signInWithCredential:failure", e);
+        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    //Google Sign in
+    @Override
+    public void onSuccess(AuthResult authResult) {
+        onSuccess();
     }
 }
