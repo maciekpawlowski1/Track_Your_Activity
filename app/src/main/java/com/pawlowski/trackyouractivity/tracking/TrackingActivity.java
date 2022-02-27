@@ -325,7 +325,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
 
     @Override
     public void onStopClick() {
-        mFirebaseDatabaseHelper.addTraining(mAccountKey, mTrainingKey, mDistance, mKcal, mTime, mTrainingDate, mTrainingType);
+        //mFirebaseDatabaseHelper.addTraining(mAccountKey, mTrainingKey, mDistance, mKcal, mTime, mTrainingDate, mTrainingType);
         TrainingModel training = new TrainingModel(mTrainingKey, mDistance, mTime, mKcal, true, mTrainingType);
         training.setId(mTrainingId);
         mDbHandler.updateTraining(training);

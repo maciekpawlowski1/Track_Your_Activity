@@ -19,7 +19,6 @@ import com.pawlowski.trackyouractivity.models.UserModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -140,7 +139,7 @@ public class FirebaseDatabaseHelper {
         TaskCompletionSource<List<String>> source = new TaskCompletionSource<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("k/"+accountKey);
-        reference.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+        reference.get().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 List<String> keys = new ArrayList<>();

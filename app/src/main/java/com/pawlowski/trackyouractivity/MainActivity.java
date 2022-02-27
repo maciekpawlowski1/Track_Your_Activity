@@ -27,11 +27,8 @@ import com.pawlowski.trackyouractivity.settings.ProfileSettingsFragment;
 import com.pawlowski.trackyouractivity.tracking.TrackingActivity;
 
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.work.WorkInfo;
 
@@ -100,7 +97,7 @@ public class MainActivity extends BaseActivity {
         if((bundle != null && bundle.getBoolean("start_with_settings", false)) || !mSharedPreferences.isProfileSaved())
         {
             showProgressDialog("Please wait...");
-            mFirebaseDatabaseHelper.getUserInfo(mAccountKey).addOnCompleteListener(new OnCompleteListener<UserModel>() {
+            mFirebaseDatabaseHelper.getUserInfo(mAccountKey).addOnCompleteListener(new OnCompleteListener<>() {
                 @Override
                 public void onComplete(@NonNull Task<UserModel> task) {
                     if(task.isSuccessful())
@@ -149,7 +146,7 @@ public class MainActivity extends BaseActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mFirebaseDatabaseHelper.getKeysToDownload(mAccountKey, trainingKeys).addOnSuccessListener(new OnSuccessListener<List<String>>() {
+                            mFirebaseDatabaseHelper.getKeysToDownload(mAccountKey, trainingKeys).addOnSuccessListener(new OnSuccessListener<>() {
                                 @Override
                                 public void onSuccess(List<String> strings) {
                                     mSharedPreferences.setLastUpdatesCheckTime(now);
@@ -185,7 +182,7 @@ public class MainActivity extends BaseActivity {
 
     public void startDownloadWorker(List<String> trainingKeys)
     {
-        new DownloadWorkHelper().startWorkIfNotExists(getApplicationContext(), mAccountKey, trainingKeys).observe(MainActivity.this, new Observer<WorkInfo>() {
+        new DownloadWorkHelper().startWorkIfNotExists(getApplicationContext(), mAccountKey, trainingKeys).observe(MainActivity.this, new Observer<>() {
             @Override
             public void onChanged(WorkInfo workInfo) {
                 Log.d("DownloadWorkerState", workInfo.getState().toString());
@@ -203,7 +200,7 @@ public class MainActivity extends BaseActivity {
                 super.onBackPressed();
             }
         }
-        else if(checkedItem != null && checkedItem.getItemId() == R.id.settings_nav_menu)
+        else if(checkedItem.getItemId() == R.id.settings_nav_menu)
         {
             if(mSharedPreferences.isProfileSaved())
             {

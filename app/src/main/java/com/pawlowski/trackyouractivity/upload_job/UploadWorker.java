@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -124,8 +125,7 @@ public class UploadWorker extends ListenableWorker {
     private void work(String accountKey, @NonNull CallbackToFutureAdapter.Completer<Result> completer)
     {
         List<TrainingModel> trainings = mDBHandler.getAllNotSavedTrainings(accountKey);
-        Log.d("worker", "to save: " + trainings.size());
-        List<UploadTask> tasks = new ArrayList<>();
+        List<UploadTask> gpxTasks = new ArrayList<>();
         List<Integer> taskTrainingIds = new ArrayList<>();
         for(TrainingModel training: trainings)
         {
@@ -133,7 +133,7 @@ public class UploadWorker extends ListenableWorker {
             if(file.exists())
             {
                 Log.d("worker", "Running some task");
-                tasks.add(mFirebaseDatabaseHelper.uploadFile(accountKey, training.getKey(), file));
+                gpxTasks.add(mFirebaseDatabaseHelper.uploadFile(accountKey, training.getKey(), file));
                 taskTrainingIds.add(training.getId());
             }
             else
@@ -142,9 +142,46 @@ public class UploadWorker extends ListenableWorker {
             }
         }
 
-        Tasks.whenAll(tasks).addOnCompleteListener(new OnCompleteListener<>() {
+
+        List<TrainingModel> trainingsRemoteDatabase = mDBHandler.getAllNotSavedTrainingsInRealtimeDatabase(accountKey);
+        List<Task<Void>> tasksRemoteDatabase = new ArrayList<>();
+
+        for(TrainingModel training: trainingsRemoteDatabase)
+        {
+            tasksRemoteDatabase.add(mFirebaseDatabaseHelper.addTraining(accountKey, training.getKey(), training.getDistance(), training.getKcal(), training.getTime(), training.getDate(), training.getTrainingType()));
+        }
+
+
+        Task<Void> remoteTasksContinuation = Tasks.whenAll(tasksRemoteDatabase).continueWith(new Continuation<Void, Void>() {
+
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public Void then(@NonNull Task<Void> task) throws Exception {
+                if(task.isSuccessful())
+                {
+                    for(TrainingModel training: trainingsRemoteDatabase)
+                    {
+                        mDBHandler.updateTrainingAsSavedInRealtimeDatabase(training.getId());
+                    }
+                    return null;
+                }
+                else
+                {
+                    for(int i = 0;i<tasksRemoteDatabase.size();i++)
+                    {
+                        if(tasksRemoteDatabase.get(i).isSuccessful())
+                        {
+                            mDBHandler.updateTrainingAsSavedInRealtimeDatabase(trainingsRemoteDatabase.get(i).getId());
+                        }
+                    }
+                    throw new Exception("Some trainings didn't save");
+                }
+
+
+            }
+        });
+        Task<Void> gpxContinuationTask = Tasks.whenAll(gpxTasks).continueWith(new Continuation<Void, Void>() {
+            @Override
+            public Void then(@NonNull Task<Void> task) throws Exception {
                 if(task.isSuccessful())
                 {
                     Log.d("worker", "success, saved");
@@ -154,19 +191,38 @@ public class UploadWorker extends ListenableWorker {
                         mDBHandler.updateTrainingAsSaved(id);
                         Log.d("worker", "one task successful");
                     }
-                    completer.set(Result.success());
+                   return null;
                 }
                 else
                 {
                     Log.d("worker", "failure");
-                    for(int i=0;i<tasks.size();i++)
+                    for(int i=0;i<gpxTasks.size();i++)
                     {
-                        if(tasks.get(i).isSuccessful())
+                        if(gpxTasks.get(i).isSuccessful())
                         {
                             Log.d("worker", "one task successful");
                             mDBHandler.updateTrainingAsSaved(taskTrainingIds.get(i));
                         }
                     }
+                    throw new Exception("Some trainings gpx didn't save");
+                }
+            }
+        });
+
+
+        Tasks.whenAll(remoteTasksContinuation, gpxContinuationTask)
+                .addOnCompleteListener(new OnCompleteListener<>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                {
+                    Log.d("UploadWorker", "All trainings uploaded");
+                    completer.set(Result.success());
+                }
+                else
+                {
+                    Log.d("UploadWorker", "Some trainings not uploaded. Retrying...");
+
                     completer.set(Result.retry());
                 }
             }

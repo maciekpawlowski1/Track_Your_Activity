@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 public class DBHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TrackYourActivityDatabase";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public DBHandler(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -26,7 +26,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql1 = "CREATE TABLE Trainings(id INTEGER PRIMARY KEY, training_key TEXT, distance DOUBLE, time LONG, kcal INTEGER, is_finished TEXT, date LONG, training_type INTEGER, is_saved TEXT, account_key TEXT)";
+        String sql1 = "CREATE TABLE Trainings(id INTEGER PRIMARY KEY, training_key TEXT, distance DOUBLE, time LONG, kcal INTEGER, is_finished TEXT, date LONG, training_type INTEGER, is_saved TEXT, is_saved_realtime_database,  account_key TEXT)";
         sqLiteDatabase.execSQL(sql1);
     }
 
@@ -49,6 +49,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("training_key", training.getKey());
         values.put("is_saved", "false");
         values.put("account_key", accountKey);
+        values.put("is_saved_realtime_database", "false");
         Log.d("Inserting", training.getTrainingType()+"");
         db.insert("Trainings", null, values);
         db.close();
@@ -66,6 +67,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("training_type", training.getTrainingType());
         values.put("training_key", training.getKey());
         values.put("is_saved", "true");
+        values.put("is_saved_realtime_database", "true");
+
         values.put("account_key", accountKey);
         Log.d("Inserting", training.getTrainingType()+"");
         db.insert("Trainings", null, values);
@@ -262,6 +265,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    //As saved gpx file
     public void updateTrainingAsSaved(int trainingId)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -274,11 +278,46 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    //As saved in realtime database
+    public void updateTrainingAsSavedInRealtimeDatabase(int trainingId)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("is_saved_realtime_database", true);
+
+        db.update("Trainings", values, "id = ?",
+                new String[]{String.valueOf(trainingId)});
+
+        db.close();
+    }
+
+    //Not saved gpx files
     public List<TrainingModel> getAllNotSavedTrainings(String accountKey)
     {
         List<TrainingModel> trainings = new ArrayList<>();
 
         String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' AND T.is_saved LIKE 'false' AND t.account_key LIKE '" + accountKey + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectSql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                TrainingModel training = new TrainingModel(cursor.getString(6), cursor.getLong(4), cursor.getDouble(1), cursor.getLong(2), cursor.getInt(3), false, cursor.getInt(5));
+                training.setId(cursor.getInt(0));
+                trainings.add(training);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return trainings;
+    }
+
+    //Not saved in realtime database
+    public List<TrainingModel> getAllNotSavedTrainingsInRealtimeDatabase(String accountKey)
+    {
+        List<TrainingModel> trainings = new ArrayList<>();
+
+        String selectSql = "SELECT T.id, T.distance, T.time, T.kcal, T.date, T.training_type, T.training_key FROM Trainings T WHERE T.is_finished LIKE 'true' AND T.is_saved_realtime_database LIKE 'false' AND t.account_key LIKE '" + accountKey + "'";
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(selectSql, null);
