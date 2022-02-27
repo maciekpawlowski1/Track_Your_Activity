@@ -20,12 +20,14 @@
         <item
             android:id="@+id/leaderboard_nav_menu"
             android:icon="@drawable/leaderboard_icon"
-            android:title="Leaderboard" />
+            android:title="Leaderboard"
+            android:visible="false" />
 
         <item
             android:id="@+id/friends_nav_menu"
             android:icon="@drawable/friends_icon"
-            android:title="Friends" />
+            android:title="Friends"
+            android:visible="false" />
 
         <item
             android:id="@+id/settings_nav_menu"

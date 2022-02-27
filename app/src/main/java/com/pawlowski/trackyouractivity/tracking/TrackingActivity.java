@@ -103,7 +103,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 @Override
                 public void onSuccess() {
                     mMapHelper.startShowingLocation();
-                    if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
+                    /*if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
                     {
                         mPermissionHelper.requestBackgroundPermission(new PermissionHelper.OnPermissionReadyListener() {
                             @Override
@@ -113,16 +113,16 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                         });
                     }
                     else
-                    {
+                    {*/
                         if(mSharedPreferencesHelper.isTrackingActive())
                         {
                             startServiceIfActive();
                         }
-                    }
+                    //}
                 }
             });
         }
-        else if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
+        /*else if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
         {
             mPermissionHelper.requestBackgroundPermission(new PermissionHelper.OnPermissionReadyListener() {
                 @Override
@@ -130,7 +130,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                     startServiceIfActive();
                 }
             });
-        }
+        }*/
         else
         {
             startServiceIfActive();
