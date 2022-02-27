@@ -60,7 +60,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
         if(mSharedPreferences.isProfileSaved())
         {
             mViewMvc.setVisibilityOfMenuButton(true);
-            mViewMvc.bindSavedValues(null/*TODO: bind name and birthday*/,mSharedPreferences.getWeeklyGoal(),mSharedPreferences.getWeight());
+            mViewMvc.bindSavedValues(mSharedPreferences.getName(), mSharedPreferences.getWeeklyGoal(),mSharedPreferences.getWeight(), mSharedPreferences.getDateOfBirth());
         }
         else
         {
@@ -102,8 +102,11 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
         if(correct)
         {
             mFirebaseDatabaseHelper.addUserInfo(mFirebaseAuthHelper.getCurrentUser().getUid(), name, date, goal, weight);
+            //TODO: Wait until saving finish, show progress dialog and then only save to SharedPreferences
             mSharedPreferences.setWeeklyGoal(goal);
             mSharedPreferences.setWeight(weight);
+            mSharedPreferences.setName(name);
+            mSharedPreferences.setDateOfBirth(date);
             mSharedPreferences.setProfileSaved(true);
             mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
         }

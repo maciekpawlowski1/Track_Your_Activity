@@ -161,12 +161,13 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
         });
     }
 
-    public void bindSavedValues(@NonNull String name, int goal, int weight)
+    public void bindSavedValues(@NonNull String name, int goal, int weight, String dateOfBirth)
     {
         mNameInput.setText(name);
         mWeightInput.setText(weight+"");
         mSeekBar.setProgress(goal);
         mSeekBarEditText.setText(goal+"");
+        mBirthdayInput.setText(dateOfBirth);
     }
 
     public @NonNull String getDateOfBirth()

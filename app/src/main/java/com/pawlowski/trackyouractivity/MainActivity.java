@@ -108,12 +108,16 @@ public class MainActivity extends BaseActivity {
                         UserModel user = task.getResult();
                         mSharedPreferences.setWeeklyGoal(user.getGoal());
                         mSharedPreferences.setWeight(user.getWeight());
+                        mSharedPreferences.setName(user.getName());
+                        mSharedPreferences.setDateOfBirth(user.getDateOfBirth());
                         mSharedPreferences.setProfileSaved(true);
                         mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                        mViewMvc.checkItem(R.id.overview_nav_menu);
                     }
                     else
                     {
                         mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                        mViewMvc.checkItem(R.id.settings_nav_menu);
                     }
                     hideProgressDialog();
                 }
@@ -122,6 +126,7 @@ public class MainActivity extends BaseActivity {
         else
         {
             mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+            mViewMvc.checkItem(R.id.overview_nav_menu);
         }
 
 
@@ -191,10 +196,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         MenuItem checkedItem = mViewMvc.getCheckedItem();
-
-        if((checkedItem == null || checkedItem.getItemId() != R.id.settings_nav_menu) && !mViewMvc.showNavigation())
+        if((checkedItem == null || checkedItem.getItemId() != R.id.settings_nav_menu))
         {
-            super.onBackPressed();
+            if(!mViewMvc.showNavigation())
+            {
+                super.onBackPressed();
+            }
         }
         else if(checkedItem != null && checkedItem.getItemId() == R.id.settings_nav_menu)
         {
@@ -203,6 +210,7 @@ public class MainActivity extends BaseActivity {
                 if(!mViewMvc.showNavigation())
                     super.onBackPressed();
             }
+
         }
     }
 }

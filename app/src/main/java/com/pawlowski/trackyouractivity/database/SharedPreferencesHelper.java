@@ -130,6 +130,29 @@ public class SharedPreferencesHelper {
         setCurrentKcal(0);
     }
 
+    public void setName(String name)
+    {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("name", name);
+        editor.apply();
+    }
+
+    public void setDateOfBirth(String dateOfBirth)
+    {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("dateOfBirth", dateOfBirth);
+        editor.apply();
+    }
+    public String getName()
+    {
+        return mSharedPreferences.getString("name", "");
+    }
+
+    public String getDateOfBirth()
+    {
+        return mSharedPreferences.getString("dateOfBirth", "");
+    }
+
     public void resetPersonValues()
     {
         setProfileSaved(false);
