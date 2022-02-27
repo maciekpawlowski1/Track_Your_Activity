@@ -39,48 +39,55 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
         android:fontFamily="@font/montserrat"
         android:text="Login with"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/google_login_button_sign_in"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-        android:id="@+id/facebook_login_button_sign_in"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginEnd="18dp"
-        android:background="@drawable/login_buttons_background"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="@+id/google_login_button_sign_in"
-        app:layout_constraintEnd_toStartOf="@+id/google_login_button_sign_in"
-        app:srcCompat="@drawable/facebook_icon" />
-
-    <ImageButton
-        android:id="@+id/google_login_button_sign_in"
-        android:layout_width="65dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="65dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/login_buttons_background"
-        android:scaleType="centerInside"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/google_icon" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
-        android:id="@+id/mail_login_button_sign_in"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="18dp"
-        android:background="@drawable/login_buttons_background"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="@+id/google_login_button_sign_in"
-        app:layout_constraintStart_toEndOf="@id/google_login_button_sign_in"
-        app:srcCompat="@drawable/email_icon" />
+        <ImageButton
+            android:id="@+id/facebook_login_button_sign_in"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/login_buttons_background"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:srcCompat="@drawable/facebook_icon" />
+
+        <ImageButton
+            android:id="@+id/google_login_button_sign_in"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/login_buttons_background"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/google_icon" />
+
+        <ImageButton
+            android:id="@+id/mail_login_button_sign_in"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="18dp"
+            android:background="@drawable/login_buttons_background"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/email_icon" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView3"
