@@ -1,4 +1,5 @@
 # Track_Your_Activity
+<img src="/app/src/main/app_logo-playstore.png" alt="shopisto logo" width="150"/>
 
 ## Used language:
 * Java
