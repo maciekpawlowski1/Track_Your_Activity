@@ -22,6 +22,8 @@
 ### Comunication between Activity and Service
 * EventBus
 
-
 ## Used Code Architecture:
 * MVC
+
+## When created
+* I created this app in February 2022. All process of creating it took me around 2 weeks
