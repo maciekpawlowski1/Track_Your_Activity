@@ -108,6 +108,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
             mSharedPreferences.setName(name);
             mSharedPreferences.setDateOfBirth(date);
             mSharedPreferences.setProfileSaved(true);
+            mMainViewMvc.setHeaderNameText(name);
             mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
         }
     }

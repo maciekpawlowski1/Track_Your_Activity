@@ -132,17 +132,22 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
-        else if(mSharedPreferences.isTrackingActive())
-        {
-            Intent i = new Intent(MainActivity.this, TrackingActivity.class);
-            i.putExtra("training_type", TrainingModel.TrainingType.RUNNING);
-            startActivity(i);
-        }
         else
         {
-            mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
-            mViewMvc.checkItem(R.id.overview_nav_menu);
+            mViewMvc.setHeaderNameText(mSharedPreferences.getName());
+            if(mSharedPreferences.isTrackingActive())
+            {
+                Intent i = new Intent(MainActivity.this, TrackingActivity.class);
+                i.putExtra("training_type", TrainingModel.TrainingType.RUNNING);
+                startActivity(i);
+            }
+            else
+            {
+                mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                mViewMvc.checkItem(R.id.overview_nav_menu);
+            }
         }
+
 
 
         checkForUpdatesIfNeeded();

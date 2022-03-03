@@ -2,7 +2,9 @@ package com.pawlowski.trackyouractivity;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.pawlowski.trackyouractivity.base.BaseViewMvc;
@@ -21,6 +23,7 @@ public class MainViewMvc extends BaseViewMvc {
     private final DrawerLayout mDrawerLayout;
     private final ActionBarDrawerToggle mToggle;
     private final NavigationView mNavigationView;
+    private final TextView mHelloTextNavHeader;
 
     public MainViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent, AppCompatActivity activity) {
 
@@ -33,12 +36,14 @@ public class MainViewMvc extends BaseViewMvc {
         mToggle = new ActionBarDrawerToggle(activity, mDrawerLayout, R.string.Open, R.string.Close);
         mDrawerLayout.addDrawerListener(mToggle);
 
-        //View headerView = navigationView.getHeaderView(0);
-        //helloText = headerView.findViewById(R.id.hello_text_nav_header);
+        View headerView = mNavigationView.getHeaderView(0);
+        mHelloTextNavHeader = headerView.findViewById(R.id.name_text_nav_header);
 
+    }
 
-
-
+    public void setHeaderNameText(String name)
+    {
+        mHelloTextNavHeader.setText("Hi, " + name + "!");
     }
 
 

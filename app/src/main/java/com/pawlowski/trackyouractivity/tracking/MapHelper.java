@@ -3,7 +3,6 @@ package com.pawlowski.trackyouractivity.tracking;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -93,11 +92,9 @@ public class MapHelper implements OnMapReadyCallback {
     {
         if(mTrainingKey != null && mMap != null)
         {
-            Log.d("reading", "reading " + mTrainingKey);
             mGpxUseCase.readFromGpxTask(mTrainingKey + ".gpx").addOnSuccessListener(new OnSuccessListener<>() {
                 @Override
                 public void onSuccess(List<Waypoint> waypoints) {
-                    Log.d("reading", "success: " + waypoints.size());
                     addManyWaypointsToMap(waypoints);
                 }
             });
