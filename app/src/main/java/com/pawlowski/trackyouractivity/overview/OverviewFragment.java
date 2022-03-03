@@ -75,6 +75,15 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
             mViewMvc.setCurrentTrainingDistance(ConstAndStaticMethods.distanceMetersToKilometers(mSharedPreferences.getCurrentDistance())+"");
             mViewMvc.setCurrentTrainingTypeImage(mDbHandler.getTypeOfCurrentTraining());
             mViewMvc.showCurrentActivityPanel();
+
+            if(!mSharedPreferences.isTrackingActive())
+            {
+                //TODO: Change color of dot (yellow)
+            }
+            else
+            {
+                //TODO: Change color of dot (green)
+            }
         }
         else
         {

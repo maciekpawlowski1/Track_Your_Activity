@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -82,11 +83,22 @@ public class MainActivity extends BaseActivity {
                 }
                 else if(item.getItemId() == R.id.sign_out_nav_menu)
                 {
-                    mSharedPreferences.resetPersonValues();
-                    mFirebaseAuthHelper.signOut();
-                    Intent i = new Intent(MainActivity.this, SignInActivity.class);
-                    startActivity(i);
-                    finish();
+                    if(mSharedPreferences.isTrackingActive())
+                    {
+                        Intent i = new Intent(MainActivity.this, TrackingActivity.class);
+                        startActivity(i);
+                        mViewMvc.hideNavigation();
+                        Toast.makeText(getApplicationContext(), "You have to finish your training first!", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        mSharedPreferences.resetPersonValues();
+                        mFirebaseAuthHelper.signOut();
+                        Intent i = new Intent(MainActivity.this, SignInActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+
                 }
 
                     return false;
@@ -119,6 +131,12 @@ public class MainActivity extends BaseActivity {
                     hideProgressDialog();
                 }
             });
+        }
+        else if(mSharedPreferences.isTrackingActive())
+        {
+            Intent i = new Intent(MainActivity.this, TrackingActivity.class);
+            i.putExtra("training_type", TrainingModel.TrainingType.RUNNING);
+            startActivity(i);
         }
         else
         {

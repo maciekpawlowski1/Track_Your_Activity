@@ -70,7 +70,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         wasOnStartBefore = false;
 
         Bundle bundle = getIntent().getExtras();
-        mTrainingType = bundle.getInt("training_type");
+        mTrainingType = bundle.getInt("training_type", TrainingModel.TrainingType.RUNNING.ordinal());
         mFirebaseAuthHelper = new FirebaseAuthHelper();
 
         mAccountKey = mFirebaseAuthHelper.getCurrentUser().getUid();
@@ -103,34 +103,14 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
                 @Override
                 public void onSuccess() {
                     mMapHelper.startShowingLocation();
-                    /*if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
+                    if(mSharedPreferencesHelper.isTrackingActive())
                     {
-                        mPermissionHelper.requestBackgroundPermission(new PermissionHelper.OnPermissionReadyListener() {
-                            @Override
-                            public void onSuccess() {
-                                startServiceIfActive();
-                            }
-                        });
+                        startServiceIfActive();
                     }
-                    else
-                    {*/
-                        if(mSharedPreferencesHelper.isTrackingActive())
-                        {
-                            startServiceIfActive();
-                        }
-                    //}
+
                 }
             });
         }
-        /*else if(!mPermissionHelper.isBackgroundTrackingPermissionGranted())
-        {
-            mPermissionHelper.requestBackgroundPermission(new PermissionHelper.OnPermissionReadyListener() {
-                @Override
-                public void onSuccess() {
-                    startServiceIfActive();
-                }
-            });
-        }*/
         else
         {
             startServiceIfActive();
