@@ -12,7 +12,6 @@ import com.pawlowski.trackyouractivity.models.TrainingModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class DBHandler extends SQLiteOpenHelper {

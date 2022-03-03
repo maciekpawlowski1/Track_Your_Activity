@@ -1,15 +1,12 @@
 package com.pawlowski.trackyouractivity.gpx;
 
 
-import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.urizev.gpx.GPXParser;
 import com.urizev.gpx.beans.GPX;
 import com.urizev.gpx.beans.Route;
 import com.urizev.gpx.beans.Waypoint;
-
 
 import org.xml.sax.SAXException;
 

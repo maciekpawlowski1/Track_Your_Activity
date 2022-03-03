@@ -3,7 +3,6 @@ package com.pawlowski.trackyouractivity.tracking;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -46,17 +45,7 @@ public class PermissionHelper {
                 == PackageManager.PERMISSION_GRANTED;
     }
 
-    public boolean isBackgroundTrackingPermissionGranted()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        {
-            return ActivityCompat.checkSelfPermission(mActivity.getApplicationContext(),
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED;
-        }
-        else
-            return true;
-    }
+
 
     public void requestPermission(OnPermissionReadyListener onPermissionReadyListener)
     {
@@ -64,16 +53,6 @@ public class PermissionHelper {
         ActivityCompat.requestPermissions(mActivity, new String[]
                         {Manifest.permission.ACCESS_FINE_LOCATION},
                 ConstAndStaticMethods.REQUEST_LOCATION_PERMISSION);
-    }
-
-    public void requestBackgroundPermission(OnPermissionReadyListener onPermissionReadyListener)
-    {
-        registerBackgroundListener(onPermissionReadyListener);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ActivityCompat.requestPermissions(mActivity, new String[]
-                            {Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                    ConstAndStaticMethods.REQUEST_LOCATION_PERMISSION2);
-        }
     }
 
 

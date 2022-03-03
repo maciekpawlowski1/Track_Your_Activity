@@ -37,7 +37,7 @@ public class ProfileSettingsViewMvc extends BaseObservableViewMvc<ProfileSetting
     private final ImageButton mCalendarButton;
     private final ImageButton mMenuButton;
     private final Button mSaveButton;
-    private MainViewMvc mMainViewMvc;
+    private final MainViewMvc mMainViewMvc;
 
     public ProfileSettingsViewMvc(LayoutInflater inflater, ViewGroup container, MainViewMvc mainViewMvc) {
         mMainViewMvc = mainViewMvc;

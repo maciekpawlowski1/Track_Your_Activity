@@ -8,12 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.base.BaseObservableViewMvc;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnControlButtonsClickListener> {
 
@@ -27,7 +26,7 @@ public class TrackingViewMvc extends BaseObservableViewMvc<TrackingViewMvc.OnCon
     private final ImageView mTrainingTypeImage;
     private ControllerButtonsState mCurrentState;
 
-    public TrackingViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent, AppCompatActivity activity) {
+    public TrackingViewMvc(LayoutInflater inflater, @Nullable ViewGroup parent) {
 
         rootView = inflater.inflate(R.layout.activity_tracking, parent, false);
         mStartPauseButton = findViewById(R.id.start_pause_button_tracking);

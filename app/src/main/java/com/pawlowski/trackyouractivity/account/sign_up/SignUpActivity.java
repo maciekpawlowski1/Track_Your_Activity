@@ -10,9 +10,7 @@ import com.pawlowski.trackyouractivity.MainActivity;
 import com.pawlowski.trackyouractivity.account.BaseAccountActivity;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
-import com.pawlowski.trackyouractivity.base.BaseActivity;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
-import com.pawlowski.trackyouractivity.settings.ProfileSettingsFragment;
 
 import androidx.annotation.NonNull;
 

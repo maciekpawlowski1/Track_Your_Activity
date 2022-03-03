@@ -49,7 +49,7 @@ public class FirebaseAuthHelper {
 
     public void signInWithMailAndPassword(@NonNull String mail, @NonNull String password)
     {
-        mFirebaseAuth.signInWithEmailAndPassword(mail, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        mFirebaseAuth.signInWithEmailAndPassword(mail, password).addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                 notifyListeners(true, null);
@@ -64,7 +64,7 @@ public class FirebaseAuthHelper {
 
     public void signUpWithMailAndPassword(@NonNull String mail, @NonNull String password)
     {
-        mFirebaseAuth.createUserWithEmailAndPassword(mail, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        mFirebaseAuth.createUserWithEmailAndPassword(mail, password).addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                 notifyListeners(true, null);

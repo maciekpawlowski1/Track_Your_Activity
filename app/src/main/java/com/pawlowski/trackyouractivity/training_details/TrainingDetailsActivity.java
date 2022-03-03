@@ -1,15 +1,14 @@
 package com.pawlowski.trackyouractivity.training_details;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 import com.pawlowski.trackyouractivity.tracking.MapHelper;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class TrainingDetailsActivity extends AppCompatActivity implements TrainingDetailsViewMvc.TrainingDetailsButtonsClickListener{
 

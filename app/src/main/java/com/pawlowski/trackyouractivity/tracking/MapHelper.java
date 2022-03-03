@@ -12,7 +12,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.gpx.GPXUseCase;
 import com.urizev.gpx.beans.Waypoint;
 
@@ -26,7 +25,7 @@ public class MapHelper implements OnMapReadyCallback {
     Location mLastLocation;
     private final FusedLocationProviderClient mFusedLocationClient;
     private final PermissionHelper mPermissionHelper;
-    private String mTrainingKey;
+    private final String mTrainingKey;
     private final Context mAppContext;
     private final boolean mCurrentlyTracking;
     private final GPXUseCase mGpxUseCase;
@@ -95,7 +94,7 @@ public class MapHelper implements OnMapReadyCallback {
         if(mTrainingKey != null && mMap != null)
         {
             Log.d("reading", "reading " + mTrainingKey);
-            mGpxUseCase.readFromGpxTask(mTrainingKey + ".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+            mGpxUseCase.readFromGpxTask(mTrainingKey + ".gpx").addOnSuccessListener(new OnSuccessListener<>() {
                 @Override
                 public void onSuccess(List<Waypoint> waypoints) {
                     Log.d("reading", "success: " + waypoints.size());
@@ -175,7 +174,7 @@ public class MapHelper implements OnMapReadyCallback {
     {
         if(mMap != null)
         {
-            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<>() {
                 @Override
                 public void onSuccess(Location location) {
                     if(location == null)

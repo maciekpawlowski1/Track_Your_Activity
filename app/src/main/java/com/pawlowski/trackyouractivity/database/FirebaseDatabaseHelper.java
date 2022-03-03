@@ -52,7 +52,7 @@ public class FirebaseDatabaseHelper {
         TaskCompletionSource<UserModel> source = new TaskCompletionSource<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("u/"+accountKey);
-        reference.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+        reference.get().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists())
@@ -98,7 +98,7 @@ public class FirebaseDatabaseHelper {
         values.put("t", seconds);
         values.put("w", date);
         values.put("a", trainingType);
-        return reference.updateChildren(values).continueWithTask(new Continuation<Void, Task<Void>>() {
+        return reference.updateChildren(values).continueWithTask(new Continuation<>() {
             @Override
             public Task<Void> then(@NonNull Task<Void> task) throws Exception {
                 if(!task.isSuccessful())
@@ -114,7 +114,7 @@ public class FirebaseDatabaseHelper {
         TaskCompletionSource<TrainingModel> source = new TaskCompletionSource<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("t/"+accountKey+"/"+trainingKey);
-        reference.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+        reference.get().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 double distance = (double) Objects.requireNonNull(dataSnapshot.child("d").getValue());

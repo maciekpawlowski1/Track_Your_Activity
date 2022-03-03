@@ -99,7 +99,7 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
         startTrackingLocation();
 
 
-        mGPXUseCase.readFromGpxTask(mTrainingKey+".gpx").addOnSuccessListener(new OnSuccessListener<List<Waypoint>>() {
+        mGPXUseCase.readFromGpxTask(mTrainingKey+".gpx").addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(List<Waypoint> waypoints) {
                 waypoints.addAll(mWaypoints);

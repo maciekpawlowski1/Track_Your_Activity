@@ -1,7 +1,5 @@
 package com.pawlowski.trackyouractivity.base;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 

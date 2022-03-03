@@ -60,7 +60,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTrackingViewMvc = new TrackingViewMvc(getLayoutInflater(), null, this);
+        mTrackingViewMvc = new TrackingViewMvc(getLayoutInflater(), null);
         mTrackingViewMvc.registerListener(this);
         setContentView(mTrackingViewMvc.getRootView());
 
@@ -332,7 +332,7 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mSharedPreferencesHelper.resetCurrentTraining();
 
-        new WorkHelper().startWorkIfNotExists(getApplicationContext(),mAccountKey).observe(TrackingActivity.this, new Observer<WorkInfo>() {
+        new WorkHelper().startWorkIfNotExists(getApplicationContext(),mAccountKey).observe(TrackingActivity.this, new Observer<>() {
             @Override
             public void onChanged(WorkInfo workInfo) {
                 Log.d("info", workInfo.getState().toString());

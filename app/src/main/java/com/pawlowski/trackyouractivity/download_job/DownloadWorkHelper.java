@@ -3,8 +3,6 @@ package com.pawlowski.trackyouractivity.download_job;
 import android.content.Context;
 import android.util.Log;
 
-import com.pawlowski.trackyouractivity.upload_job.UploadWorker;
-
 import java.util.List;
 
 import androidx.lifecycle.LiveData;

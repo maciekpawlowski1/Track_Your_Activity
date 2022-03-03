@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import androidx.annotation.WorkerThread;
 
 public class GPXUpdater {
-    private String mTrainingKey;
+    private final String mTrainingKey;
     private final GPXUseCase mGpxUseCase;
     private final ArrayList<Waypoint> mWaypoints = new ArrayList<>();
     private int mLastUpdatedSize;

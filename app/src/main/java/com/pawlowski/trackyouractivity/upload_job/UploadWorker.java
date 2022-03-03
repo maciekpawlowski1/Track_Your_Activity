@@ -152,7 +152,7 @@ public class UploadWorker extends ListenableWorker {
         }
 
 
-        Task<Void> remoteTasksContinuation = Tasks.whenAll(tasksRemoteDatabase).continueWith(new Continuation<Void, Void>() {
+        Task<Void> remoteTasksContinuation = Tasks.whenAll(tasksRemoteDatabase).continueWith(new Continuation<>() {
 
             @Override
             public Void then(@NonNull Task<Void> task) throws Exception {
@@ -179,7 +179,7 @@ public class UploadWorker extends ListenableWorker {
 
             }
         });
-        Task<Void> gpxContinuationTask = Tasks.whenAll(gpxTasks).continueWith(new Continuation<Void, Void>() {
+        Task<Void> gpxContinuationTask = Tasks.whenAll(gpxTasks).continueWith(new Continuation<>() {
             @Override
             public Void then(@NonNull Task<Void> task) throws Exception {
                 if(task.isSuccessful())

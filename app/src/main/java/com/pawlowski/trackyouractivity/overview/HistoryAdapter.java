@@ -3,7 +3,6 @@ package com.pawlowski.trackyouractivity.overview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.models.TrainingModel;

@@ -28,7 +28,6 @@ public class ConstAndStaticMethods {
     public static long GPX_UPDATE_TIME_DELTA_IN_SECONDS = 10;
 
 
-    public static double RUNNING_4MPH_MET = 6.0;
 
     public static double getKcalForGivenSecondsHavingMet(double weight, double met, long seconds)
     {

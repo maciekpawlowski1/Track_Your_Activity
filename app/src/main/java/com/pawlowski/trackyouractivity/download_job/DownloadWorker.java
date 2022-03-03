@@ -11,12 +11,10 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.UploadTask;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.database.DBHandler;
@@ -108,7 +106,7 @@ public class DownloadWorker extends ListenableWorker {
         Log.d("worker", "startWork");
 
         String accountKey = getInputData().getString("account_key");
-        List<String> keysToDownload = new ArrayList<String>(Arrays.asList(Objects.requireNonNull(getInputData().getStringArray("keysToDownload"))));
+        List<String> keysToDownload = new ArrayList<>(Arrays.asList(Objects.requireNonNull(getInputData().getStringArray("keysToDownload"))));
 
 
 
@@ -149,7 +147,7 @@ public class DownloadWorker extends ListenableWorker {
             }
         }
 
-        Tasks.whenAll(tasks).addOnCompleteListener(new OnCompleteListener<Void>() {
+        Tasks.whenAll(tasks).addOnCompleteListener(new OnCompleteListener<>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 EventBus.getDefault().post(new TrainingsDownloadedUpdateModel(true));
@@ -179,7 +177,7 @@ public class DownloadWorker extends ListenableWorker {
 
 
 
-        Task<Boolean> trainingAllTask = trainingTask.continueWith(new Continuation<TrainingModel, Boolean>() {
+        Task<Boolean> trainingAllTask = trainingTask.continueWith(new Continuation<>() {
             @Override
             public Boolean then(@NonNull Task<TrainingModel> task) throws Exception {
                 if(task.isSuccessful())
