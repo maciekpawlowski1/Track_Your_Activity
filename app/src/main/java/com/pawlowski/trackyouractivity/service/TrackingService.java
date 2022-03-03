@@ -19,6 +19,7 @@ import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -296,12 +297,12 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     {
         vibrate();
         Toast.makeText(getApplicationContext(), "You've completed " + kmNumber + " kilometers!", Toast.LENGTH_SHORT).show();
-        long seconds = mCurrentSeconds;
+        long seconds = mCurrentSeconds/1000;
         String timeTextSpeech = "";
         long secondsT = (seconds - (seconds/60)*60);
         long minutesT = ((seconds/60) - (seconds/3600)*3600);
         long hoursT = (seconds/3600);
-
+        Log.d("time", hoursT+":"+minutesT+":"+secondsT);
         if(hoursT != 0)
         {
             timeTextSpeech+= hoursT + " hours, ";

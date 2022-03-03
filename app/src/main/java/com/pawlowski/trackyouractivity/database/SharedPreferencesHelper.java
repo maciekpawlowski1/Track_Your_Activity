@@ -156,5 +156,6 @@ public class SharedPreferencesHelper {
     public void resetPersonValues()
     {
         setProfileSaved(false);
+        setLastUpdatesCheckTime(0);
     }
 }
