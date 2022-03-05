@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
 import com.pawlowski.trackyouractivity.MainActivity;
 import com.pawlowski.trackyouractivity.account.BaseAccountActivity;
@@ -25,6 +28,14 @@ public class SignInActivity extends BaseAccountActivity implements SignInViewMvc
         mViewMvc = new SignInViewMvc(getLayoutInflater(), null);
         mViewMvc.registerListener(this);
         setContentView(mViewMvc.getRootView());
+
+        //TODO: Move to splash screen when created
+        FirebaseApp.initializeApp(/*context=*/ this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
+        //End TODO
+
         mFirebaseAuthHelper = new FirebaseAuthHelper();
 
         hideNotificationBar();

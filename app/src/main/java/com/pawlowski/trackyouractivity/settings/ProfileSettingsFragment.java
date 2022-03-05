@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.MainViewMvc;
+import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
@@ -109,6 +110,7 @@ public class ProfileSettingsFragment extends Fragment implements ProfileSettings
             mSharedPreferences.setDateOfBirth(date);
             mSharedPreferences.setProfileSaved(true);
             mMainViewMvc.setHeaderNameText(name);
+            mMainViewMvc.checkItem(R.id.overview_nav_menu);
             mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
         }
     }
