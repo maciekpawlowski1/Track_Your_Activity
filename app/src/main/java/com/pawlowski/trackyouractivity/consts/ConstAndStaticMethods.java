@@ -1,5 +1,7 @@
 package com.pawlowski.trackyouractivity.consts;
 
+import android.util.Patterns;
+
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 
@@ -254,8 +256,7 @@ public class ConstAndStaticMethods {
 
     public static boolean isMailCorrect(String mail)
     {
-        final String mailRegex = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
-        return Pattern.compile(mailRegex).matcher(mail).matches();
+        return Patterns.EMAIL_ADDRESS.matcher(mail).matches();
     }
 
 
