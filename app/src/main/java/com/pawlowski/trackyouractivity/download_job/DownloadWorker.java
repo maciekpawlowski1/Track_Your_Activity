@@ -14,8 +14,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FileDownloadTask;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
@@ -104,8 +106,14 @@ public class DownloadWorker extends ListenableWorker {
     public ListenableFuture<Result> startWork() {
 
         Log.d("worker", "startWork");
+        FirebaseUser user = new FirebaseAuthHelper().getCurrentUser();
 
-        String accountKey = getInputData().getString("account_key");
+        String accountKey;
+        if(user != null)
+            accountKey = user.getUid();
+        else
+            accountKey = null;
+        //getInputData().getString("account_key");
         List<String> keysToDownload = new ArrayList<>(Arrays.asList(Objects.requireNonNull(getInputData().getStringArray("keysToDownload"))));
 
 
