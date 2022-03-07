@@ -1,6 +1,9 @@
 # Track_Your_Activity
 <img src="/app/src/main/app_logo-playstore.png" alt="shopisto logo" width="150"/>
 
+## App is avaible on Google Play:
+[Link](https://play.google.com/store/apps/details?id=com.pawlowski.trackyouractivity)
+
 ## Used language:
 * Java
 
