@@ -10,7 +10,8 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TrackYourActivity">
+        android:theme="@style/Theme.TrackYourActivity"
+        android:name=".MyApplication">
         <activity
             android:name=".training_details.TrainingDetailsActivity"
             android:exported="false"

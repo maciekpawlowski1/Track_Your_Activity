@@ -10,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.MainViewMvc;
+import com.pawlowski.trackyouractivity.base.BaseFragment;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.overview.HistoryAdapter;
 
 
-public class HistoryFragment extends Fragment implements HistoryViewMvc.HistoryButtonsClickListener {
+public class HistoryFragment extends BaseFragment implements HistoryViewMvc.HistoryButtonsClickListener {
 
 
     private HistoryViewMvc mViewMvc;
@@ -43,11 +44,11 @@ public class HistoryFragment extends Fragment implements HistoryViewMvc.HistoryB
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mViewMvc = new HistoryViewMvc(inflater, container);
+        mViewMvc = getCompositionRoot().getViewMvcFactory().getHistoryViewMvc(container);
 
         mViewMvc.registerListener(this);
         mHistoryAdapter = new HistoryAdapter(getContext());
-        mDbHandler = new DBHandler(getContext());
+        mDbHandler = getCompositionRoot().getDBHandler();
         mViewMvc.setRecyclerAdapter(mHistoryAdapter);
         mHistoryAdapter.setTrainings(mDbHandler.getAllTrainings(mAccountKey));
         return mViewMvc.getRootView();

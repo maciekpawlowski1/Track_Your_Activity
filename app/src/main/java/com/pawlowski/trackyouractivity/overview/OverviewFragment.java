@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.MainViewMvc;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.base.BaseFragment;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
@@ -31,7 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 
-public class OverviewFragment extends Fragment implements OverviewViewMvc.OverviewButtonsListener {
+public class OverviewFragment extends BaseFragment implements OverviewViewMvc.OverviewButtonsListener {
 
     private MainViewMvc mMainActivityViewMvc;
     private OverviewViewMvc mViewMvc;
@@ -54,8 +55,8 @@ public class OverviewFragment extends Fragment implements OverviewViewMvc.Overvi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDbHandler = new DBHandler(getContext());
-        mSharedPreferences = new SharedPreferencesHelper(requireActivity().getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, Context.MODE_MULTI_PROCESS));
+        mDbHandler = getCompositionRoot().getDBHandler();
+        mSharedPreferences = getCompositionRoot().getSharedPreferencesHelper();
     }
 
     @Override

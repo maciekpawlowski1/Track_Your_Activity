@@ -23,10 +23,10 @@ public class SignInWithPasswordActivity extends BaseAccountActivity implements S
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewMvc = new SignInWithPasswordViewMvc(getLayoutInflater(), null);
+        mViewMvc = getCompositionRoot().getViewMvcFactory().getSignInWithPasswordViewMvc(null);
         setContentView(mViewMvc.getRootView());
         mViewMvc.registerListener(this);
-        mFirebaseAuthHelper = new FirebaseAuthHelper();
+        mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();
         mFirebaseAuthHelper.registerListener(this);
 
         hideNotificationBar();

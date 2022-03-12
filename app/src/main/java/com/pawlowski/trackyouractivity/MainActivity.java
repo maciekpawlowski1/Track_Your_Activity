@@ -48,11 +48,11 @@ public class MainActivity extends BaseActivity {
 
         setContentView(mViewMvc.getRootView());
 
-        mSharedPreferences = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
+        mSharedPreferences = getCompositionRoot().getSharedPreferencesHelper();
 
-        mFirebaseAuthHelper = new FirebaseAuthHelper();
+        mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();
         mAccountKey = mFirebaseAuthHelper.getCurrentUser().getUid();
-        mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
+        mFirebaseDatabaseHelper = getCompositionRoot().getFirebaseDatabaseHelper();
 
 
 
@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    List<String> trainingKeys = new DBHandler(getApplicationContext()).getAllTrainingsKeys(mAccountKey);
+                    List<String> trainingKeys = getCompositionRoot().getDBHandler().getAllTrainingsKeys(mAccountKey);
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

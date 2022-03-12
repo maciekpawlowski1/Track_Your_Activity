@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.base.BaseService;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
@@ -50,10 +51,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
-public class TrackingService extends Service implements TimeCounterUseCase.OnTimeUpdateListener, SpeedAndKcalChecker.SpeedChangeListener {
+public class TrackingService extends BaseService implements TimeCounterUseCase.OnTimeUpdateListener, SpeedAndKcalChecker.SpeedChangeListener {
 
 
     public TrackingService() {
+
     }
 
     private LocationCallback mLocationCallback;
@@ -84,8 +86,8 @@ public class TrackingService extends Service implements TimeCounterUseCase.OnTim
     public void onCreate() {
         super.onCreate();
 
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
-        mDbHandler = new DBHandler(getApplicationContext());
+        mSharedPreferencesHelper = getAppCompositionRoot().getSharedPreferencesHelper();
+        mDbHandler = getAppCompositionRoot().getDBHandler();
         mSpeedAndKcalChecker = new SpeedAndKcalChecker(mSharedPreferencesHelper.getCurrentKcal(), mDbHandler.getTypeOfCurrentTraining(), mSharedPreferencesHelper.getWeight());
         mSpeedAndKcalChecker.registerListener(this);
 

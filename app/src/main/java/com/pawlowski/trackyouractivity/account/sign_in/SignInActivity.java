@@ -25,7 +25,7 @@ public class SignInActivity extends BaseAccountActivity implements SignInViewMvc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewMvc = new SignInViewMvc(getLayoutInflater(), null);
+        mViewMvc = getCompositionRoot().getViewMvcFactory().getSignInViewMvc(null);
         mViewMvc.registerListener(this);
         setContentView(mViewMvc.getRootView());
 
@@ -36,7 +36,7 @@ public class SignInActivity extends BaseAccountActivity implements SignInViewMvc
                 SafetyNetAppCheckProviderFactory.getInstance());
         //End TODO
 
-        mFirebaseAuthHelper = new FirebaseAuthHelper();
+        mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();
 
         hideNotificationBar();
 

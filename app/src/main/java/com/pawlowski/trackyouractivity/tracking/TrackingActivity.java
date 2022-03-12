@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
+import com.pawlowski.trackyouractivity.base.BaseActivity;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
@@ -34,7 +35,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class TrackingActivity extends AppCompatActivity implements TrackingViewMvc.OnControlButtonsClickListener {
+public class TrackingActivity extends BaseActivity implements TrackingViewMvc.OnControlButtonsClickListener {
 
 
     private MapHelper mMapHelper;
@@ -60,18 +61,18 @@ public class TrackingActivity extends AppCompatActivity implements TrackingViewM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTrackingViewMvc = new TrackingViewMvc(getLayoutInflater(), null);
+        mTrackingViewMvc = getCompositionRoot().getViewMvcFactory().getTrackingViewMvc(null);
         mTrackingViewMvc.registerListener(this);
         setContentView(mTrackingViewMvc.getRootView());
 
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
         mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
-        mDbHandler = new DBHandler(getApplicationContext());
+        mDbHandler = getCompositionRoot().getDBHandler();
         wasOnStartBefore = false;
 
         Bundle bundle = getIntent().getExtras();
         mTrainingType = bundle.getInt("training_type", TrainingModel.TrainingType.RUNNING.ordinal());
-        mFirebaseAuthHelper = new FirebaseAuthHelper();
+        mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();
 
         mAccountKey = mFirebaseAuthHelper.getCurrentUser().getUid();
 

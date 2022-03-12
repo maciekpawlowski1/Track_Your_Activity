@@ -4,13 +4,14 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
+import com.pawlowski.trackyouractivity.base.BaseActivity;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 import com.pawlowski.trackyouractivity.tracking.MapHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class TrainingDetailsActivity extends AppCompatActivity implements TrainingDetailsViewMvc.TrainingDetailsButtonsClickListener{
+public class TrainingDetailsActivity extends BaseActivity implements TrainingDetailsViewMvc.TrainingDetailsButtonsClickListener{
 
     TrainingDetailsViewMvc mViewMvc;
     MapHelper mMapHelper;
@@ -19,7 +20,7 @@ public class TrainingDetailsActivity extends AppCompatActivity implements Traini
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewMvc = new TrainingDetailsViewMvc(getLayoutInflater(), null);
+        mViewMvc = getCompositionRoot().getViewMvcFactory().getTrainingDetailsViewMvc(null);
         setContentView(mViewMvc.getRootView());
 
         int trainingId = getIntent().getExtras().getInt("training_id");
