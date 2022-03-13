@@ -60,7 +60,7 @@ public class ActivityCompositionRoot {
 
     public GPXUseCase getGPXUseCase()
     {
-        return appCompositionRoot.getGPXUseCase();
+        return getAppCompositionRoot().getGPXUseCase();
     }
 
     public FusedLocationProviderClient getFusedLocationClient()
@@ -78,7 +78,7 @@ public class ActivityCompositionRoot {
 
     public FirebaseAuthHelper getFirebaseAuthHelper()
     {
-        return appCompositionRoot.getFirebaseAuthHelper();
+        return getAppCompositionRoot().getFirebaseAuthHelper();
     }
 
 
