@@ -25,26 +25,23 @@ public class MapHelper implements OnMapReadyCallback {
     private final FusedLocationProviderClient mFusedLocationClient;
     private final PermissionHelper mPermissionHelper;
     private final String mTrainingKey;
-    private final Context mAppContext;
     private final boolean mCurrentlyTracking;
     private final GPXUseCase mGpxUseCase;
 
-    public MapHelper(@NonNull FusedLocationProviderClient mFusedLocationClient, @NonNull PermissionHelper permissionHelper, String trainingKey) {
+    public MapHelper(@NonNull FusedLocationProviderClient mFusedLocationClient, @NonNull PermissionHelper permissionHelper, String trainingKey, GPXUseCase gpxUseCase) {
         this.mFusedLocationClient = mFusedLocationClient;
         mPermissionHelper = permissionHelper;
         mTrainingKey = trainingKey;
+        this.mGpxUseCase = gpxUseCase;
         mCurrentlyTracking = true;
-        mAppContext = mFusedLocationClient.getApplicationContext();
-        mGpxUseCase = new GPXUseCase(mAppContext.getFilesDir());
     }
 
-    public MapHelper(String trainingKey, Context appContext) {
+    public MapHelper(String trainingKey, GPXUseCase gpxUseCase) {
         mTrainingKey = trainingKey;
-        mAppContext = appContext;
         mCurrentlyTracking = false;
         mFusedLocationClient = null;
         mPermissionHelper = null;
-        mGpxUseCase = new GPXUseCase(mAppContext.getFilesDir());
+        this.mGpxUseCase = gpxUseCase;
     }
 
     @Override

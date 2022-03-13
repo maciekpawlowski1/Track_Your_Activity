@@ -19,6 +19,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
+import com.pawlowski.trackyouractivity.composition.BaseWorker;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
@@ -40,7 +41,7 @@ import androidx.work.ForegroundInfo;
 import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
-public class DownloadWorker extends ListenableWorker {
+public class DownloadWorker extends BaseWorker {
     private static final String NOTIFICATION_CHANNEL_ID = "TrackYourActivityDownloadWorkerChannelId";
     private static final CharSequence NOTIFICATION_CHANNEL_NAME = "TrackYourActivityDownloadWorkerChannelName";
     private final DBHandler mDBHandler;
@@ -51,8 +52,8 @@ public class DownloadWorker extends ListenableWorker {
     public DownloadWorker(Context context, WorkerParameters workerParams) {
         super(context, workerParams);
         Log.d("worker", "constructor");
-        mDBHandler = new DBHandler(context);
-        mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
+        mDBHandler = getAppCompositionRoot().getDBHandler();
+        mFirebaseDatabaseHelper = getAppCompositionRoot().getFirebaseDatabaseHelper();
         mFilesDir = context.getFilesDir();
 
     }
@@ -106,7 +107,7 @@ public class DownloadWorker extends ListenableWorker {
     public ListenableFuture<Result> startWork() {
 
         Log.d("worker", "startWork");
-        FirebaseUser user = new FirebaseAuthHelper().getCurrentUser();
+        FirebaseUser user = getAppCompositionRoot().getFirebaseAuthHelper().getCurrentUser();
 
         String accountKey;
         if(user != null)

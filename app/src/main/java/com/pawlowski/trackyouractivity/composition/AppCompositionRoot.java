@@ -9,6 +9,8 @@ import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
+import com.pawlowski.trackyouractivity.gpx.GPXUpdater;
+import com.pawlowski.trackyouractivity.gpx.GPXUseCase;
 
 public class AppCompositionRoot {
     private final Context appContext;
@@ -50,5 +52,20 @@ public class AppCompositionRoot {
             sharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences());
 
         return sharedPreferencesHelper;
+    }
+
+    public GPXUseCase getGPXUseCase()
+    {
+        return new GPXUseCase(appContext.getFilesDir());
+    }
+
+    public GPXUpdater getGPXUpdater(String trainingKey, GPXUseCase gpxUseCase)
+    {
+        return new GPXUpdater(trainingKey, gpxUseCase);
+    }
+
+    public FirebaseAuthHelper getFirebaseAuthHelper()
+    {
+        return new FirebaseAuthHelper();
     }
 }

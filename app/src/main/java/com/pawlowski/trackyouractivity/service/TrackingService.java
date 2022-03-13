@@ -93,8 +93,8 @@ public class TrackingService extends BaseService implements TimeCounterUseCase.O
 
         mTrainingKey = mDbHandler.getCurrentTrainingKey();
 
-        mGPXUseCase = new GPXUseCase(getFilesDir());
-        mGPXUpdater = new GPXUpdater(mTrainingKey, mGPXUseCase);
+        mGPXUseCase = getAppCompositionRoot().getGPXUseCase();
+        mGPXUpdater = getAppCompositionRoot().getGPXUpdater(mTrainingKey, mGPXUseCase);
         buildNotification();
         initLocationCallback();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);

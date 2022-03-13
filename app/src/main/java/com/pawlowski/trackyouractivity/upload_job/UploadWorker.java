@@ -19,6 +19,7 @@ import com.google.firebase.storage.UploadTask;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
+import com.pawlowski.trackyouractivity.composition.BaseWorker;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
@@ -35,7 +36,7 @@ import androidx.work.ForegroundInfo;
 import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
-public class UploadWorker extends ListenableWorker {
+public class UploadWorker extends BaseWorker {
 
     private static final String NOTIFICATION_CHANNEL_ID = "TrackYourActivityWorkerChannelId";
     private static final CharSequence NOTIFICATION_CHANNEL_NAME = "TrackYourActivityWorkerChannelName";
@@ -47,8 +48,8 @@ public class UploadWorker extends ListenableWorker {
     public UploadWorker(Context context, WorkerParameters workerParams) {
         super(context, workerParams);
         Log.d("worker", "constructor");
-        mDBHandler = new DBHandler(context);
-        mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
+        mDBHandler = getAppCompositionRoot().getDBHandler();
+        mFirebaseDatabaseHelper = getAppCompositionRoot().getFirebaseDatabaseHelper();
         mFilesDir = context.getFilesDir();
 
     }
@@ -103,7 +104,7 @@ public class UploadWorker extends ListenableWorker {
     public ListenableFuture<Result> startWork() {
 
         Log.d("worker", "startWork");
-        FirebaseUser user = new FirebaseAuthHelper().getCurrentUser();
+        FirebaseUser user = getAppCompositionRoot().getFirebaseAuthHelper().getCurrentUser();
         String accountKey;//getInputData().getString("account_key");
         if(user != null)
             accountKey = user.getUid();

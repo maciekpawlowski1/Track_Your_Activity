@@ -28,8 +28,8 @@ public class TrainingDetailsActivity extends BaseActivity implements TrainingDet
 
 
 
-        mTraining = new DBHandler(getApplicationContext()).getTraining(trainingId);
-        mMapHelper = new MapHelper(mTraining.getKey(), getApplicationContext());
+        mTraining = getCompositionRoot().getDBHandler().getTraining(trainingId);
+        mMapHelper = getCompositionRoot().getMapHelper(mTraining.getKey(), false, null);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_tracking);

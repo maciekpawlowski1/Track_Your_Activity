@@ -66,7 +66,7 @@ public class TrackingActivity extends BaseActivity implements TrackingViewMvc.On
         setContentView(mTrackingViewMvc.getRootView());
 
         mTrackingViewMvc.changeButtonsState(TrackingViewMvc.ControllerButtonsState.STOPPED);
-        mFirebaseDatabaseHelper = new FirebaseDatabaseHelper();
+        mFirebaseDatabaseHelper = getCompositionRoot().getFirebaseDatabaseHelper();
         mDbHandler = getCompositionRoot().getDBHandler();
         wasOnStartBefore = false;
 
@@ -89,9 +89,9 @@ public class TrackingActivity extends BaseActivity implements TrackingViewMvc.On
 
         mTrackingViewMvc.setTrainingTypeIcon(mTrainingType);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mPermissionHelper = new PermissionHelper(mFusedLocationClient, this);
-        mMapHelper = new MapHelper(mFusedLocationClient, mPermissionHelper, mTrainingKey);
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getSharedPreferences(ConstAndStaticMethods.SHARED_PREFERENCES_NAME, MODE_MULTI_PROCESS));
+        mPermissionHelper = getCompositionRoot().getPermissionHelper();
+        mMapHelper = getCompositionRoot().getMapHelper(mTrainingKey, true, mPermissionHelper);
+        mSharedPreferencesHelper = getCompositionRoot().getSharedPreferencesHelper();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_tracking);
