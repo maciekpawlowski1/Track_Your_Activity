@@ -33,7 +33,7 @@ public class SignInActivity extends BaseAccountActivity implements SignInViewMvc
         FirebaseApp.initializeApp(/*context=*/ this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
+                SafetyNetAppCheckProviderFactory.getInstance(), true);
         //End TODO
 
         mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();

@@ -117,7 +117,7 @@ public class FirebaseDatabaseHelper {
         reference.get().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
-                double distance = (double) Objects.requireNonNull(dataSnapshot.child("d").getValue());
+                double distance = Double.parseDouble( Objects.requireNonNull(dataSnapshot.child("d").getValue()).toString());
                 long kcal = (long) Objects.requireNonNull(dataSnapshot.child("k").getValue());
                 long seconds = (long) Objects.requireNonNull(dataSnapshot.child("t").getValue());
                 long date = (long) Objects.requireNonNull(dataSnapshot.child("w").getValue());
