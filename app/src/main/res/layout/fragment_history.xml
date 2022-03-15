@@ -26,7 +26,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:backgroundTint="@color/orange"
-            android:contentDescription="Open menu"
+            android:contentDescription="@string/open_menu"
             android:src="@drawable/menu_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:fontFamily="@font/montserrat_bold"
-            android:text="History of trainings"
+            android:text="@string/history_of_trainings"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/view2"

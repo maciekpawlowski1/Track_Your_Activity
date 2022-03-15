@@ -14,7 +14,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="30dp"
         android:fontFamily="@font/montserrat_bold"
-        android:gravity="right"
+        android:gravity="end"
         android:text="Track Your "
         android:textColor="@color/white"
         android:textSize="30sp"
@@ -72,7 +72,7 @@
             android:id="@+id/mail_input_edit_text_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter email"
+            android:hint="@string/enter_email"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,7 +101,7 @@
             android:id="@+id/password_input_edit_text_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter password"
+            android:hint="@string/enter_password"
             android:inputType="textPassword"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -131,7 +131,7 @@
             android:id="@+id/password_repeat_input_edit_text_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Repeat password"
+            android:hint="@string/repeat_password"
             android:inputType="textPassword"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -142,7 +142,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/montserrat"
-        android:text="Or Sign Up With"
+        android:text="@string/or_sign_up_with"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,7 +154,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:background="@drawable/button_background"
-        android:text="Submit"
+        android:text="@string/submit"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="@+id/password_input_layout_sign_up"
@@ -187,7 +187,7 @@
             android:layout_height="65dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/login_buttons_background"
-            android:contentDescription="Sign up by google"
+            android:contentDescription="@string/sign_up_by_google"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/google_icon" />
     </LinearLayout>

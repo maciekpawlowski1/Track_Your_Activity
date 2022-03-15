@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_bold"
-            android:text="Your weekly goal :"
+            android:text="@string/your_weekly_goal"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/progress_bar_weekly_goal"
             app:layout_constraintTop_toTopOf="parent" />

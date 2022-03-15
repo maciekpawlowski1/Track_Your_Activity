@@ -6,37 +6,37 @@
             android:id="@+id/overview_nav_menu"
             android:checked="true"
             android:icon="@drawable/home_icon"
-            android:title="Overview" />
+            android:title="@string/overview" />
         <item
             android:id="@+id/track_nav_menu"
             android:icon="@drawable/run_icon"
-            android:title="Track activity" />
+            android:title="@string/track_activity" />
 
         <item
             android:id="@+id/history_nav_menu"
             android:icon="@drawable/history_icon"
-            android:title="History" />
+            android:title="@string/history" />
 
         <item
             android:id="@+id/leaderboard_nav_menu"
             android:icon="@drawable/leaderboard_icon"
-            android:title="Leaderboard"
+            android:title="@string/leaderboard"
             android:visible="false" />
 
         <item
             android:id="@+id/friends_nav_menu"
             android:icon="@drawable/friends_icon"
-            android:title="Friends"
+            android:title="@string/friends"
             android:visible="false" />
 
         <item
             android:id="@+id/settings_nav_menu"
             android:icon="@drawable/settings_icon"
-            android:title="Settings" />
+            android:title="@string/settings" />
         <item
             android:id="@+id/sign_out_nav_menu"
             android:icon="@drawable/logout_icon"
-            android:title="Sign out" />
+            android:title="@string/sign_out" />
 
     </group>
 
