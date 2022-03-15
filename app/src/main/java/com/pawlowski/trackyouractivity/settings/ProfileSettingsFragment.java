@@ -36,8 +36,7 @@ public class ProfileSettingsFragment extends BaseFragment implements ProfileSett
     public ProfileSettingsFragment(MainViewMvc mainViewMvc, String accountKey) {
         mMainViewMvc = mainViewMvc;
         mAccountKey = accountKey;
-        mFirebaseDatabaseHelper = getCompositionRoot().getFirebaseDatabaseHelper();
-        mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();
+
     }
 
 
@@ -49,7 +48,8 @@ public class ProfileSettingsFragment extends BaseFragment implements ProfileSett
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSharedPreferences = getCompositionRoot().getSharedPreferencesHelper();
-
+        mFirebaseDatabaseHelper = getCompositionRoot().getFirebaseDatabaseHelper();
+        mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();
 
     }
 
@@ -58,6 +58,8 @@ public class ProfileSettingsFragment extends BaseFragment implements ProfileSett
                              Bundle savedInstanceState) {
         mViewMvc = getCompositionRoot().getViewMvcFactory().getProfileSettingsViewMvc(container, mMainViewMvc);
         mViewMvc.registerListener(this);
+
+
 
         if(mSharedPreferences.isProfileSaved())
         {
