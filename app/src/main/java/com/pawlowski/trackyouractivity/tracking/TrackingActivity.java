@@ -1,18 +1,11 @@
 package com.pawlowski.trackyouractivity.tracking;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.work.WorkInfo;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -34,6 +27,10 @@ import com.pawlowski.trackyouractivity.upload_job.WorkHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
+import androidx.work.WorkInfo;
 
 public class TrackingActivity extends BaseActivity implements TrackingViewMvc.OnControlButtonsClickListener {
 
@@ -325,5 +322,12 @@ public class TrackingActivity extends BaseActivity implements TrackingViewMvc.On
     @Override
     public void onBackClick() {
         onBackPressed();
+    }
+
+    public static void launch(Context context, int trainingType)
+    {
+        Intent i = new Intent(context, TrackingActivity.class);
+        i.putExtra("training_type", trainingType);
+        context.startActivity(i);
     }
 }

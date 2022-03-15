@@ -1,6 +1,5 @@
 package com.pawlowski.trackyouractivity.settings;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.overview.OverviewFragment;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 
 public class ProfileSettingsFragment extends BaseFragment implements ProfileSettingsViewMvc.ProfileSettingsButtonsClickListener {
@@ -114,7 +112,12 @@ public class ProfileSettingsFragment extends BaseFragment implements ProfileSett
             mSharedPreferences.setProfileSaved(true);
             mMainViewMvc.setHeaderNameText(name);
             mMainViewMvc.checkItem(R.id.overview_nav_menu);
-            mMainViewMvc.loadFragment(new OverviewFragment(mMainViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
+            mMainViewMvc.loadFragment(OverviewFragment.newInstance(mMainViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
         }
+    }
+
+    public static ProfileSettingsFragment newInstance(MainViewMvc mainViewMvc, String accountKey)
+    {
+        return new ProfileSettingsFragment(mainViewMvc, accountKey);
     }
 }

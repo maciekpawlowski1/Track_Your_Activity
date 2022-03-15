@@ -17,7 +17,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FileDownloadTask;
 import com.pawlowski.trackyouractivity.R;
-import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.composition.BaseWorker;
 import com.pawlowski.trackyouractivity.database.DBHandler;
@@ -38,7 +37,6 @@ import androidx.annotation.Nullable;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
 import androidx.core.app.NotificationCompat;
 import androidx.work.ForegroundInfo;
-import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
 public class DownloadWorker extends BaseWorker {

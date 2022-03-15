@@ -1,9 +1,5 @@
 package com.pawlowski.trackyouractivity.splash_screen;
 
-import androidx.annotation.NonNull;
-import androidx.core.splashscreen.SplashScreenViewProvider;
-
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.firebase.FirebaseApp;
@@ -13,6 +9,9 @@ import com.pawlowski.trackyouractivity.MainActivity;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.base.BaseActivity;
+
+import androidx.annotation.NonNull;
+import androidx.core.splashscreen.SplashScreenViewProvider;
 
 public class SplashActivity extends BaseActivity implements SplashScreenHelper.SplashListener {
     private SplashScreenHelper mSplashScreenHelper;
@@ -42,11 +41,11 @@ public class SplashActivity extends BaseActivity implements SplashScreenHelper.S
     public void onSplashScreenEnd(@NonNull SplashScreenViewProvider splashScreenViewProvider) {
         if(mIsSignedIn)
         {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            MainActivity.launch(this, false);
         }
         else
         {
-            startActivity(new Intent(SplashActivity.this, SignInActivity.class));
+            SignInActivity.launch(SplashActivity.this);
         }
         finish();
 

@@ -1,7 +1,5 @@
 package com.pawlowski.trackyouractivity.overview;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +27,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 
 public class OverviewFragment extends BaseFragment implements OverviewViewMvc.OverviewButtonsListener {
@@ -137,7 +134,7 @@ public class OverviewFragment extends BaseFragment implements OverviewViewMvc.Ov
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mViewMvc = new OverviewViewMvc(inflater, container);
+        mViewMvc = getCompositionRoot().getViewMvcFactory().getOverviewViewMvc(container);
 
         mViewMvc.registerListener(this);
 
@@ -154,21 +151,17 @@ public class OverviewFragment extends BaseFragment implements OverviewViewMvc.Ov
 
     @Override
     public void onCurrentTrainingCardClick() {
-        Intent i = new Intent(getContext(), TrackingActivity.class);
-        i.putExtra("training_type", -1);
-        startActivity(i);
+        TrackingActivity.launch(getContext(), TrainingModel.TrainingType.RUNNING.ordinal());
     }
 
     @Override
     public void onTrainingStartClick(TrainingModel.TrainingType trainingType) {
-        Intent i = new Intent(getContext(), TrackingActivity.class);
-        i.putExtra("training_type", trainingType.ordinal());
-        startActivity(i);
+        TrackingActivity.launch(getContext(), trainingType.ordinal());
     }
 
     @Override
     public void onMoreHistoryClick() {
-        mMainActivityViewMvc.loadFragment(new HistoryFragment(mMainActivityViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
+        mMainActivityViewMvc.loadFragment(HistoryFragment.newInstance(mMainActivityViewMvc, mAccountKey), requireActivity().getSupportFragmentManager(), false);
         mMainActivityViewMvc.checkItem(R.id.history_nav_menu);
     }
 
@@ -196,5 +189,10 @@ public class OverviewFragment extends BaseFragment implements OverviewViewMvc.Ov
     public void onTrackingStopUpdate(TrackingStopUpdate stopUpdate)
     {
         //TODO: Change color of dot
+    }
+
+    public static OverviewFragment newInstance(MainViewMvc mainActivityViewMvc, String accountKey)
+    {
+        return new OverviewFragment(mainActivityViewMvc, accountKey);
     }
 }

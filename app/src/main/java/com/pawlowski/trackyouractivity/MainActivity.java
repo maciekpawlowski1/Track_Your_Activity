@@ -1,5 +1,6 @@
 package com.pawlowski.trackyouractivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +17,6 @@ import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
 import com.pawlowski.trackyouractivity.account.sign_in.SignInActivity;
 import com.pawlowski.trackyouractivity.base.BaseActivity;
 import com.pawlowski.trackyouractivity.consts.ConstAndStaticMethods;
-import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
 import com.pawlowski.trackyouractivity.download_job.DownloadWorkHelper;
@@ -44,7 +44,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewMvc = new MainViewMvc(getLayoutInflater(), null, this);
+        mViewMvc = getCompositionRoot().getViewMvcFactory().getMainViewMvc(null, this);
 
         setContentView(mViewMvc.getRootView());
 
@@ -61,33 +61,29 @@ public class MainActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.overview_nav_menu)
                 {
-                    mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                    mViewMvc.loadFragment(OverviewFragment.newInstance(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                     mViewMvc.checkItem(R.id.overview_nav_menu);
                 }
                 else if (item.getItemId() == R.id.track_nav_menu)
                 {
-                    Intent i = new Intent(MainActivity.this, TrackingActivity.class);
-                    i.putExtra("training_type", TrainingModel.TrainingType.RUNNING);
-                    startActivity(i);
+                    TrackingActivity.launch(MainActivity.this, TrainingModel.TrainingType.RUNNING.ordinal());
                     mViewMvc.hideNavigation();
                 }
                 else if (item.getItemId() == R.id.history_nav_menu)
                 {
-                    mViewMvc.loadFragment(new HistoryFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                    mViewMvc.loadFragment(HistoryFragment.newInstance(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                     mViewMvc.checkItem(R.id.history_nav_menu);
                 }
                 else if(item.getItemId() == R.id.settings_nav_menu)
                 {
-                    mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                    mViewMvc.loadFragment(ProfileSettingsFragment.newInstance(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                     mViewMvc.checkItem(R.id.settings_nav_menu);
                 }
                 else if(item.getItemId() == R.id.sign_out_nav_menu)
                 {
                     if(mSharedPreferences.isTrackingActive())
                     {
-                        Intent i = new Intent(MainActivity.this, TrackingActivity.class);
-                        i.putExtra("doNotShowSplash", true);
-                        startActivity(i);
+                        TrackingActivity.launch(MainActivity.this, TrainingModel.TrainingType.RUNNING.ordinal());
                         mViewMvc.hideNavigation();
                         Toast.makeText(getApplicationContext(), "You have to finish your training first!", Toast.LENGTH_LONG).show();
                     }
@@ -95,8 +91,7 @@ public class MainActivity extends BaseActivity {
                     {
                         mSharedPreferences.resetPersonValues();
                         mFirebaseAuthHelper.signOut();
-                        Intent i = new Intent(MainActivity.this, SignInActivity.class);
-                        startActivity(i);
+                        SignInActivity.launch(MainActivity.this);
                         finish();
                     }
 
@@ -121,12 +116,12 @@ public class MainActivity extends BaseActivity {
                         mSharedPreferences.setName(user.getName());
                         mSharedPreferences.setDateOfBirth(user.getDateOfBirth());
                         mSharedPreferences.setProfileSaved(true);
-                        mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                        mViewMvc.loadFragment(OverviewFragment.newInstance(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                         mViewMvc.checkItem(R.id.overview_nav_menu);
                     }
                     else
                     {
-                        mViewMvc.loadFragment(new ProfileSettingsFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+                        mViewMvc.loadFragment(ProfileSettingsFragment.newInstance(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
                         mViewMvc.checkItem(R.id.settings_nav_menu);
                     }
                     hideProgressDialog();
@@ -136,13 +131,11 @@ public class MainActivity extends BaseActivity {
         else
         {
             mViewMvc.setHeaderNameText(mSharedPreferences.getName());
-            mViewMvc.loadFragment(new OverviewFragment(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
+            mViewMvc.loadFragment(OverviewFragment.newInstance(mViewMvc, mAccountKey), getSupportFragmentManager(), false);
             mViewMvc.checkItem(R.id.overview_nav_menu);
             if(mSharedPreferences.isTrackingActive())
             {
-                Intent i = new Intent(MainActivity.this, TrackingActivity.class);
-                i.putExtra("training_type", TrainingModel.TrainingType.RUNNING);
-                startActivity(i);
+                TrackingActivity.launch(this, TrainingModel.TrainingType.RUNNING.ordinal());
             }
         }
 
@@ -230,5 +223,12 @@ public class MainActivity extends BaseActivity {
             }
 
         }
+    }
+
+    public static void launch(Context context, boolean startWithSettings)
+    {
+        Intent i = new Intent(context, MainActivity.class);
+        i.putExtra("start_with_settings", startWithSettings);
+        context.startActivity(i);
     }
 }

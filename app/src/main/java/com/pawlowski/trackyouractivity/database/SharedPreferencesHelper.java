@@ -14,7 +14,7 @@ public class SharedPreferencesHelper {
     {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putFloat("kcal", kcal);
-        editor.commit();
+        editor.apply();
     }
 
     public double getCurrentKcal()

@@ -1,6 +1,5 @@
 package com.pawlowski.trackyouractivity.tracking;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 

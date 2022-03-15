@@ -2,7 +2,6 @@ package com.pawlowski.trackyouractivity.overview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.ViewGroup;
 
 import com.pawlowski.trackyouractivity.models.TrainingModel;
@@ -36,9 +35,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.viewMvc.registerListener(new TrainingHistoryItemViewMvc.TrainingCardButtonsClickListener() {
             @Override
             public void onCardClick() {
-                Intent i = new Intent(mContext, TrainingDetailsActivity.class);
-                i.putExtra("training_id", currentTraining.getId());
-                mContext.startActivity(i);
+                TrainingDetailsActivity.launch(mContext, currentTraining.getId());
             }
         });
     }

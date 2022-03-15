@@ -1,15 +1,14 @@
 package com.pawlowski.trackyouractivity.training_details;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pawlowski.trackyouractivity.R;
 import com.pawlowski.trackyouractivity.base.BaseActivity;
-import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.models.TrainingModel;
 import com.pawlowski.trackyouractivity.tracking.MapHelper;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class TrainingDetailsActivity extends BaseActivity implements TrainingDetailsViewMvc.TrainingDetailsButtonsClickListener{
 
@@ -43,5 +42,12 @@ public class TrainingDetailsActivity extends BaseActivity implements TrainingDet
     @Override
     public void onBackClick() {
         finish();
+    }
+
+    public static void launch(Context context, int trainingId)
+    {
+        Intent i = new Intent(context, TrainingDetailsActivity.class);
+        i.putExtra("training_id", trainingId);
+        context.startActivity(i);
     }
 }

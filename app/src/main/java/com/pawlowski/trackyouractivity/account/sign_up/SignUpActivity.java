@@ -1,5 +1,6 @@
 package com.pawlowski.trackyouractivity.account.sign_up;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -89,8 +90,7 @@ public class SignUpActivity extends BaseAccountActivity implements SignUpViewMvc
 
     @Override
     public void onBackButtonClick() {
-        Intent i = new Intent(this, SignInActivity.class);
-        startActivity(i);
+        SignInActivity.launch(this);
         finish();
     }
 
@@ -107,9 +107,7 @@ public class SignUpActivity extends BaseAccountActivity implements SignUpViewMvc
     @Override
     public void onSuccess() {
         hideProgressDialog();
-        Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("start_with_settings", true);
-        startActivity(i);
+        MainActivity.launch(this, true);
         finish();
     }
 
@@ -131,5 +129,10 @@ public class SignUpActivity extends BaseAccountActivity implements SignUpViewMvc
     @Override
     public void onSuccess(AuthResult authResult) {
         onSuccess();
+    }
+
+    public static void launch(Context context)
+    {
+        context.startActivity(new Intent(context, SignUpActivity.class));
     }
 }

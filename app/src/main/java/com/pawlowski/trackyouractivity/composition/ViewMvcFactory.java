@@ -8,6 +8,7 @@ import com.pawlowski.trackyouractivity.account.sign_in.SignInViewMvc;
 import com.pawlowski.trackyouractivity.account.sign_in_with_password.SignInWithPasswordViewMvc;
 import com.pawlowski.trackyouractivity.account.sign_up.SignUpViewMvc;
 import com.pawlowski.trackyouractivity.history.HistoryViewMvc;
+import com.pawlowski.trackyouractivity.overview.OverviewViewMvc;
 import com.pawlowski.trackyouractivity.overview.TrainingHistoryItemViewMvc;
 import com.pawlowski.trackyouractivity.settings.ProfileSettingsViewMvc;
 import com.pawlowski.trackyouractivity.tracking.TrackingViewMvc;
@@ -69,5 +70,10 @@ public class ViewMvcFactory {
     public MainViewMvc getMainViewMvc(@Nullable ViewGroup viewGroup, @NonNull AppCompatActivity activity)
     {
         return new MainViewMvc(layoutInflater, viewGroup, activity);
+    }
+
+    public OverviewViewMvc getOverviewViewMvc(@Nullable ViewGroup viewGroup)
+    {
+        return new OverviewViewMvc(layoutInflater, viewGroup);
     }
 }

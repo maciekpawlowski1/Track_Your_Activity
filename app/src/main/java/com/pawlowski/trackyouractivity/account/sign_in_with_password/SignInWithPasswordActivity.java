@@ -1,5 +1,6 @@
 package com.pawlowski.trackyouractivity.account.sign_in_with_password;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,8 +68,7 @@ public class SignInWithPasswordActivity extends BaseAccountActivity implements S
 
     @Override
     public void onRegisterWithMailButtonClick() {
-        Intent i = new Intent(this, SignUpActivity.class);
-        startActivity(i);
+        SignUpActivity.launch(this);
         finish();
     }
 
@@ -84,16 +84,14 @@ public class SignInWithPasswordActivity extends BaseAccountActivity implements S
 
     @Override
     public void onBackButtonClick() {
-        Intent i = new Intent(this, SignInActivity.class);
-        startActivity(i);
+        SignInActivity.launch(this);
         finish();
     }
 
     @Override
     public void onSuccess() {
         hideProgressDialog();
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+        MainActivity.launch(this, false);
         finish();
     }
 
@@ -115,5 +113,10 @@ public class SignInWithPasswordActivity extends BaseAccountActivity implements S
     @Override
     public void onSuccess(AuthResult authResult) {
         onSuccess();
+    }
+
+    public static void launch(Context context)
+    {
+        context.startActivity(new Intent(context, SignInWithPasswordActivity.class));
     }
 }

@@ -1,10 +1,6 @@
 package com.pawlowski.trackyouractivity.history;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +9,8 @@ import com.pawlowski.trackyouractivity.MainViewMvc;
 import com.pawlowski.trackyouractivity.base.BaseFragment;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.overview.HistoryAdapter;
+
+import androidx.annotation.NonNull;
 
 
 public class HistoryFragment extends BaseFragment implements HistoryViewMvc.HistoryButtonsClickListener {
@@ -57,5 +55,10 @@ public class HistoryFragment extends BaseFragment implements HistoryViewMvc.Hist
     @Override
     public void onMenuButtonClick() {
         mMainActivityViewMvc.showNavigation();
+    }
+
+    public static HistoryFragment newInstance(MainViewMvc mainViewMvc, String accountKey)
+    {
+        return new HistoryFragment(mainViewMvc, accountKey);
     }
 }
