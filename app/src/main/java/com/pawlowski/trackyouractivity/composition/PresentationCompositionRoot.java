@@ -1,7 +1,7 @@
 package com.pawlowski.trackyouractivity.composition;
 
-import com.pawlowski.trackyouractivity.MyApplication;
 import com.pawlowski.trackyouractivity.account.FirebaseAuthHelper;
+import com.pawlowski.trackyouractivity.splash_screen.SplashScreenHelper;
 import com.pawlowski.trackyouractivity.database.DBHandler;
 import com.pawlowski.trackyouractivity.database.FirebaseDatabaseHelper;
 import com.pawlowski.trackyouractivity.database.SharedPreferencesHelper;
@@ -9,7 +9,6 @@ import com.pawlowski.trackyouractivity.gpx.GPXUseCase;
 import com.pawlowski.trackyouractivity.tracking.MapHelper;
 import com.pawlowski.trackyouractivity.tracking.PermissionHelper;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class PresentationCompositionRoot {
@@ -40,6 +39,11 @@ public class PresentationCompositionRoot {
     public FirebaseDatabaseHelper getFirebaseDatabaseHelper()
     {
         return activityCompositionRoot.getFirebaseDatabaseHelper();
+    }
+
+    public SplashScreenHelper getSplashScreenHelper()
+    {
+        return activityCompositionRoot.getSplashScreenHelper();
     }
 
     public ViewMvcFactory getViewMvcFactory()

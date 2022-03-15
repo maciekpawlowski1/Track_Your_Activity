@@ -86,6 +86,7 @@ public class MainActivity extends BaseActivity {
                     if(mSharedPreferences.isTrackingActive())
                     {
                         Intent i = new Intent(MainActivity.this, TrackingActivity.class);
+                        i.putExtra("doNotShowSplash", true);
                         startActivity(i);
                         mViewMvc.hideNavigation();
                         Toast.makeText(getApplicationContext(), "You have to finish your training first!", Toast.LENGTH_LONG).show();

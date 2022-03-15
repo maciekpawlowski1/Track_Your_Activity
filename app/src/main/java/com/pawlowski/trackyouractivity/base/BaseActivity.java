@@ -52,6 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return new PresentationCompositionRoot(activityCompositionRoot);
     }
 
+
     public ActivityCompositionRoot getActivityCompositionRoot() {
         if(activityCompositionRoot == null)
         {

@@ -16,11 +16,12 @@ import com.pawlowski.trackyouractivity.account.sign_in_with_password.SignInWithP
 import com.pawlowski.trackyouractivity.account.sign_up.SignUpActivity;
 
 import androidx.annotation.NonNull;
+import androidx.core.splashscreen.SplashScreen;
+import androidx.core.splashscreen.SplashScreenViewProvider;
 
 public class SignInActivity extends BaseAccountActivity implements SignInViewMvc.SignInButtonsClickListener {
 
     SignInViewMvc mViewMvc;
-    FirebaseAuthHelper mFirebaseAuthHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,28 +30,11 @@ public class SignInActivity extends BaseAccountActivity implements SignInViewMvc
         mViewMvc.registerListener(this);
         setContentView(mViewMvc.getRootView());
 
-        //TODO: Move to splash screen when created
-        FirebaseApp.initializeApp(/*context=*/ this);
-        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance(), true);
-        //End TODO
-
-        mFirebaseAuthHelper = getCompositionRoot().getFirebaseAuthHelper();
-
         hideNotificationBar();
-
-        if(mFirebaseAuthHelper.isSignedIn())    //TODO: Create splash screen and move it there
-        {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
-        else
-        {
-            initGoogleLogin();
-        }
+        initGoogleLogin();
 
     }
+
 
 
 
@@ -94,4 +78,6 @@ public class SignInActivity extends BaseAccountActivity implements SignInViewMvc
         Log.w("SignInActivity", "signInWithCredential:failure", e);
         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
     }
+
+
 }
