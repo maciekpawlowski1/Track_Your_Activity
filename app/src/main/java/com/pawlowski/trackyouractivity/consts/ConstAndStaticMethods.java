@@ -218,8 +218,8 @@ public class ConstAndStaticMethods {
     public static String convertSecondsToTimeTest(long seconds)
     {
         long secondsT = (seconds - (seconds/60)*60);
-        long minutesT = ((seconds/60) - (seconds/3600)*3600);
         long hoursT = (seconds/3600);
+        long minutesT = ((seconds - hoursT*3600)/60);
         return (hoursT<10?"0"+hoursT:hoursT+"")+":"+(minutesT<10?"0"+minutesT:minutesT+"")+":"+(secondsT<10?"0"+secondsT:secondsT+"");
     }
 

@@ -301,8 +301,8 @@ public class TrackingService extends BaseService implements TimeCounterUseCase.O
         long seconds = mCurrentSeconds/1000;
         String timeTextSpeech = "";
         long secondsT = (seconds - (seconds/60)*60);
-        long minutesT = ((seconds/60) - (seconds/3600)*3600);
         long hoursT = (seconds/3600);
+        long minutesT = ((seconds - hoursT*3600)/60);
         Log.d("time", hoursT+":"+minutesT+":"+secondsT);
         if(hoursT != 0)
         {
